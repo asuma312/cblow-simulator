@@ -130,6 +130,7 @@ import { useTournamentStore } from '@/stores/tournament'
 import { useChampionsStore } from '@/stores/champions'
 import { simulateGame } from '@/engine/simulation'
 import { getAITeamById, getAITeamPicks } from '@/engine/ai-team'
+import { ROLES } from '@/types/game.types'
 import type { GameResult } from '@/types/game.types'
 import { onIconError } from '@/utils/championImages'
 import GameLog from '@/components/gameplay/GameLog.vue'
@@ -158,32 +159,17 @@ const matchFormat = computed(() => currentMatch.value?.format ?? 'bo3')
 const playerPicks = computed(() => champStore.picks[playerSide.value].map(p => p.name))
 const opponentPicks = computed(() => champStore.picks[aiSide.value].map(p => p.name))
 
-const playerPicksMap = computed(() => {
-    const roles = ['top', 'jungle', 'mid', 'adc', 'support']
-    const picks = playerPicks.value
+function picksToMap(picks: string[]): Record<string, string> {
     const map: Record<string, string> = {}
-    roles.forEach((role, i) => { if (picks[i]) map[role] = picks[i] })
+    ROLES.forEach((role, i) => { if (picks[i]) map[role] = picks[i] })
     return map
-})
+}
 
-const opponentPicksMap = computed(() => {
-    const roles = ['top', 'jungle', 'mid', 'adc', 'support']
-    const picks = opponentPicks.value
-    const map: Record<string, string> = {}
-    roles.forEach((role, i) => { if (picks[i]) map[role] = picks[i] })
-    return map
-})
+const playerPicksMap   = computed(() => picksToMap(playerPicks.value))
+const opponentPicksMap = computed(() => picksToMap(opponentPicks.value))
 
-const seriesFinished = computed(() => {
-    const { player, opponent } = gameStore.seriesScores
-    if (matchFormat.value === 'bo3') return player >= 2 || opponent >= 2
-    return player >= 3 || opponent >= 3
-})
-
-const playerWonSeries = computed(() => {
-    if (matchFormat.value === 'bo3') return gameStore.seriesScores.player >= 2
-    return gameStore.seriesScores.player >= 3
-})
+const seriesFinished  = computed(() => gameStore.isSeriesOver(matchFormat.value))
+const playerWonSeries = computed(() => gameStore.playerWonSeries(matchFormat.value))
 
 const applyMoraleChanges = (winner: 'player' | 'opponent') => {
     for (const player of teamStore.roster) {

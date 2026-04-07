@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Player, Coach } from '@/types/game.types'
+import { ROLES } from '@/types/game.types'
 import { loadFromStorage, saveToStorage } from '@/utils/storage'
 
 const SAVE_KEY = 'cblow-save'
@@ -23,15 +24,8 @@ export const useTeamStore = defineStore('team', {
     },
 
     getters: {
-        totalSalary(state): number {
-            return state.roster.reduce((sum, p) => sum + p.salary, 0)
-        },
-        canAffordPlayer(state): (salary: number) => boolean {
-            return (salary: number) => state.budget >= salary
-        },
         isRosterComplete(state): boolean {
-            const roles = ['top', 'jungle', 'mid', 'adc', 'support']
-            return roles.every(role => state.roster.some(p => p.role === role))
+            return ROLES.every(role => state.roster.some(p => p.role === role))
         },
         getPlayerByRole(state): (role: string) => Player | undefined {
             return (role: string) => state.roster.find(p => p.role === role)
@@ -59,13 +53,6 @@ export const useTeamStore = defineStore('team', {
         removePlayer(playerId: string) {
             this.roster = this.roster.filter(p => p.id !== playerId)
             this._save()
-        },
-
-        payWeeklySalaries(): boolean {
-            if (this.budget < this.totalSalary) return false
-            this.budget -= this.totalSalary
-            this._save()
-            return true
         },
 
         addBudget(amount: number) {

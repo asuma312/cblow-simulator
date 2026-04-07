@@ -147,9 +147,8 @@ export const useTournamentStore = defineStore('tournament', {
             }
 
             type Route = (team: string) => void
-            const noop: Route = () => {}
 
-            const routes: Record<string, { w: Route; l: Route }> = {
+            const routes: Record<string, { w: Route; l?: Route }> = {
                 winners_1: {
                     w: t => fillInRound(this.matches, 'winners', 2, Math.floor(pos / 2), t),
                     l: t => fillInRound(this.matches, 'losers',  1, pos, t),
@@ -162,27 +161,15 @@ export const useTournamentStore = defineStore('tournament', {
                     w: t => fillById(this.matches, 'grand_final', t),
                     l: t => fillById(this.matches, 'lb_final', t),
                 },
-                losers_1: {
-                    w: t => fillInRound(this.matches, 'losers', 2, Math.floor(pos / 2), t),
-                    l: noop,
-                },
-                losers_2: {
-                    w: t => fillInRound(this.matches, 'losers', 3, pos, t),
-                    l: noop,
-                },
-                losers_3: {
-                    w: t => fillById(this.matches, 'lb_final', t),
-                    l: noop,
-                },
-                losers_4: {
-                    w: t => fillById(this.matches, 'grand_final', t),
-                    l: noop,
-                },
+                losers_1: { w: t => fillInRound(this.matches, 'losers', 2, Math.floor(pos / 2), t) },
+                losers_2: { w: t => fillInRound(this.matches, 'losers', 3, pos, t) },
+                losers_3: { w: t => fillById(this.matches, 'lb_final', t) },
+                losers_4: { w: t => fillById(this.matches, 'grand_final', t) },
             }
 
             const route = routes[`${match.bracket}_${match.round}`]
             route?.w(winner)
-            route?.l(loser)
+            route?.l?.(loser)
         },
 
         simulateAIMatches() {

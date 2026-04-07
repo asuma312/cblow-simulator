@@ -65,13 +65,6 @@
         <!-- Step 3: Choose Players -->
         <div v-if="step === 3" class="setup-section animate-float-up">
             <h2 class="section-title">MONTAR ROSTER</h2>
-            <div class="budget-bar">
-                <span class="budget-label">Orçamento:</span>
-                <span class="budget-amount" :class="{ 'budget-over': remainingBudget < 0 }">
-                    R$ {{ remainingBudget.toLocaleString('pt-BR') }}
-                </span>
-                <span class="budget-total">/ R$ {{ BUDGET.toLocaleString('pt-BR') }}</span>
-            </div>
 
             <div class="role-tabs">
                 <button
@@ -96,7 +89,6 @@
                     :player="player"
                     :selected="getRosterPlayer(selectedRole)?.id === player.id"
                     clickable
-                    showSalary
                     showPool
                     @click="selectPlayer(player)"
                 />
@@ -110,9 +102,6 @@
                         <span class="roster-player" :class="{ 'roster-player--empty': !getRosterPlayer(role.id) }">
                             {{ getRosterPlayer(role.id)?.nickname ?? '---' }}
                         </span>
-                        <span v-if="getRosterPlayer(role.id)" class="roster-salary">
-                            R$ {{ getRosterPlayer(role.id)?.salary.toLocaleString('pt-BR') }}
-                        </span>
                     </div>
                 </div>
             </div>
@@ -121,7 +110,7 @@
                 <button class="setup-btn setup-btn--secondary" @click="step = 2">Voltar</button>
                 <button
                     class="setup-btn"
-                    :disabled="!isRosterComplete || remainingBudget < 0"
+                    :disabled="!isRosterComplete"
                     @click="confirmSetup"
                 >
                     CONFIRMAR TIME
@@ -139,6 +128,7 @@ import { useGameStore } from '@/stores/game'
 import { useTournamentStore } from '@/stores/tournament'
 import { COACHES } from '@/data/coaches'
 import { ALL_PLAYERS, getPlayersByRole } from '@/data/players'
+import { ROLES, ROLE_LABELS } from '@/types/game.types'
 import type { Player, Coach } from '@/types/game.types'
 import PlayerCard from '@/components/shared/PlayerCard.vue'
 
@@ -147,7 +137,6 @@ const teamStore = useTeamStore()
 const gameStore = useGameStore()
 const tournamentStore = useTournamentStore()
 
-const BUDGET = 10000
 const step = ref(1)
 const teamName = ref(teamStore.teamName || '')
 const selectedCoach = ref<Coach | null>(teamStore.coach)
@@ -159,25 +148,13 @@ for (const p of teamStore.roster) {
     roster.value[p.role] = p
 }
 
-const roles = [
-    { id: 'top', label: 'Top' },
-    { id: 'jungle', label: 'Jungle' },
-    { id: 'mid', label: 'Mid' },
-    { id: 'adc', label: 'ADC' },
-    { id: 'support', label: 'Suporte' },
-]
+const roles = ROLES.map(id => ({ id, label: ROLE_LABELS[id] }))
 
 const coaches = COACHES
 
 const availablePlayers = computed(() => getPlayersByRole(selectedRole.value))
 
 const getRosterPlayer = (role: string) => roster.value[role] ?? null
-
-const totalSalary = computed(() =>
-    Object.values(roster.value).reduce((sum, p) => sum + p.salary, 0)
-)
-
-const remainingBudget = computed(() => BUDGET - totalSalary.value)
 
 const isRosterComplete = computed(() =>
     roles.every(r => roster.value[r.id])
@@ -190,9 +167,6 @@ const selectPlayer = (player: Player) => {
 const confirmSetup = () => {
     teamStore.setTeamName(teamName.value)
     if (selectedCoach.value) teamStore.selectCoach(selectedCoach.value)
-    teamStore.budget = remainingBudget.value + (teamStore.budget - BUDGET > 0 ? teamStore.budget - BUDGET : 0)
-    // Reset budget to remaining
-    teamStore.budget = remainingBudget.value
 
     for (const player of Object.values(roster.value)) {
         teamStore.addPlayer(player)
@@ -437,36 +411,6 @@ const confirmSetup = () => {
     letter-spacing: 0.04em;
 }
 
-.budget-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(139, 94, 60, 0.3);
-}
-
-.budget-label {
-    font-size: 12px;
-    color: rgba(245, 240, 232, 0.5);
-    letter-spacing: 0.06em;
-}
-
-.budget-amount {
-    font-size: 20px;
-    font-weight: 700;
-    color: #22c55e;
-    transition: color 0.3s;
-
-    &.budget-over {
-        color: #ef4444;
-    }
-}
-
-.budget-total {
-    font-size: 14px;
-    color: rgba(245, 240, 232, 0.3);
-}
 
 .role-tabs {
     display: flex;
@@ -564,8 +508,5 @@ const confirmSetup = () => {
     }
 }
 
-.roster-salary {
-    font-size: 11px;
-    color: #C8860A;
-}
+
 </style>

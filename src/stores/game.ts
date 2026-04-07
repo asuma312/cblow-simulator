@@ -21,6 +21,20 @@ export const useGameStore = defineStore('game', {
         isPlayerAhead(state): boolean {
             return state.seriesScores.player > state.seriesScores.opponent
         },
+
+        isSeriesOver(state): (format: 'bo3' | 'bo5') => boolean {
+            return (format) => {
+                const n = format === 'bo3' ? 2 : 3
+                return state.seriesScores.player >= n || state.seriesScores.opponent >= n
+            }
+        },
+
+        playerWonSeries(state): (format: 'bo3' | 'bo5') => boolean {
+            return (format) => {
+                const n = format === 'bo3' ? 2 : 3
+                return state.seriesScores.player >= n
+            }
+        },
     },
 
     actions: {

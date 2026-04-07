@@ -1,4 +1,13 @@
-export type Role = 'top' | 'jungle' | 'mid' | 'adc' | 'support'
+export const ROLES = ['top', 'jungle', 'mid', 'adc', 'support'] as const
+export type Role = typeof ROLES[number]
+
+export const ROLE_LABELS: Record<Role, string> = {
+    top: 'Top', jungle: 'Jungle', mid: 'Mid', adc: 'ADC', support: 'Suporte',
+}
+
+export const ROLE_SHORT_LABELS: Record<Role, string> = {
+    top: 'TOP', jungle: 'JGL', mid: 'MID', adc: 'ADC', support: 'SUP',
+}
 
 export interface PlayerStats {
     farm: number      // 1-10
@@ -18,7 +27,6 @@ export interface Player {
     role: Role
     stats: PlayerStats
     champPool: ChampionKnowledge[]
-    salary: number        // weekly cost
     popularity: number    // 0-100
     moral: number         // 0-100
     fatigue: number       // 0-100

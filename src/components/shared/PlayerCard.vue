@@ -65,15 +65,12 @@
             </div>
         </div>
 
-        <div v-if="showSalary" class="player-card__salary">
-            <span class="salary-label">Salário:</span>
-            <span class="salary-value">R$ {{ player.salary.toLocaleString('pt-BR') }}/sem</span>
-        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import { ROLE_SHORT_LABELS } from '@/types/game.types'
 import type { Player } from '@/types/game.types'
 
 const props = defineProps({
@@ -82,31 +79,21 @@ const props = defineProps({
     clickable: { type: Boolean, default: false },
     showStatus: { type: Boolean, default: false },
     showPool: { type: Boolean, default: false },
-    showSalary: { type: Boolean, default: false },
 })
 
 defineEmits(['click'])
 
-const roleLabel = computed(() => {
-    const labels: Record<string, string> = {
-        top: 'TOP', jungle: 'JGL', mid: 'MID', adc: 'ADC', support: 'SUP'
-    }
-    return labels[props.player.role] ?? props.player.role.toUpperCase()
-})
-
-const moralColor = computed(() => {
-    const m = props.player.moral
-    if (m >= 70) return '#4ade80'
-    if (m >= 40) return '#eab308'
+function statusColor(value: number, reverse = false): string {
+    const good = reverse ? value <= 30 : value >= 70
+    const mid  = reverse ? value <= 60 : value >= 40
+    if (good) return '#4ade80'
+    if (mid)  return '#eab308'
     return '#ef4444'
-})
+}
 
-const fatigueColor = computed(() => {
-    const f = props.player.fatigue
-    if (f <= 30) return '#4ade80'
-    if (f <= 60) return '#eab308'
-    return '#ef4444'
-})
+const roleLabel    = computed(() => ROLE_SHORT_LABELS[props.player.role] ?? props.player.role.toUpperCase())
+const moralColor   = computed(() => statusColor(props.player.moral))
+const fatigueColor = computed(() => statusColor(props.player.fatigue, true))
 </script>
 
 <style lang="scss" scoped>
@@ -256,23 +243,5 @@ const fatigueColor = computed(() => {
     font-weight: 700;
 }
 
-.player-card__salary {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(139, 94, 60, 0.3);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
-.salary-label {
-    font-size: 10px;
-    color: rgba(245, 240, 232, 0.5);
-}
-
-.salary-value {
-    font-size: 12px;
-    font-weight: 700;
-    color: #C8860A;
-}
 </style>

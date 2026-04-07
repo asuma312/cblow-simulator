@@ -8,9 +8,6 @@
             <div class="training-budget">
                 <p class="budget-label">Orçamento</p>
                 <p class="budget-amount">R$ {{ teamStore.budget.toLocaleString('pt-BR') }}</p>
-                <p class="salary-warning" v-if="teamStore.totalSalary > 0">
-                    -R$ {{ teamStore.totalSalary.toLocaleString('pt-BR') }}/sem (salários)
-                </p>
             </div>
         </div>
 
@@ -97,7 +94,6 @@ const actionLabel = (playerId: string): string => {
 
 const executeWeek = () => {
     trainingStore.executeWeek()
-    teamStore.payWeeklySalaries()
     gameStore.advanceWeek()
     gameStore.setPhase('champselect')
 
@@ -158,11 +154,7 @@ const executeWeek = () => {
     color: #22c55e;
 }
 
-.salary-warning {
-    font-size: 11px;
-    color: rgba(239, 68, 68, 0.7);
-    margin-top: 2px;
-}
+
 
 .training-grid {
     display: grid;

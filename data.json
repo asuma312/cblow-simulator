@@ -1,0 +1,835 @@
+{
+  "general": {
+    "melhorTime": {
+      "nome": "BRONZINTHIANS",
+      "info": "Score 162.8 • 6 vitórias • 85.7% WR"
+    },
+    "melhorJogador": {
+      "nome": "THEUZ",
+      "info": "BRONZINTHIANS • SUP • AMA 7.73 • 6 jogos • 83.3% WR"
+    },
+    "campeaoMeta": {
+      "nome": "Urgot",
+      "info": "14 bans • 55.3% P/B • Essencial na Grande Final"
+    },
+    "totalDrafts": 38
+  },
+  "times": [
+    {
+      "nome": "VOS BRONZE",
+      "presidente": "ABSOLUT",
+      "pts": 200,
+      "vit": 12,
+      "wr": 63.2,
+      "logo": "assets/logos/pres_vosbronze.png"
+    },
+    {
+      "nome": "BRONZINTHIANS",
+      "presidente": "LUMA",
+      "pts": 168.8,
+      "vit": 8,
+      "wr": 66.7,
+      "logo": "assets/logos/pres_bronzinthians.png"
+    },
+    {
+      "nome": "T1LAPIAS",
+      "presidente": "KENNZY",
+      "pts": 125.4,
+      "vit": 6,
+      "wr": 50,
+      "logo": "assets/logos/pres_t1lapias.png"
+    },
+    {
+      "nome": "LOWCHONETE",
+      "presidente": "ARTHUR LANCHES",
+      "pts": 99.9,
+      "vit": 4,
+      "wr": 44.4,
+      "logo": "assets/logos/pres_lowchonete.png"
+    },
+    {
+      "nome": "SHOPPINGFY TATUAPELION",
+      "presidente": "REVOLTA",
+      "pts": 96.7,
+      "vit": 3,
+      "wr": 42.9,
+      "logo": "assets/logos/pres_shoppingfy.png"
+    },
+    {
+      "nome": "SKTENIS ACADEMY",
+      "presidente": "YETZ",
+      "pts": 85.5,
+      "vit": 3,
+      "wr": 42.9,
+      "logo": "assets/logos/pres_sktenis.png"
+    },
+    {
+      "nome": "OREIUDOS JUNIOR",
+      "presidente": "BRUCER",
+      "pts": 47.1,
+      "vit": 1,
+      "wr": 20,
+      "logo": "assets/logos/pres_oreiudos.png"
+    },
+    {
+      "nome": "SKT TELETON",
+      "presidente": "RODIL",
+      "pts": 45,
+      "vit": 1,
+      "wr": 20,
+      "logo": "assets/logos/pres_sktteleton.png"
+    }
+  ],
+  "jogadores": [
+    {
+      "nome": "AZIR DE WARMOG",
+      "time": "LOWCHONETE",
+      "pos": "MID",
+      "k": 26,
+      "d": 55,
+      "a": 61,
+      "jogos": 9,
+      "ama": 1.58
+    },
+    {
+      "nome": "BPM ZECAPAGOD",
+      "time": "BRONZINTHIANS",
+      "pos": "TOP",
+      "k": 48,
+      "d": 24,
+      "a": 40,
+      "jogos": 7,
+      "ama": 3.67
+    },
+    {
+      "nome": "BSHADOW7",
+      "time": "BRONZINTHIANS",
+      "pos": "JG",
+      "k": 28,
+      "d": 10,
+      "a": 30,
+      "jogos": 4,
+      "ama": 5.8
+    },
+    {
+      "nome": "CAP FARINHA",
+      "time": "SHOPPINGFY TATUAPELION",
+      "pos": "TOP",
+      "k": 30,
+      "d": 16,
+      "a": 35,
+      "jogos": 7,
+      "ama": 4.06
+    },
+    {
+      "nome": "CASTRO YSE",
+      "time": "VOS BRONZE",
+      "pos": "MID",
+      "k": 34,
+      "d": 37,
+      "a": 54,
+      "jogos": 10,
+      "ama": 2.38
+    },
+    {
+      "nome": "CHENDERBOY",
+      "time": "OREIUDOS JUNIOR",
+      "pos": "TOP",
+      "k": 13,
+      "d": 21,
+      "a": 19,
+      "jogos": 5,
+      "ama": 1.52
+    },
+    {
+      "nome": "CHOGATO027ES",
+      "time": "T1LAPIAS",
+      "pos": "TOP",
+      "k": 44,
+      "d": 24,
+      "a": 48,
+      "jogos": 8,
+      "ama": 3.83
+    },
+    {
+      "nome": "CRIZ",
+      "time": "LOWCHONETE",
+      "pos": "ADC",
+      "k": 41,
+      "d": 36,
+      "a": 60,
+      "jogos": 9,
+      "ama": 2.81
+    },
+    {
+      "nome": "DANVERII",
+      "time": "OREIUDOS JUNIOR",
+      "pos": "MID",
+      "k": 26,
+      "d": 20,
+      "a": 30,
+      "jogos": 5,
+      "ama": 2.8
+    },
+    {
+      "nome": "E O PUXAS",
+      "time": "VOS BRONZE",
+      "pos": "SUP",
+      "k": 2,
+      "d": 39,
+      "a": 71,
+      "jogos": 7,
+      "ama": 1.87
+    },
+    {
+      "nome": "ELGATO",
+      "time": "T1LAPIAS",
+      "pos": "ADC",
+      "k": 46,
+      "d": 48,
+      "a": 65,
+      "jogos": 8,
+      "ama": 2.31
+    },
+    {
+      "nome": "ENZOGOSTOSO123",
+      "time": "BRONZINTHIANS",
+      "pos": "MID",
+      "k": 17,
+      "d": 10,
+      "a": 23,
+      "jogos": 3,
+      "ama": 4
+    },
+    {
+      "nome": "EU ME CAGUEI",
+      "time": "OREIUDOS JUNIOR",
+      "pos": "SUP",
+      "k": 4,
+      "d": 25,
+      "a": 51,
+      "jogos": 5,
+      "ama": 2.2
+    },
+    {
+      "nome": "FRENEZERI",
+      "time": "SKT TELETON",
+      "pos": "MID",
+      "k": 24,
+      "d": 36,
+      "a": 53,
+      "jogos": 8,
+      "ama": 2.14
+    },
+    {
+      "nome": "GALORURAL",
+      "time": "VOS BRONZE",
+      "pos": "JG",
+      "k": 63,
+      "d": 42,
+      "a": 80,
+      "jogos": 10,
+      "ama": 3.4
+    },
+    {
+      "nome": "JEIEL UP",
+      "time": "VOS BRONZE",
+      "pos": "TOP",
+      "k": 35,
+      "d": 37,
+      "a": 52,
+      "jogos": 10,
+      "ama": 2.35
+    },
+    {
+      "nome": "KIRAH",
+      "time": "SHOPPINGFY TATUAPELION",
+      "pos": "MID",
+      "k": 32,
+      "d": 29,
+      "a": 60,
+      "jogos": 7,
+      "ama": 3.17
+    },
+    {
+      "nome": "KISSIDANE",
+      "time": "SKT TELETON",
+      "pos": "TOP",
+      "k": 3,
+      "d": 21,
+      "a": 18,
+      "jogos": 5,
+      "ama": 1
+    },
+    {
+      "nome": "LIPPEH",
+      "time": "VOS BRONZE",
+      "pos": "ADC",
+      "k": 74,
+      "d": 40,
+      "a": 61,
+      "jogos": 10,
+      "ama": 3.38
+    },
+    {
+      "nome": "LOOSE",
+      "time": "OREIUDOS JUNIOR",
+      "pos": "ADC",
+      "k": 36,
+      "d": 24,
+      "a": 22,
+      "jogos": 5,
+      "ama": 2.42
+    },
+    {
+      "nome": "MEGAEXTRO",
+      "time": "SKT TELETON",
+      "pos": "ADC",
+      "k": 30,
+      "d": 19,
+      "a": 16,
+      "jogos": 5,
+      "ama": 2.42
+    },
+    {
+      "nome": "MICAEL PASTEL",
+      "time": "LOWCHONETE",
+      "pos": "SUP",
+      "k": 12,
+      "d": 18,
+      "a": 69,
+      "jogos": 8,
+      "ama": 4.5
+    },
+    {
+      "nome": "MIELCOHEN",
+      "time": "SKTENIS ACADEMY",
+      "pos": "TOP",
+      "k": 27,
+      "d": 23,
+      "a": 34,
+      "jogos": 7,
+      "ama": 2.65
+    },
+    {
+      "nome": "NKZ",
+      "time": "BRONZINTHIANS",
+      "pos": "ADC",
+      "k": 63,
+      "d": 20,
+      "a": 46,
+      "jogos": 7,
+      "ama": 5.45
+    },
+    {
+      "nome": "O BOBO",
+      "time": "SKTENIS ACADEMY",
+      "pos": "MID",
+      "k": 31,
+      "d": 14,
+      "a": 38,
+      "jogos": 7,
+      "ama": 4.93
+    },
+    {
+      "nome": "OSURT",
+      "time": "LOWCHONETE",
+      "pos": "TOP",
+      "k": 23,
+      "d": 38,
+      "a": 43,
+      "jogos": 9,
+      "ama": 1.74
+    },
+    {
+      "nome": "OXEE",
+      "time": "T1LAPIAS",
+      "pos": "SUP",
+      "k": 11,
+      "d": 33,
+      "a": 84,
+      "jogos": 7,
+      "ama": 2.88
+    },
+    {
+      "nome": "P0MB0",
+      "time": "SKT TELETON",
+      "pos": "SUP",
+      "k": 6,
+      "d": 23,
+      "a": 26,
+      "jogos": 5,
+      "ama": 1.39
+    },
+    {
+      "nome": "PDJ SHACO FACAO",
+      "time": "SKT TELETON",
+      "pos": "JG",
+      "k": 43,
+      "d": 31,
+      "a": 43,
+      "jogos": 8,
+      "ama": 2.77
+    },
+    {
+      "nome": "RLUPERINI",
+      "time": "SHOPPINGFY TATUAPELION",
+      "pos": "ADC",
+      "k": 44,
+      "d": 25,
+      "a": 47,
+      "jogos": 7,
+      "ama": 3.64
+    },
+    {
+      "nome": "ROBINHOGAMER17",
+      "time": "LOWCHONETE",
+      "pos": "JG",
+      "k": 43,
+      "d": 21,
+      "a": 34,
+      "jogos": 7,
+      "ama": 3.67
+    },
+    {
+      "nome": "RUIM E ESQUISITO",
+      "time": "T1LAPIAS",
+      "pos": "MID",
+      "k": 69,
+      "d": 30,
+      "a": 39,
+      "jogos": 8,
+      "ama": 3.6
+    },
+    {
+      "nome": "SÓFADINHA",
+      "time": "SHOPPINGFY TATUAPELION",
+      "pos": "SUP",
+      "k": 6,
+      "d": 26,
+      "a": 74,
+      "jogos": 6,
+      "ama": 3.08
+    },
+    {
+      "nome": "SOJOGOMUTADO",
+      "time": "SKTENIS ACADEMY",
+      "pos": "SUP",
+      "k": 11,
+      "d": 22,
+      "a": 49,
+      "jogos": 5,
+      "ama": 2.73
+    },
+    {
+      "nome": "THAAYLADY",
+      "time": "SKTENIS ACADEMY",
+      "pos": "ADC",
+      "k": 28,
+      "d": 20,
+      "a": 26,
+      "jogos": 6,
+      "ama": 2.7
+    },
+    {
+      "nome": "THEUZ",
+      "time": "BRONZINTHIANS",
+      "pos": "SUP",
+      "k": 7,
+      "d": 11,
+      "a": 78,
+      "jogos": 6,
+      "ama": 7.73
+    },
+    {
+      "nome": "VEIO DO WHATSAPP",
+      "time": "LOWCHONETE",
+      "pos": "JG",
+      "k": 4,
+      "d": 14,
+      "a": 10,
+      "jogos": 2,
+      "ama": 1
+    },
+    {
+      "nome": "VKS BMAG",
+      "time": "OREIUDOS JUNIOR",
+      "pos": "JG",
+      "k": 11,
+      "d": 24,
+      "a": 31,
+      "jogos": 5,
+      "ama": 1.75
+    },
+    {
+      "nome": "VÔ CORVO",
+      "time": "T1LAPIAS",
+      "pos": "JG",
+      "k": 17,
+      "d": 25,
+      "a": 46,
+      "jogos": 8,
+      "ama": 2.52
+    },
+    {
+      "nome": "ZANGRANDO",
+      "time": "SKTENIS ACADEMY",
+      "pos": "JG",
+      "k": 16,
+      "d": 31,
+      "a": 53,
+      "jogos": 7,
+      "ama": 2.23
+    },
+    {
+      "nome": "ZEROCHANNN",
+      "time": "SHOPPINGFY TATUAPELION",
+      "pos": "JG",
+      "k": 40,
+      "d": 26,
+      "a": 68,
+      "jogos": 7,
+      "ama": 4.15
+    }
+  ],
+  "campeonato": {
+    "chaveSuperior": {
+      "titulo": "Chave Superior",
+      "fases": [
+        {
+          "nome": "Quartas",
+          "partidas": [
+            {
+              "id": "qf1",
+              "p1": "T1LAPIAS",
+              "p2": "SKT TELETON",
+              "winner": "T1LAPIAS"
+            },
+            {
+              "id": "qf2",
+              "p1": "LOWCHONETE",
+              "p2": "SHOPPINGFY TATUAPELION",
+              "winner": "SHOPPINGFY TATUAPELION"
+            },
+            {
+              "id": "qf3",
+              "p1": "VOS BRONZE",
+              "p2": "BRONZINTHIANS",
+              "winner": "BRONZINTHIANS"
+            },
+            {
+              "id": "qf4",
+              "p1": "OREIUDOS JUNIOR",
+              "p2": "SKTENIS ACADEMY",
+              "winner": "SKTENIS ACADEMY"
+            }
+          ]
+        },
+        {
+          "nome": "Semifinais",
+          "partidas": [
+            {
+              "id": "sf1",
+              "p1": "T1LAPIAS",
+              "p2": "SHOPPINGFY TATUAPELION",
+              "winner": "T1LAPIAS"
+            },
+            {
+              "id": "sf2",
+              "p1": "BRONZINTHIANS",
+              "p2": "SKTENIS ACADEMY",
+              "winner": "BRONZINTHIANS"
+            }
+          ]
+        },
+        {
+          "nome": "Final Superior",
+          "partidas": [
+            {
+              "id": "upperFinal",
+              "p1": "T1LAPIAS",
+              "p2": "BRONZINTHIANS",
+              "winner": "BRONZINTHIANS",
+              "data": "29/03"
+            }
+          ]
+        }
+      ]
+    },
+    "chaveInferior": {
+      "titulo": "Chave Inferior (Repescagem)",
+      "fases": [
+        {
+          "nome": "Repescagem 1",
+          "partidas": [
+            {
+              "id": "elim1",
+              "p1": "SKT TELETON",
+              "p2": "LOWCHONETE",
+              "winner": "LOWCHONETE"
+            },
+            {
+              "id": "elim2",
+              "p1": "VOS BRONZE",
+              "p2": "OREIUDOS JUNIOR",
+              "winner": "VOS BRONZE"
+            }
+          ]
+        },
+        {
+          "nome": "Repescagem 2",
+          "partidas": [
+            {
+              "id": "rep1",
+              "p1": "LOWCHONETE",
+              "p2": "SHOPPINGFY TATUAPELION",
+              "winner": "LOWCHONETE"
+            },
+            {
+              "id": "rep2",
+              "p1": "SKTENIS ACADEMY",
+              "p2": "VOS BRONZE",
+              "winner": "VOS BRONZE"
+            }
+          ]
+        },
+        {
+          "nome": "Semifinal Inferior",
+          "partidas": [
+            {
+              "id": "semiLower",
+              "p1": "LOWCHONETE",
+              "p2": "VOS BRONZE",
+              "winner": "VOS BRONZE",
+              "data": "29/03"
+            }
+          ]
+        },
+        {
+          "nome": "Final Inferior",
+          "partidas": [
+            {
+              "id": "lowerFinalReal",
+              "p1": "T1LAPIAS",
+              "p2": "VOS BRONZE",
+              "winner": "VOS BRONZE",
+              "placar": "1 x 3",
+              "data": "04/04 às 18:00"
+            }
+          ]
+        }
+      ]
+    },
+    "grandeFinal": {
+      "titulo": "Grande Final",
+      "partida": {
+        "id": "grandFinal",
+        "p1": "BRONZINTHIANS",
+        "p2": "VOS BRONZE",
+        "winner": "VOS BRONZE",
+        "placar": "2 x 3",
+        "data": "05/04 - FINALIZADO"
+      }
+    }
+  },
+  "bonecos": [
+    {
+      "nome": "Jinx",
+      "picks": 11,
+      "pickRate": 28.9,
+      "bans": 4,
+      "banRate": 10.5,
+      "presenca": 39.5,
+      "winrate": 30
+    },
+    {
+      "nome": "Sion",
+      "picks": 10,
+      "pickRate": 26.3,
+      "bans": 2,
+      "banRate": 5.3,
+      "presenca": 31.6,
+      "winrate": 60
+    },
+    {
+      "nome": "Leona",
+      "picks": 7,
+      "pickRate": 18.4,
+      "bans": 2,
+      "banRate": 5.3,
+      "presenca": 23.7,
+      "winrate": 57.1
+    },
+    {
+      "nome": "Malphite",
+      "picks": 8,
+      "pickRate": 21.1,
+      "bans": 2,
+      "banRate": 5.3,
+      "presenca": 26.3,
+      "winrate": 25
+    },
+    {
+      "nome": "Jax",
+      "picks": 7,
+      "pickRate": 18.4,
+      "bans": 5,
+      "banRate": 13.2,
+      "presenca": 31.6,
+      "winrate": 42.9
+    },
+    {
+      "nome": "Lux",
+      "picks": 6,
+      "pickRate": 15.8,
+      "bans": 0,
+      "banRate": 0,
+      "presenca": 15.8,
+      "winrate": 16.7
+    },
+    {
+      "nome": "Ahri",
+      "picks": 6,
+      "pickRate": 15.8,
+      "bans": 3,
+      "banRate": 7.9,
+      "presenca": 23.7,
+      "winrate": 66.7
+    },
+    {
+      "nome": "Urgot",
+      "picks": 7,
+      "pickRate": 18.4,
+      "bans": 14,
+      "banRate": 36.8,
+      "presenca": 55.3,
+      "winrate": 60
+    },
+    {
+      "nome": "Caitlyn",
+      "picks": 7,
+      "pickRate": 18.4,
+      "bans": 6,
+      "banRate": 15.8,
+      "presenca": 34.2,
+      "winrate": 60
+    },
+    {
+      "nome": "Sett",
+      "picks": 5,
+      "pickRate": 13.2,
+      "bans": 7,
+      "banRate": 18.4,
+      "presenca": 31.6,
+      "winrate": 80
+    },
+    {
+      "nome": "Malzahar",
+      "picks": 6,
+      "pickRate": 15.8,
+      "bans": 3,
+      "banRate": 7.9,
+      "presenca": 23.7,
+      "winrate": 16.7
+    },
+    {
+      "nome": "Rakan",
+      "picks": 6,
+      "pickRate": 15.8,
+      "bans": 4,
+      "banRate": 10.5,
+      "presenca": 26.3,
+      "winrate": 66.7
+    },
+    {
+      "nome": "Aurora",
+      "picks": 6,
+      "pickRate": 15.8,
+      "bans": 3,
+      "banRate": 7.9,
+      "presenca": 23.7,
+      "winrate": 33.3
+    },
+    {
+      "nome": "Nautilus",
+      "picks": 7,
+      "pickRate": 18.4,
+      "bans": 1,
+      "banRate": 2.6,
+      "presenca": 21.1,
+      "winrate": 42.9
+    },
+    {
+      "nome": "Renekton",
+      "picks": 6,
+      "pickRate": 15.8,
+      "bans": 3,
+      "banRate": 7.9,
+      "presenca": 23.7,
+      "winrate": 50
+    },
+    {
+      "nome": "Mordekaiser",
+      "picks": 5,
+      "pickRate": 13.2,
+      "bans": 12,
+      "banRate": 31.6,
+      "presenca": 44.7,
+      "winrate": 40
+    },
+    {
+      "nome": "Morgana",
+      "picks": 6,
+      "pickRate": 15.8,
+      "bans": 8,
+      "banRate": 21.1,
+      "presenca": 36.8,
+      "winrate": 50
+    },
+    {
+      "nome": "Braum",
+      "picks": 6,
+      "pickRate": 15.8,
+      "bans": 5,
+      "banRate": 13.2,
+      "presenca": 28.9,
+      "winrate": 50
+    },
+    {
+      "nome": "Sejuani",
+      "picks": 4,
+      "pickRate": 10.5,
+      "bans": 3,
+      "banRate": 7.9,
+      "presenca": 18.4,
+      "winrate": 75
+    },
+    {
+      "nome": "Galio",
+      "picks": 6,
+      "pickRate": 15.8,
+      "bans": 5,
+      "banRate": 13.2,
+      "presenca": 28.9,
+      "winrate": 83.3
+    },
+    {
+      "nome": "Miss Fortune",
+      "picks": 4,
+      "pickRate": 10.5,
+      "bans": 2,
+      "banRate": 5.3,
+      "presenca": 15.8,
+      "winrate": 50
+    },
+    {
+      "nome": "Kai'Sa",
+      "picks": 5,
+      "pickRate": 13.2,
+      "bans": 0,
+      "banRate": 0,
+      "presenca": 13.2,
+      "winrate": 20
+    }
+  ]
+}

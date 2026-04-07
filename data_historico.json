@@ -1,0 +1,3868 @@
+{
+  "upperFinal": [
+    {
+      "etapa": "Final Upper",
+      "placar": "0 x 1",
+      "vencedor": "BRONZINTHIANS",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Nenhum",
+          "Morgana",
+          "Viego",
+          "Shaco",
+          "Nocturne"
+        ],
+        "objetivos": {
+          "torres": 3,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Jax",
+            "kda": "11 / 4 / 3"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Mordekaiser",
+            "kda": "1 / 5 / 1"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Mel",
+            "kda": "11 / 5 / 0"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Yunara",
+            "kda": "0 / 11 / 1"
+          },
+          {
+            "jogador": "TARIC BOT",
+            "rota": "SUP",
+            "campeao": "Taric",
+            "kda": "5 / 2 / 14"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Heimerdinger",
+          "Tristana",
+          "Caitlyn",
+          "Yasuo",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 3,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Sett",
+            "kda": "14 / 0 / 9"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Kayn",
+            "kda": "8 / 0 / 3"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Galio",
+            "kda": "5 / 2 / 13"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Smolder",
+            "kda": "4 / 3 / 15"
+          },
+          {
+            "jogador": "CHO'GATH BOT",
+            "rota": "SUP",
+            "campeao": "Cho'Gath",
+            "kda": "0 / 14 / 0"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Final Upper",
+      "placar": "1 x 1",
+      "vencedor": "T1LAPIAS",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 10,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Sion",
+            "kda": "3 / 0 / 7"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Trundle",
+            "kda": "2 / 0 / 3"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Annie",
+            "kda": "8 / 2 / 0"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Tristana",
+            "kda": "10 / 4 / 6"
+          },
+          {
+            "jogador": "OXEE",
+            "rota": "SUP",
+            "campeao": "Thresh",
+            "kda": "0 / 3 / 11"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Urgot",
+          "Yorick",
+          "Ezreal",
+          "Rumble",
+          "Heimerdinger"
+        ],
+        "objetivos": {
+          "torres": 1,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Gangplank",
+            "kda": "2 / 3 / 3"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Nidalee",
+            "kda": "2 / 5 / 4"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Azir",
+            "kda": "1 / 4 / 4"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Kalista",
+            "kda": "3 / 8 / 3"
+          },
+          {
+            "jogador": "THEUZ",
+            "rota": "SUP",
+            "campeao": "Yuumi",
+            "kda": "1 / 3 / 5"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Final Upper",
+      "placar": "1 x 2",
+      "vencedor": "BRONZINTHIANS",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 3,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Urgot",
+            "kda": "7 / 8 / 4"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Dr.Mundo",
+            "kda": "0 / 7 / 5"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Heimerdinger",
+            "kda": "10 / 8 / 3"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Jinx",
+            "kda": "0 / 9 / 14"
+          },
+          {
+            "jogador": "OXEE",
+            "rota": "SUP",
+            "campeao": "lulu",
+            "kda": "4 / 10 / 3"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhuml"
+        ],
+        "objetivos": {
+          "torres": 9,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Illaoi",
+            "kda": "13 / 8 / 4"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Viego",
+            "kda": "14 / 3 / 9"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Heimerdinger",
+            "kda": "4 / 4 / 13"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Jinx",
+            "kda": "11 / 0 / 11"
+          },
+          {
+            "jogador": "THEUZ",
+            "rota": "SUP",
+            "campeao": "Rakan",
+            "kda": "0 / 3 / 17"
+          }
+        ]
+      }
+    }
+  ],
+  "semiLower": [
+    {
+      "etapa": "Semifinal Inferior",
+      "placar": "0 x 2",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "LOWCHONETE",
+        "bans": [
+          "Evelynn",
+          "Yasuo",
+          "Shyvana",
+          "Sylas",
+          "Aurora"
+        ],
+        "objetivos": {
+          "torres": 2,
+          "dragoes": 4,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "OSURT",
+            "rota": "TOP",
+            "campeao": "Sion",
+            "kda": "4 / 5 / 8"
+          },
+          {
+            "jogador": "ROBINHOGAMER17",
+            "rota": "JG",
+            "campeao": "Nocturne",
+            "kda": "4 / 4 / 14"
+          },
+          {
+            "jogador": "AZIR DE WARMOG",
+            "rota": "MID",
+            "campeao": "Veigar",
+            "kda": "4 / 5 / 12"
+          },
+          {
+            "jogador": "CRIZ",
+            "rota": "ADC",
+            "campeao": "Yunara",
+            "kda": "13 / 7 / 6"
+          },
+          {
+            "jogador": "ARTHUR LANCHES",
+            "rota": "SUP",
+            "campeao": "Yuumi",
+            "kda": "0 / 4 / 20"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Malzahar",
+          "Orianna",
+          "Vi",
+          "Viego",
+          "Azir"
+        ],
+        "objetivos": {
+          "torres": 13,
+          "dragoes": 2,
+          "barao": 3,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Urgot",
+            "kda": "4 / 7 / 2"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Wukong",
+            "kda": "8 / 5 / 5"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Yone",
+            "kda": "1 / 5 / 8"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Ezreal",
+            "kda": "11 / 7 / 5"
+          },
+          {
+            "jogador": "ABSOLUT",
+            "rota": "SUP",
+            "campeao": "Yuumi",
+            "kda": "1 / 1 / 20"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Semifinal Inferior",
+      "placar": "0 x 2",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "LOWCHONETE",
+        "bans": [
+          "Xin Zhao",
+          "Yasuo",
+          "Gwen",
+          "Shyvana",
+          "Evelynn"
+        ],
+        "objetivos": {
+          "torres": 4,
+          "dragoes": 3,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "OSURT",
+            "rota": "TOP",
+            "campeao": "Jax",
+            "kda": "0 / 5 / 2"
+          },
+          {
+            "jogador": "ROBINHOGAMER17",
+            "rota": "JG",
+            "campeao": "Pantheon",
+            "kda": "3 / 2 / 3"
+          },
+          {
+            "jogador": "AZIR DE WARMOG",
+            "rota": "MID",
+            "campeao": "malzahar",
+            "kda": "3 / 7 / 6"
+          },
+          {
+            "jogador": "CRIZ",
+            "rota": "ADC",
+            "campeao": "Jinx",
+            "kda": "3 / 6 / 6"
+          },
+          {
+            "jogador": "MICAEL PASTEL",
+            "rota": "SUP",
+            "campeao": "Lux",
+            "kda": "4 / 0 / 7"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Azir",
+          "Vi",
+          "Jarvan IV",
+          "malphite",
+          "Ornn"
+        ],
+        "objetivos": {
+          "torres": 9,
+          "dragoes": 3,
+          "barao": 1,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Renekton",
+            "kda": "9 / 0 / 5"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Sejuani",
+            "kda": "1 / 3 / 13"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Aurora",
+            "kda": "2 / 3 / 5"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Smolder",
+            "kda": "8 / 4 / 6"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Braum",
+            "kda": "0 / 3 / 14"
+          }
+        ]
+      }
+    }
+  ],
+  "lowerFinalReal": [
+    {
+      "etapa": "Final Inferior",
+      "placar": "0 x 1",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 3,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Illaoi",
+            "kda": "2 / 5 / 2"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Trundle",
+            "kda": "1 / 8 / 5"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Heimerdinger",
+            "kda": "7 / 6 / 3"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Smolder",
+            "kda": "4 / 8 / 4"
+          },
+          {
+            "jogador": "OXEE",
+            "rota": "SUP",
+            "campeao": "Braum",
+            "kda": "1 / 5 / 6"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Illaoi",
+            "kda": "5 / 5 / 10"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Hecarim",
+            "kda": "4 / 4 / 15"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Mel",
+            "kda": "8 / 4 / 8"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Twitch",
+            "kda": "15 / 1 / 5"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Yuumi",
+            "kda": "0 / 1 / 22"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Final Inferior",
+      "placar": "0 x 2",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Sion",
+          "Veigar",
+          "Yunara",
+          "Thresh",
+          "Cho'Gath"
+        ],
+        "objetivos": {
+          "torres": 6,
+          "dragoes": 2,
+          "barao": 0,
+          "vastilavas": 2
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Mordekaiser",
+            "kda": "1 / 8 / 11"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Nocturne",
+            "kda": "1 / 8 / 10"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Malzahar",
+            "kda": "1 / 4 / 21"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Nilah",
+            "kda": "19 / 8 / 5"
+          },
+          {
+            "jogador": "OXEE",
+            "rota": "SUP",
+            "campeao": "Nautilus",
+            "kda": "2 / 8 / 17"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Shyvana",
+          "Yasuo",
+          "Renekton",
+          "Gwen",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 10,
+          "dragoes": 4,
+          "barao": 2,
+          "vastilavas": 1
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Urgot",
+            "kda": "9 / 3 / 5"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Evelynn",
+            "kda": "10 / 6 / 9"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Sylas",
+            "kda": "4 / 6 / 10"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Ezreal",
+            "kda": "9 / 3 / 16"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Tahm Kench",
+            "kda": "3 / 6 / 17"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Final Inferior",
+      "placar": "1 x 2",
+      "vencedor": "T1LAPIAS",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Aurora",
+          "Caitlyn",
+          "Taric",
+          "Galio",
+          "Gwen"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 3,
+          "barao": 0,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Sion",
+            "kda": "2 / 1 / 7"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Malphite",
+            "kda": "1 / 2 / 10"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Veigar",
+            "kda": "14 / 0 / 4"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Tristana",
+            "kda": "15 / 3 / 9"
+          },
+          {
+            "jogador": "OXEE",
+            "rota": "SUP",
+            "campeao": "Thresh",
+            "kda": "4 / 1 / 14"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 1,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Gangplank",
+            "kda": "1 / 4 / 2"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Ivern",
+            "kda": "1 / 5 / 3"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Azir",
+            "kda": "1 / 8 / 1"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Kalista",
+            "kda": "2 / 9 / 3"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Janna",
+            "kda": "2 / 10 / 3"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Final Inferior",
+      "placar": "1 x 3",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Pantheon",
+          "Gwen",
+          "Yasuo",
+          "Aurora",
+          "Akali"
+        ],
+        "objetivos": {
+          "torres": 3,
+          "dragoes": 3,
+          "barao": 0,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Jax",
+            "kda": "1 / 4 / 12"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Amumu",
+            "kda": "1 / 9 / 14"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Galio",
+            "kda": "6 / 3 / 9"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Jinx",
+            "kda": "20 / 8 / 8"
+          },
+          {
+            "jogador": "OXEE",
+            "rota": "SUP",
+            "campeao": "Karma",
+            "kda": "1 / 8 / 21"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Annie",
+          "Leona",
+          "Lulu",
+          "Yunara",
+          "Cho'Gath"
+        ],
+        "objetivos": {
+          "torres": 9,
+          "dragoes": 3,
+          "barao": 1,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Renekton",
+            "kda": "8 / 5 / 6"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "JG",
+            "campeao": "Warwick",
+            "kda": "4 / 6 / 11"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Yone",
+            "kda": "9 / 3 / 7"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Caitlyn",
+            "kda": "7 / 5 / 14"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "SUP",
+            "campeao": "Morgana",
+            "kda": "4 / 10 / 23"
+          }
+        ]
+      }
+    }
+  ],
+  "rep2": [
+    {
+      "etapa": "Repescagem 02",
+      "placar": "1 x 0",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Nenhum",
+          "Galio",
+          "Viktor",
+          "mordekaiser",
+          "Zaahen"
+        ],
+        "objetivos": {
+          "torres": 9,
+          "dragoes": 4,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Gwen",
+            "kda": "6 / 5 / 8"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Evelynn",
+            "kda": "18 / 1 / 11"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Yasuo",
+            "kda": "7 / 4 / 10"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Jinx",
+            "kda": "10 / 1 / 8"
+          },
+          {
+            "jogador": "TARIC BOT",
+            "rota": "SUP",
+            "campeao": "Taric",
+            "kda": "3 / 9 / 10"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKTENIS ACADEMY",
+        "bans": [
+          "Urgot",
+          "Pantheon",
+          "Aphelios",
+          "Nenhum",
+          "Vex"
+        ],
+        "objetivos": {
+          "torres": 1,
+          "dragoes": 0,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "MIELCOHEN",
+            "rota": "TOP",
+            "campeao": "Gangplank",
+            "kda": "6 / 4 / 7"
+          },
+          {
+            "jogador": "ZANGRANDO",
+            "rota": "JG",
+            "campeao": "Xin Zhao",
+            "kda": "5 / 7 / 7"
+          },
+          {
+            "jogador": "O BOBO",
+            "rota": "MID",
+            "campeao": "Sion",
+            "kda": "3 / 6 / 8"
+          },
+          {
+            "jogador": "BRAND BOT",
+            "rota": "ADC",
+            "campeao": "Brand",
+            "kda": "1 / 20 / 9"
+          },
+          {
+            "jogador": "SOJOGOMUTADO",
+            "rota": "SUP",
+            "campeao": "Lux",
+            "kda": "5 / 7 / 9"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Repescagem 02",
+      "placar": "1 x 1",
+      "vencedor": "SKTENIS ACADEMY",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Malphite",
+          "Mordekaiser",
+          "Viktor",
+          "Zaahen",
+          "Braum"
+        ],
+        "objetivos": {
+          "torres": 3,
+          "dragoes": 3,
+          "barao": 0,
+          "vastilavas": 2
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Rumble",
+            "kda": "3 / 3 / 3"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Wukong",
+            "kda": "4 / 3 / 5"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Aurora",
+            "kda": "2 / 2 / 2"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Caitlyn",
+            "kda": "3 / 2 / 6"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Tahm Kench",
+            "kda": "0 / 3 / 5"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKTENIS ACADEMY",
+        "bans": [
+          "K'Sante",
+          "Illaoi",
+          "Urgot",
+          "Smolder",
+          "pantheon"
+        ],
+        "objetivos": {
+          "torres": 9,
+          "dragoes": 2,
+          "barao": 2,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "MIELCOHEN",
+            "rota": "TOP",
+            "campeao": "Trundle",
+            "kda": "1 / 3 / 3"
+          },
+          {
+            "jogador": "ZANGRANDO",
+            "rota": "JG",
+            "campeao": "Jarvan IV",
+            "kda": "0 / 4 / 9"
+          },
+          {
+            "jogador": "O BOBO",
+            "rota": "MID",
+            "campeao": "Veigar",
+            "kda": "5 / 1 / 5"
+          },
+          {
+            "jogador": "THAAYLADY",
+            "rota": "ADC",
+            "campeao": "Miss Fortune",
+            "kda": "7 / 2 / 4"
+          },
+          {
+            "jogador": "SOJOGOMUTADO",
+            "rota": "SUP",
+            "campeao": "Nautilus",
+            "kda": "0 / 2 / 8"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Repescagem 02",
+      "placar": "2 x 1",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Mordekaiser",
+          "tristana",
+          "Viktor",
+          "Zaahen",
+          "Sejuani"
+        ],
+        "objetivos": {
+          "torres": 10,
+          "dragoes": 3,
+          "barao": 1,
+          "vastilavas": 2
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Maokai",
+            "kda": "0 / 1 / 10"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Shyvana",
+            "kda": "4 / 1 / 10"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Sylas",
+            "kda": "6 / 4 / 3"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Ezreal",
+            "kda": "9 / 2 / 8"
+          },
+          {
+            "jogador": "ABSOLUT",
+            "rota": "SUP",
+            "campeao": "Yuumi",
+            "kda": "1 / 1 / 18"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKTENIS ACADEMY",
+        "bans": [
+          "Urgot",
+          "Smolder",
+          "Aphelios",
+          "Ambessa",
+          "K'Sante"
+        ],
+        "objetivos": {
+          "torres": 1,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 1
+        },
+        "jogadores": [
+          {
+            "jogador": "MIELCOHEN",
+            "rota": "TOP",
+            "campeao": "Renekton",
+            "kda": "1 / 3 / 3"
+          },
+          {
+            "jogador": "ZANGRANDO",
+            "rota": "JG",
+            "campeao": "Malphite",
+            "kda": "0 / 6 / 5"
+          },
+          {
+            "jogador": "O BOBO",
+            "rota": "MID",
+            "campeao": "Ahri",
+            "kda": "4 / 1 / 2"
+          },
+          {
+            "jogador": "THAAYLADY",
+            "rota": "ADC",
+            "campeao": "Ashe",
+            "kda": "2 / 5 / 3"
+          },
+          {
+            "jogador": "YETZ",
+            "rota": "SUP",
+            "campeao": "Yuumi",
+            "kda": "2 / 5 / 5"
+          }
+        ]
+      }
+    }
+  ],
+  "rep1": [
+    {
+      "etapa": "Repescagem 01",
+      "placar": "1 x 0",
+      "vencedor": "LOWCHONETE",
+      "time1": {
+        "nome": "LOWCHONETE",
+        "bans": [
+          "Nami",
+          "Morgana",
+          "Fizz",
+          "Zaahen",
+          "Draven"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 4,
+          "barao": 2,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "OSURT",
+            "rota": "TOP",
+            "campeao": "Sion",
+            "kda": "1 / 0 / 4"
+          },
+          {
+            "jogador": "ROBINHOGAMER17",
+            "rota": "JG",
+            "campeao": "Vi",
+            "kda": "6 / 4 / 2"
+          },
+          {
+            "jogador": "AZIR DE WARMOG",
+            "rota": "MID",
+            "campeao": "Orianna",
+            "kda": "1 / 2 / 7"
+          },
+          {
+            "jogador": "CRIZ",
+            "rota": "ADC",
+            "campeao": "Jinx",
+            "kda": "1 / 3 / 7"
+          },
+          {
+            "jogador": "MICAEL PASTEL",
+            "rota": "SUP",
+            "campeao": "Braum",
+            "kda": "1 / 0 / 6"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SHOPPINGFY TATUAPELION",
+        "bans": [
+          "Jax",
+          "Yunara",
+          "Azir",
+          "Vayne",
+          "milio"
+        ],
+        "objetivos": {
+          "torres": 3,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CAP FARINHA",
+            "rota": "TOP",
+            "campeao": "Urgot",
+            "kda": "2 / 1 / 0"
+          },
+          {
+            "jogador": "ZEROCHANNN",
+            "rota": "JG",
+            "campeao": "Xin Zhao",
+            "kda": "0 / 2 / 6"
+          },
+          {
+            "jogador": "KIRAH",
+            "rota": "MID",
+            "campeao": "Ahri",
+            "kda": "1 / 4 / 4"
+          },
+          {
+            "jogador": "RLUPERINI",
+            "rota": "ADC",
+            "campeao": "Kai'Sa",
+            "kda": "5 / 2 / 2"
+          },
+          {
+            "jogador": "SÓFADINHA",
+            "rota": "SUP",
+            "campeao": "Leona",
+            "kda": "1 / 1 / 6"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Repescagem 01",
+      "placar": "2 x 0",
+      "vencedor": "LOWCHONETE",
+      "time1": {
+        "nome": "LOWCHONETE",
+        "bans": [
+          "Sylas",
+          "Yasuo",
+          "Fizza",
+          "Draven",
+          "Zaahen"
+        ],
+        "objetivos": {
+          "torres": 7,
+          "dragoes": 3,
+          "barao": 1,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "OSURT",
+            "rota": "TOP",
+            "campeao": "Malphite",
+            "kda": "1 / 5 / 6"
+          },
+          {
+            "jogador": "ROBINHOGAMER17",
+            "rota": "JG",
+            "campeao": "Viego",
+            "kda": "6 / 4 / 4"
+          },
+          {
+            "jogador": "AZIR DE WARMOG",
+            "rota": "MID",
+            "campeao": "malzahar",
+            "kda": "7 / 7 / 6"
+          },
+          {
+            "jogador": "CRIZ",
+            "rota": "ADC",
+            "campeao": "Yunara",
+            "kda": "5 / 3 / 9"
+          },
+          {
+            "jogador": "MICAEL PASTEL",
+            "rota": "SUP",
+            "campeao": "Karma",
+            "kda": "0 / 4 / 10"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SHOPPINGFY TATUAPELION",
+        "bans": [
+          "Jax",
+          "Vayne",
+          "Azir",
+          "Seraphine",
+          "Maokai"
+        ],
+        "objetivos": {
+          "torres": 4,
+          "dragoes": 0,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CAP FARINHA",
+            "rota": "TOP",
+            "campeao": "Sett",
+            "kda": "5 / 3 / 6"
+          },
+          {
+            "jogador": "ZEROCHANNN",
+            "rota": "JG",
+            "campeao": "Shyvana",
+            "kda": "9 / 5 / 9"
+          },
+          {
+            "jogador": "KIRAH",
+            "rota": "MID",
+            "campeao": "Viktor",
+            "kda": "3 / 6 / 14"
+          },
+          {
+            "jogador": "RLUPERINI",
+            "rota": "ADC",
+            "campeao": "Sivir",
+            "kda": "5 / 4 / 10"
+          },
+          {
+            "jogador": "REVOLTA",
+            "rota": "SUP",
+            "campeao": "Yuumi",
+            "kda": "1 / 1 / 17"
+          }
+        ]
+      }
+    }
+  ],
+  "qf1": [
+    {
+      "etapa": "Quartas de final",
+      "placar": "1 x 0",
+      "vencedor": "T1LAPIAS",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Lulu",
+          "Akali",
+          "Jinx",
+          "Cho'Gath",
+          "Heimerdinger"
+        ],
+        "objetivos": {
+          "torres": 10,
+          "dragoes": 1,
+          "barao": 4,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Sion",
+            "kda": "4 / 2 / 13"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Jax",
+            "kda": "9 / 1 / 7"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Veigar",
+            "kda": "5 / 2 / 11"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Ezreal",
+            "kda": "6 / 3 / 15"
+          },
+          {
+            "jogador": "OXEE",
+            "rota": "SUP",
+            "campeao": "Thresh",
+            "kda": "5 / 2 / 14"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKT TELETON",
+        "bans": [
+          "Yorick",
+          "Shaco",
+          "Nocturne",
+          "Illaoi",
+          "Mordekaiser"
+        ],
+        "objetivos": {
+          "torres": 3,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "KISSIDANE",
+            "rota": "TOP",
+            "campeao": "Malphite",
+            "kda": "1 / 2 / 3"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Master Yi",
+            "kda": "2 / 8 / 4"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Mel",
+            "kda": "1 / 7 / 2"
+          },
+          {
+            "jogador": "MEGAEXTRO",
+            "rota": "ADC",
+            "campeao": "Nilah",
+            "kda": "6 / 6 / 0"
+          },
+          {
+            "jogador": "P0MB0",
+            "rota": "SUP",
+            "campeao": "Taric",
+            "kda": "0 / 6 / 7"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Quartas de final",
+      "placar": "2 x 0",
+      "vencedor": "T1LAPIAS",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Mordekaiser",
+          "Morgana",
+          "Yorick",
+          "Shaco",
+          "Nocturne"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Urgot",
+            "kda": "11 / 1 / 9"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Sejuani",
+            "kda": "2 / 2 / 13"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Annie",
+            "kda": "6 / 5 / 14"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Caitlyn",
+            "kda": "10 / 3 / 9"
+          },
+          {
+            "jogador": "OXEE",
+            "rota": "SUP",
+            "campeao": "Nautilus",
+            "kda": "0 / 4 / 17"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKT TELETON",
+        "bans": [
+          "Heimerdinger",
+          "Jinx",
+          "cho'Gath",
+          "nenhum",
+          "lulu"
+        ],
+        "objetivos": {
+          "torres": 2,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "KISSIDANE",
+            "rota": "TOP",
+            "campeao": "Garen",
+            "kda": "0 / 5 / 3"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Bel'Veth",
+            "kda": "4 / 6 / 5"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Aurora",
+            "kda": "0 / 6 / 9"
+          },
+          {
+            "jogador": "MEGAEXTRO",
+            "rota": "ADC",
+            "campeao": "Miss Fortune",
+            "kda": "10 / 6 / 3"
+          },
+          {
+            "jogador": "P0MB0",
+            "rota": "SUP",
+            "campeao": "Leona",
+            "kda": "1 / 6 / 7"
+          }
+        ]
+      }
+    }
+  ],
+  "qf2": [
+    {
+      "etapa": "Quartas de final",
+      "placar": "0 x 1",
+      "vencedor": "SHOPPINGFY TATUAPELION",
+      "time1": {
+        "nome": "LOWCHONETE",
+        "bans": [
+          "Yunara",
+          "Morgana",
+          "Ambessa",
+          "Draven",
+          "Zaahen"
+        ],
+        "objetivos": {
+          "torres": 4,
+          "dragoes": 4,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "OSURT",
+            "rota": "TOP",
+            "campeao": "Garen",
+            "kda": "3 / 7 / 5"
+          },
+          {
+            "jogador": "VEIO DO WHATSAPP",
+            "rota": "JG",
+            "campeao": "Trundle",
+            "kda": "3 / 7 / 7"
+          },
+          {
+            "jogador": "AZIR DE WARMOG",
+            "rota": "MID",
+            "campeao": "Orianna",
+            "kda": "3 / 5 / 9"
+          },
+          {
+            "jogador": "CRIZ",
+            "rota": "ADC",
+            "campeao": "Jinx",
+            "kda": "7 / 6 / 7"
+          },
+          {
+            "jogador": "MICAEL PASTEL",
+            "rota": "SUP",
+            "campeao": "Maokai",
+            "kda": "1 / 6 / 11"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SHOPPINGFY TATUAPELION",
+        "bans": [
+          "Azir",
+          "Vayne",
+          "Milio",
+          "Sylas",
+          "Mel"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 0,
+          "barao": 2,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CAP FARINHA",
+            "rota": "TOP",
+            "campeao": "Urgot",
+            "kda": "9 / 1 / 7"
+          },
+          {
+            "jogador": "ZEROCHANNN",
+            "rota": "JG",
+            "campeao": "Xin Zhao",
+            "kda": "2 / 4 / 15"
+          },
+          {
+            "jogador": "KIRAH",
+            "rota": "MID",
+            "campeao": "Fizz",
+            "kda": "10 / 3 / 9"
+          },
+          {
+            "jogador": "RLUPERINI",
+            "rota": "ADC",
+            "campeao": "Kai'Sa",
+            "kda": "10 / 3 / 6"
+          },
+          {
+            "jogador": "SÓFADINHA",
+            "rota": "SUP",
+            "campeao": "Leona",
+            "kda": "0 / 6 / 19"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Quartas de final",
+      "placar": "0 x 2",
+      "vencedor": "SHOPPINGFY TATUAPELION",
+      "time1": {
+        "nome": "LOWCHONETE",
+        "bans": [
+          "Zaahen",
+          "Ambessa",
+          "Draven",
+          "Morgana",
+          "Miss Fortune"
+        ],
+        "objetivos": {
+          "torres": 2,
+          "dragoes": 2,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "OSURT",
+            "rota": "TOP",
+            "campeao": "Varus",
+            "kda": "2 / 7 / 3"
+          },
+          {
+            "jogador": "VEIO DO WHATSAPP",
+            "rota": "JG",
+            "campeao": "Udyr",
+            "kda": "1 / 7 / 3"
+          },
+          {
+            "jogador": "AZIR DE WARMOG",
+            "rota": "MID",
+            "campeao": "Sylas",
+            "kda": "4 / 10 / 4"
+          },
+          {
+            "jogador": "CRIZ",
+            "rota": "ADC",
+            "campeao": "Tristana",
+            "kda": "3 / 5 / 3"
+          },
+          {
+            "jogador": "MICAEL PASTEL",
+            "rota": "SUP",
+            "campeao": "Lux",
+            "kda": "2 / 2 / 6"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SHOPPINGFY TATUAPELION",
+        "bans": [
+          "Azir",
+          "Mordekaiser",
+          "Braum",
+          "Vayne",
+          "Milio"
+        ],
+        "objetivos": {
+          "torres": 10,
+          "dragoes": 1,
+          "barao": 3,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CAP FARINHA",
+            "rota": "TOP",
+            "campeao": "Sett",
+            "kda": "9 / 1 / 6"
+          },
+          {
+            "jogador": "ZEROCHANNN",
+            "rota": "JG",
+            "campeao": "Jarvan IV",
+            "kda": "8 / 1 / 17"
+          },
+          {
+            "jogador": "KIRAH",
+            "rota": "MID",
+            "campeao": "Ahri",
+            "kda": "11 / 4 / 8"
+          },
+          {
+            "jogador": "RLUPERINI",
+            "rota": "ADC",
+            "campeao": "Ashe",
+            "kda": "3 / 3 / 8"
+          },
+          {
+            "jogador": "SÓFADINHA",
+            "rota": "SUP",
+            "campeao": "Nami",
+            "kda": "0 / 3 / 14"
+          }
+        ]
+      }
+    }
+  ],
+  "qf3": [
+    {
+      "etapa": "Quartas de final",
+      "placar": "0 x 1",
+      "vencedor": "BRONZINTHIANS",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Morgana",
+          "Sett",
+          "Mordekaiser",
+          "Rakan",
+          "Jinx"
+        ],
+        "objetivos": {
+          "torres": 2,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Ambessa",
+            "kda": "2 / 4 / 2"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Evelynn",
+            "kda": "7 / 6 / 1"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Yone",
+            "kda": "3 / 4 / 1"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Jhin",
+            "kda": "0 / 3 / 2"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Nautilus",
+            "kda": "0 / 8 / 2"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Urgot",
+          "Yasuo",
+          "Aphelios",
+          "Jax",
+          "Ezreal"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 3,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Zaahen",
+            "kda": "4 / 5 / 4"
+          },
+          {
+            "jogador": "BSHADOW7",
+            "rota": "JG",
+            "campeao": "Kayn",
+            "kda": "9 / 1 / 1"
+          },
+          {
+            "jogador": "ENZOGOSTOSO123",
+            "rota": "MID",
+            "campeao": "Akali",
+            "kda": "3 / 5 / 4"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Caitlyn",
+            "kda": "9 / 1 / 2"
+          },
+          {
+            "jogador": "THEUZ",
+            "rota": "SUP",
+            "campeao": "Leona",
+            "kda": "0 / 0 / 14"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Quartas de final",
+      "placar": "0 x 2",
+      "vencedor": "BRONZINTHIANS",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Mordekaiser",
+          "Zoe",
+          "Jax",
+          "Sylas",
+          "Veigar"
+        ],
+        "objetivos": {
+          "torres": 2,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 2
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "K'Sante",
+            "kda": "3 / 5 / 1"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Malphite",
+            "kda": "1 / 9 / 10"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Twisted Fate",
+            "kda": "2 / 1 / 4"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Lucian",
+            "kda": "8 / 7 / 2"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Milio",
+            "kda": "0 / 8 / 7"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Rumble",
+          "Renekton",
+          "Yasuo",
+          "Urgot",
+          "Aphelios"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 1
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Sett",
+            "kda": "2 / 4 / 2"
+          },
+          {
+            "jogador": "BSHADOW7",
+            "rota": "JG",
+            "campeao": "Amumu",
+            "kda": "5 / 0 / 13"
+          },
+          {
+            "jogador": "ENZOGOSTOSO123",
+            "rota": "MID",
+            "campeao": "Syndra",
+            "kda": "11 / 4 / 11"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Varus",
+            "kda": "12 / 3 / 4"
+          },
+          {
+            "jogador": "THEUZ",
+            "rota": "SUP",
+            "campeao": "Rakan",
+            "kda": "1 / 3 / 19"
+          }
+        ]
+      }
+    }
+  ],
+  "elim1": [
+    {
+      "etapa": "Eliminação 01",
+      "placar": "0 x 1",
+      "vencedor": "SKT TELETON",
+      "time1": {
+        "nome": "LOWCHONETE",
+        "bans": [
+          "Yasuo",
+          "Malzahar",
+          "Veigar",
+          "Morgana",
+          "Shaco"
+        ],
+        "objetivos": {
+          "torres": 2,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "OSURT",
+            "rota": "TOP",
+            "campeao": "Jax",
+            "kda": "4 / 4 / 0"
+          },
+          {
+            "jogador": "ROBINHOGAMER17",
+            "rota": "JG",
+            "campeao": "Volibear",
+            "kda": "3 / 5 / 0"
+          },
+          {
+            "jogador": "AZIR DE WARMOG",
+            "rota": "MID",
+            "campeao": "Ryze",
+            "kda": "0 / 12 / 1"
+          },
+          {
+            "jogador": "CRIZ",
+            "rota": "ADC",
+            "campeao": "Ashe",
+            "kda": "2 / 4 / 2"
+          },
+          {
+            "jogador": "MICAEL PASTEL",
+            "rota": "SUP",
+            "campeao": "Braum",
+            "kda": "0 / 4 / 3"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKT TELETON",
+        "bans": [
+          "Azir",
+          "Teemo",
+          "Jinx",
+          "Varus",
+          "Sylas"
+        ],
+        "objetivos": {
+          "torres": 10,
+          "dragoes": 4,
+          "barao": 2,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "KISSIDANE",
+            "rota": "TOP",
+            "campeao": "Yorick",
+            "kda": "0 / 3 / 6"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Nocturne",
+            "kda": "9 / 1 / 14"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Ahri",
+            "kda": "7 / 3 / 7"
+          },
+          {
+            "jogador": "MEGAEXTRO",
+            "rota": "ADC",
+            "campeao": "Smolder",
+            "kda": "10 / 1 / 8"
+          },
+          {
+            "jogador": "P0MB0",
+            "rota": "SUP",
+            "campeao": "Taric",
+            "kda": "3 / 1 / 5"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Eliminação 01",
+      "placar": "1 x 1",
+      "vencedor": "LOWCHONETE",
+      "time1": {
+        "nome": "LOWCHONETE",
+        "bans": [
+          "Morgana",
+          "Shaco",
+          "Veigar",
+          "Malzahar",
+          "Yasuo"
+        ],
+        "objetivos": {
+          "torres": 9,
+          "dragoes": 4,
+          "barao": 2,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "OSURT",
+            "rota": "TOP",
+            "campeao": "Sion",
+            "kda": "3 / 2 / 9"
+          },
+          {
+            "jogador": "ROBINHOGAMER17",
+            "rota": "JG",
+            "campeao": "Vi",
+            "kda": "8 / 1 / 6"
+          },
+          {
+            "jogador": "AZIR DE WARMOG",
+            "rota": "MID",
+            "campeao": "Azir",
+            "kda": "3 / 3 / 5"
+          },
+          {
+            "jogador": "CRIZ",
+            "rota": "ADC",
+            "campeao": "Yunara",
+            "kda": "4 / 1 / 9"
+          },
+          {
+            "jogador": "MICAEL PASTEL",
+            "rota": "SUP",
+            "campeao": "Milio",
+            "kda": "0 / 1 / 14"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKT TELETON",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 4,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "KISSIDANE",
+            "rota": "TOP",
+            "campeao": "Malphite",
+            "kda": "0 / 6 / 3"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Kayn",
+            "kda": "2 / 4 / 3"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Lux",
+            "kda": "3 / 3 / 3"
+          },
+          {
+            "jogador": "MEGAEXTRO",
+            "rota": "ADC",
+            "campeao": "Jinx",
+            "kda": "2 / 3 / 3"
+          },
+          {
+            "jogador": "P0MB0",
+            "rota": "SUP",
+            "campeao": "Rakan",
+            "kda": "1 / 3 / 3"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Eliminação 01",
+      "placar": "2 x 1",
+      "vencedor": "LOWCHONETE",
+      "time1": {
+        "nome": "LOWCHONETE",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "OSURT",
+            "rota": "TOP",
+            "campeao": "Malphite",
+            "kda": "5 / 3 / 6"
+          },
+          {
+            "jogador": "ROBINHOGAMER17",
+            "rota": "JG",
+            "campeao": "Viego",
+            "kda": "13 / 1 / 5"
+          },
+          {
+            "jogador": "AZIR DE WARMOG",
+            "rota": "MID",
+            "campeao": "Ziggs",
+            "kda": "1 / 4 / 11"
+          },
+          {
+            "jogador": "CRIZ",
+            "rota": "ADC",
+            "campeao": "Draven",
+            "kda": "3 / 1 / 11"
+          },
+          {
+            "jogador": "MICAEL PASTEL",
+            "rota": "SUP",
+            "campeao": "Lux",
+            "kda": "4 / 1 / 12"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKT TELETON",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 4,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "KISSIDANE",
+            "rota": "TOP",
+            "campeao": "Yorick",
+            "kda": "2 / 5 / 3"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Volibear",
+            "kda": "2 / 4 / 1"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Malzahar",
+            "kda": "3 / 7 / 2"
+          },
+          {
+            "jogador": "MEGAEXTRO",
+            "rota": "ADC",
+            "campeao": "Kai'Sa",
+            "kda": "2 / 3 / 2"
+          },
+          {
+            "jogador": "P0MB0",
+            "rota": "SUP",
+            "campeao": "Swain",
+            "kda": "1 / 7 / 4"
+          }
+        ]
+      }
+    }
+  ],
+  "qf4": [
+    {
+      "etapa": "Quartas de final",
+      "placar": "0 x 1",
+      "vencedor": "SKTENIS ACADEMY",
+      "time1": {
+        "nome": "OREIUDOS JUNIOR",
+        "bans": [
+          "Lee Sin",
+          "Trundle",
+          "Braum",
+          "Caitlyn",
+          "Sivir"
+        ],
+        "objetivos": {
+          "torres": 1,
+          "dragoes": 2,
+          "barao": 0,
+          "vastilavas": 2
+        },
+        "jogadores": [
+          {
+            "jogador": "CHENDERBOY",
+            "rota": "TOP",
+            "campeao": "K'Sante",
+            "kda": "4 / 6 / 1"
+          },
+          {
+            "jogador": "VKS BMAG",
+            "rota": "JG",
+            "campeao": "Malphite",
+            "kda": "0 / 6 / 1"
+          },
+          {
+            "jogador": "DANVERII",
+            "rota": "MID",
+            "campeao": "Malzahar",
+            "kda": "0 / 5 / 2"
+          },
+          {
+            "jogador": "LOOSE",
+            "rota": "ADC",
+            "campeao": "Jinx",
+            "kda": "2 / 4 / 2"
+          },
+          {
+            "jogador": "EU ME CAGUEI",
+            "rota": "SUP",
+            "campeao": "Karma",
+            "kda": "0 / 6 / 2"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKTENIS ACADEMY",
+        "bans": [
+          "Urgot",
+          "Poppy",
+          "Lillia",
+          "Xin Zhao",
+          "Ziggs"
+        ],
+        "objetivos": {
+          "torres": 9,
+          "dragoes": 3,
+          "barao": 2,
+          "vastilavas": 1
+        },
+        "jogadores": [
+          {
+            "jogador": "MIELCOHEN",
+            "rota": "TOP",
+            "campeao": "Renekton",
+            "kda": "4 / 0 / 4"
+          },
+          {
+            "jogador": "ZANGRANDO",
+            "rota": "JG",
+            "campeao": "Sejuani",
+            "kda": "4 / 3 / 15"
+          },
+          {
+            "jogador": "O BOBO",
+            "rota": "MID",
+            "campeao": "Ahri",
+            "kda": "5 / 1 / 12"
+          },
+          {
+            "jogador": "THAAYLADY",
+            "rota": "ADC",
+            "campeao": "Tristana",
+            "kda": "10 / 0 / 10"
+          },
+          {
+            "jogador": "SOJOGOMUTADO",
+            "rota": "SUP",
+            "campeao": "Morgana",
+            "kda": "4 / 2 / 18"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Quartas de final",
+      "placar": "0 x 2",
+      "vencedor": "SKTENIS ACADEMY",
+      "time1": {
+        "nome": "OREIUDOS JUNIOR",
+        "bans": [
+          "Braum",
+          "Lee Sin",
+          "Galio",
+          "Mordekaiser",
+          "Zaahen"
+        ],
+        "objetivos": {
+          "torres": 2,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CHENDERBOY",
+            "rota": "TOP",
+            "campeao": "Olaf",
+            "kda": "2 / 7 / 1"
+          },
+          {
+            "jogador": "VKS BMAG",
+            "rota": "JG",
+            "campeao": "Wukong",
+            "kda": "2 / 4 / 5"
+          },
+          {
+            "jogador": "DANVERII",
+            "rota": "MID",
+            "campeao": "Akali",
+            "kda": "2 / 5 / 2 "
+          },
+          {
+            "jogador": "LOOSE",
+            "rota": "ADC",
+            "campeao": "Yunara",
+            "kda": "5 / 1 / 4"
+          },
+          {
+            "jogador": "EU ME CAGUEI",
+            "rota": "SUP",
+            "campeao": "Rakan",
+            "kda": "0 / 4 / 8"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKTENIS ACADEMY",
+        "bans": [
+          "Yasuo",
+          "Yone",
+          "Lillia",
+          "Ziggs",
+          "Urgot"
+        ],
+        "objetivos": {
+          "torres": 9,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "MIELCOHEN",
+            "rota": "TOP",
+            "campeao": "Gangplank",
+            "kda": "5 / 1 / 6"
+          },
+          {
+            "jogador": "ZANGRANDO",
+            "rota": "JG",
+            "campeao": "Trundle",
+            "kda": "4 / 2 / 3"
+          },
+          {
+            "jogador": "O BOBO",
+            "rota": "MID",
+            "campeao": "Veigar",
+            "kda": "1 / 0 / 5"
+          },
+          {
+            "jogador": "THAAYLADY",
+            "rota": "ADC",
+            "campeao": "Miss Fortune",
+            "kda": "4 / 5 / 2"
+          },
+          {
+            "jogador": "SOJOGOMUTADO",
+            "rota": "SUP",
+            "campeao": "Nautilus",
+            "kda": "2 / 4 / 8"
+          }
+        ]
+      }
+    }
+  ],
+  "sf1": [
+    {
+      "etapa": "Semifinal",
+      "placar": "1x0",
+      "vencedor": "T1LAPIAS",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 12,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Sion",
+            "kda": "3 / 1 / 3"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Jax",
+            "kda": "0 / 3 / 5"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Heimerdinger",
+            "kda": "17 / 3 / 5"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Yunara",
+            "kda": "7 / 4 / 7"
+          },
+          {
+            "jogador": "OXEE",
+            "rota": "SUP",
+            "campeao": "Lulu",
+            "kda": "0 / 5 / 14"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SHOPPINGFY TATUAPELION",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 2,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "CAP FARINHA",
+            "rota": "TOP",
+            "campeao": "Urgot",
+            "kda": "2 / 5 / 4"
+          },
+          {
+            "jogador": "ZEROCHANNN",
+            "rota": "JG",
+            "campeao": "Zaahen",
+            "kda": "4 / 5 / 4"
+          },
+          {
+            "jogador": "KIRAH",
+            "rota": "MID",
+            "campeao": "Fizz",
+            "kda": "4 / 7 / 3"
+          },
+          {
+            "jogador": "RLUPERINI",
+            "rota": "ADC",
+            "campeao": "Kai'Sa",
+            "kda": "4 / 4 / 6"
+          },
+          {
+            "jogador": "SÓFADINHA",
+            "rota": "SUP",
+            "campeao": "Zaahen",
+            "kda": "2 / 6 / 7"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Semifinal",
+      "placar": "1x1",
+      "vencedor": "SHOPPINGFY TATUAPELION",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Mordekaiser",
+          "Ahri",
+          "Xin Zhao",
+          "Wukong",
+          "Sylas"
+        ],
+        "objetivos": {
+          "torres": 2,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Ornn",
+            "kda": "1 / 3 / 2"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Amumu",
+            "kda": "0 / 5 / 8"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Mel",
+            "kda": "7 / 4 / 0"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Caitlyn",
+            "kda": "2 / 10 / 7"
+          },
+          {
+            "jogador": "OXEE",
+            "rota": "SUP",
+            "campeao": "Morgana",
+            "kda": "1 / 6 / 10"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SHOPPINGFY TATUAPELION",
+        "bans": [
+          "Sejuani",
+          "Trundle",
+          "Tristana",
+          "Ezreal",
+          "Cho'Gath"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CAP FARINHA",
+            "rota": "TOP",
+            "campeao": "Sett",
+            "kda": "1 / 1 / 5"
+          },
+          {
+            "jogador": "ZEROCHANNN",
+            "rota": "JG",
+            "campeao": "Shyvana",
+            "kda": "12 / 5 / 10"
+          },
+          {
+            "jogador": "KIRAH",
+            "rota": "MID",
+            "campeao": "Galio",
+            "kda": "2 / 1 / 14"
+          },
+          {
+            "jogador": "RLUPERINI",
+            "rota": "ADC",
+            "campeao": "Draven",
+            "kda": "13 / 3 / 11"
+          },
+          {
+            "jogador": "SÓFADINHA",
+            "rota": "SUP",
+            "campeao": "Leona",
+            "kda": "0 / 4 / 21"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Semifinal",
+      "placar": "2x1",
+      "vencedor": "T1LAPIAS",
+      "time1": {
+        "nome": "T1LAPIAS",
+        "bans": [
+          "Ambessa",
+          "Olaf",
+          "xin Zhao",
+          "Ahri",
+          "Nocturne"
+        ],
+        "objetivos": {
+          "torres": 11,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "CHOGATO027ES",
+            "rota": "TOP",
+            "campeao": "Illaoi",
+            "kda": "4 / 5 / 7"
+          },
+          {
+            "jogador": "VÔ CORVO",
+            "rota": "JG",
+            "campeao": "Mordekaiser",
+            "kda": "3 / 2 / 4"
+          },
+          {
+            "jogador": "RUIM E ESQUISITO",
+            "rota": "MID",
+            "campeao": "Veigar",
+            "kda": "5 / 1 / 6"
+          },
+          {
+            "jogador": "ELGATO",
+            "rota": "ADC",
+            "campeao": "Twitch",
+            "kda": "11 / 4 / 6"
+          },
+          {
+            "jogador": "OXEE",
+            "rota": "SUP",
+            "campeao": "Thresh",
+            "kda": "1 / 3 / 15"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SHOPPINGFY TATUAPELION",
+        "bans": [
+          "Cho'Gath",
+          "Ezreal",
+          "Tristana",
+          "Trundle",
+          "Sejuani"
+        ],
+        "objetivos": {
+          "torres": 0,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "CAP FARINHA",
+            "rota": "TOP",
+            "campeao": "Volibear",
+            "kda": "2 / 4 / 7"
+          },
+          {
+            "jogador": "ZEROCHANNN",
+            "rota": "JG",
+            "campeao": "Wukong",
+            "kda": "5 / 4 / 7"
+          },
+          {
+            "jogador": "KIRAH",
+            "rota": "MID",
+            "campeao": "Malzahar",
+            "kda": "1 / 4 / 8"
+          },
+          {
+            "jogador": "RLUPERINI",
+            "rota": "ADC",
+            "campeao": "Jinx",
+            "kda": "4 / 6 / 4"
+          },
+          {
+            "jogador": "SÓFADINHA",
+            "rota": "SUP",
+            "campeao": "Seraphine",
+            "kda": "3 / 6 / 7"
+          }
+        ]
+      }
+    }
+  ],
+  "elim2": [
+    {
+      "etapa": "eliminação 02",
+      "placar": "1x0",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Tristana",
+          "Olaf",
+          "Rakan",
+          "Lillia",
+          "Naafiri"
+        ],
+        "objetivos": {
+          "torres": 9,
+          "dragoes": 1,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Gwen",
+            "kda": "5 / 0 / 7"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Pantheon",
+            "kda": "11 / 0 / 5"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Aurora",
+            "kda": "4 / 2 / 9"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Aphelios",
+            "kda": "3 / 3 / 12"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Braum",
+            "kda": "0 / 6 / 14"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "OREIUDOS JUNIOR",
+        "bans": [
+          "Evelynn",
+          "Yasuo",
+          "Urgot",
+          "Caitlyn",
+          "Rumble"
+        ],
+        "objetivos": {
+          "torres": 2,
+          "dragoes": 3,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "CHENDERBOY",
+            "rota": "TOP",
+            "campeao": "Renekton",
+            "kda": "2 / 3 / 0"
+          },
+          {
+            "jogador": "VKS BMAG",
+            "rota": "JG",
+            "campeao": "Cho'Gath",
+            "kda": "2 / 4 / 5"
+          },
+          {
+            "jogador": "DANVERII",
+            "rota": "MID",
+            "campeao": "Lux",
+            "kda": "5 / 3 / 4 "
+          },
+          {
+            "jogador": "LOOSE",
+            "rota": "ADC",
+            "campeao": "Yunara",
+            "kda": "4 / 6 / 5"
+          },
+          {
+            "jogador": "EU ME CAGUEI",
+            "rota": "SUP",
+            "campeao": "Nautilus",
+            "kda": "1 / 7 / 7"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "eliminação 02",
+      "placar": "1x1",
+      "vencedor": "OREIUDOS JUNIOR",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Galio",
+          "Sion",
+          "Ornn",
+          "Kassadin",
+          "Yorick"
+        ],
+        "objetivos": {
+          "torres": 10,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Singed",
+            "kda": "0 / 7 / 1"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Nidalee",
+            "kda": "3 / 5 / 1"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Azir",
+            "kda": "0 / 6 / 0"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Ziggs",
+            "kda": "1 / 5 / 1"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Yuumi",
+            "kda": "0 / 5 / 2"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "OREIUDOS JUNIOR",
+        "bans": [
+          "Caitlyn",
+          "Lulu",
+          "Sett",
+          "Alistar",
+          "Pyke"
+        ],
+        "objetivos": {
+          "torres": 1,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "CHENDERBOY",
+            "rota": "TOP",
+            "campeao": "Dr.Mundo",
+            "kda": "4 / 1 / 3"
+          },
+          {
+            "jogador": "VKS BMAG",
+            "rota": "JG",
+            "campeao": "Zyra",
+            "kda": "4 / 0 / 9"
+          },
+          {
+            "jogador": "DANVERII",
+            "rota": "MID",
+            "campeao": "Naafiri",
+            "kda": "9 / 0 / 8 "
+          },
+          {
+            "jogador": "LOOSE",
+            "rota": "ADC",
+            "campeao": "Tristana",
+            "kda": "9 / 3 / 4"
+          },
+          {
+            "jogador": "EU ME CAGUEI",
+            "rota": "SUP",
+            "campeao": "Leona",
+            "kda": "1 / 0 / 15"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "eliminação 02",
+      "placar": "2x1",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Yorick",
+          "Caitlyn",
+          "Corki",
+          "Rakan",
+          "Lillia"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 4,
+          "barao": 2,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Darius",
+            "kda": "3 / 5 / 13"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Wukong",
+            "kda": "6 / 9 / 19"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Sylas",
+            "kda": "7 / 6 / 12"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Smolder",
+            "kda": "21 / 6 / 11"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Galio",
+            "kda": "2 / 6 / 27"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "OREIUDOS JUNIOR",
+        "bans": [
+          "Evelynn",
+          "Yasuo",
+          "Urgot",
+          "Mordekaiser",
+          "Rumble"
+        ],
+        "objetivos": {
+          "torres": 4,
+          "dragoes": 2,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "CHENDERBOY",
+            "rota": "TOP",
+            "campeao": "Sion",
+            "kda": "1 / 4 / 14"
+          },
+          {
+            "jogador": "VKS BMAG",
+            "rota": "JG",
+            "campeao": "Fiddlesticks",
+            "kda": "3 / 10 / 11"
+          },
+          {
+            "jogador": "DANVERII",
+            "rota": "MID",
+            "campeao": "Morgana",
+            "kda": "10 / 7 / 14"
+          },
+          {
+            "jogador": "LOOSE",
+            "rota": "ADC",
+            "campeao": "Miss Fortune",
+            "kda": "16 / 10 / 7"
+          },
+          {
+            "jogador": "EU ME CAGUEI",
+            "rota": "SUP",
+            "campeao": "Tahm Kench",
+            "kda": "2 / 8 / 19"
+          }
+        ]
+      }
+    }
+  ],
+  "sf2": [
+    {
+      "etapa": "Semifinais",
+      "placar": "1 x 0",
+      "vencedor": "BRONZINTHIANS",
+      "time1": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Nenhum",
+          "Mordekaiser",
+          "Tristana",
+          "Lee Sin",
+          "Gnar"
+        ],
+        "objetivos": {
+          "torres": 11,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 2
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Illaoi",
+            "kda": "9 / 2 / 7"
+          },
+          {
+            "jogador": "BSHADOW7",
+            "rota": "JG",
+            "campeao": "Viego",
+            "kda": "8 / 4 / 4"
+          },
+          {
+            "jogador": "Galio bot",
+            "rota": "MID",
+            "campeao": "Galio",
+            "kda": "0 / 10 / 2"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Caitlyn",
+            "kda": "12 / 2 / 7"
+          },
+          {
+            "jogador": "THEUZ",
+            "rota": "SUP",
+            "campeao": "Morgana",
+            "kda": "4 / 1 / 14"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKTENIS ACADEMY",
+        "bans": [
+          "Nenhum",
+          "Kayn",
+          "Zaahen",
+          "Sett",
+          "Urgot"
+        ],
+        "objetivos": {
+          "torres": 2,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 1
+        },
+        "jogadores": [
+          {
+            "jogador": "MIELCOHEN",
+            "rota": "TOP",
+            "campeao": "Renekton",
+            "kda": "6 / 7 / 5"
+          },
+          {
+            "jogador": "ZANGRANDO",
+            "rota": "JG",
+            "campeao": "Trundle",
+            "kda": "2 / 3 / 6"
+          },
+          {
+            "jogador": "O BOBO",
+            "rota": "MID",
+            "campeao": "Aurora",
+            "kda": "7 / 1 / 4"
+          },
+          {
+            "jogador": "THAAYLADY",
+            "rota": "ADC",
+            "campeao": "Varus",
+            "kda": "4 / 4 / 4"
+          },
+          {
+            "jogador": "Annie bot",
+            "rota": "SUP",
+            "campeao": "Annie",
+            "kda": "6 / 18 / 3"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Semifinais",
+      "placar": "2 x 0",
+      "vencedor": "BRONZINTHIANS",
+      "time1": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Gnar",
+          "Lee Sin",
+          "Miss Fortune",
+          "Nautilus",
+          "Braum"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 4,
+          "barao": 2,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Tahm Kench",
+            "kda": "4 / 2 / 11"
+          },
+          {
+            "jogador": "BSHADOW7",
+            "rota": "JG",
+            "campeao": "Jax",
+            "kda": "6 / 5 / 12"
+          },
+          {
+            "jogador": "ENZOGOSTOSO123",
+            "rota": "MID",
+            "campeao": "Ahri",
+            "kda": "3 / 1 / 8"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Draven",
+            "kda": "12 / 3 / 4"
+          },
+          {
+            "jogador": "THEUZ",
+            "rota": "SUP",
+            "campeao": "Rakan",
+            "kda": "1 / 1 / 9"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "SKTENIS ACADEMY",
+        "bans": [
+          "Yasuo",
+          "Vi",
+          "Kayn",
+          "Syndra",
+          "Zoe"
+        ],
+        "objetivos": {
+          "torres": 1,
+          "dragoes": 1,
+          "barao": 0,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "MIELCOHEN",
+            "rota": "TOP",
+            "campeao": "Mordekaiser",
+            "kda": "4 / 5 / 6"
+          },
+          {
+            "jogador": "ZANGRANDO",
+            "rota": "JG",
+            "campeao": "Sejuani",
+            "kda": "1 / 6 / 8 "
+          },
+          {
+            "jogador": "O BOBO",
+            "rota": "MID",
+            "campeao": "Veigar",
+            "kda": "6 / 4 / 2"
+          },
+          {
+            "jogador": "THAAYLADY",
+            "rota": "ADC",
+            "campeao": "Tristana",
+            "kda": "1 / 4 / 3"
+          },
+          {
+            "jogador": "SOJOGOMUTADO",
+            "rota": "SUP",
+            "campeao": "Leona",
+            "kda": "0 / 7 / 6"
+          }
+        ]
+      }
+    }
+  ],
+  "grandFinal": [
+    {
+      "etapa": "Grande Final",
+      "placar": "0 x 1",
+      "vencedor": "BRONZINTHIANS",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Zaahen",
+          "Kayn",
+          "Mel",
+          "Sett",
+          "Galio"
+        ],
+        "objetivos": {
+          "torres": 3,
+          "dragoes": 2,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Gwen",
+            "kda": "3 / 6 / 0"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Shyvana",
+            "kda": "2 / 6 / 3"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Aurora",
+            "kda": "0 / 3 / 3"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Aphelios",
+            "kda": "2 / 6 / 1"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Tahm Kench",
+            "kda": "1 / 4 / 1"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Ezreal",
+          "Yasuo",
+          "Evelynn",
+          "Yone",
+          "Urgot"
+        ],
+        "objetivos": {
+          "torres": 7,
+          "dragoes": 2,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Mordekaiser",
+            "kda": "14 / 1 / 5"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Wukong",
+            "kda": "5 / 0 / 8"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Lissandra",
+            "kda": "1 / 2 / 8"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Caitlyn",
+            "kda": "5 / 2 / 10"
+          },
+          {
+            "jogador": "THEUZ",
+            "rota": "SUP",
+            "campeao": "Morgana",
+            "kda": "0 / 3 / 14"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Grande Final",
+      "placar": "1 x 1",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 8,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Rumble",
+            "kda": "10 / 4 / 9"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Nocturne",
+            "kda": "9 / 0 / 10"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Mel",
+            "kda": "9 / 1 / 7"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Ezreal",
+            "kda": "3 / 0 / 11"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Yuumi",
+            "kda": "1 / 0 / 18"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Sett",
+          "Illaoi",
+          "Draven",
+          "Rakan",
+          "Jax"
+        ],
+        "objetivos": {
+          "torres": 1,
+          "dragoes": 0,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Gangplank",
+            "kda": "4 / 8 / 1"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Ivern",
+            "kda": "0 / 8 / 2"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Azir",
+            "kda": "1 / 6 / 0"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Ziggs",
+            "kda": "0 / 3 / 0"
+          },
+          {
+            "jogador": "THEUZ",
+            "rota": "SUP",
+            "campeao": "Janna",
+            "kda": "0 / 7 / 0"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Grande Final",
+      "placar": "2 x 1",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 9,
+          "dragoes": 1,
+          "barao": 2,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Illaoi",
+            "kda": "5 / 10 / 10"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Hecarim",
+            "kda": "3 / 8 / 13"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Heimerdinger",
+            "kda": "7 / 8 / 7"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Twitch",
+            "kda": "19 / 7 / 3"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Maokai",
+            "kda": "2 / 8 / 12"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum",
+          "Nenhum"
+        ],
+        "objetivos": {
+          "torres": 13,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Illaoi",
+            "kda": "11 / 10 / 11"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Shaco",
+            "kda": "14 / 8 / 9"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Heimerdinger",
+            "kda": "3 / 5 / 12"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Jinx",
+            "kda": "8 / 8 / 14"
+          },
+          {
+            "jogador": "THEUZ",
+            "rota": "SUP",
+            "campeao": "Neeko",
+            "kda": "5 / 6 / 13"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Grande Final",
+      "placar": "2 x 2",
+      "vencedor": "BRONZINTHIANS",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Master Yi",
+          "Ornn",
+          "Zaahen",
+          "Kayn",
+          "Sett"
+        ],
+        "objetivos": {
+          "torres": 3,
+          "dragoes": 2,
+          "barao": 0,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Sion",
+            "kda": "1 / 3 / 1"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Jarvan IV",
+            "kda": "2 / 5 / 8"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Sylas",
+            "kda": "0 / 6 / 4"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Smolder",
+            "kda": "7 / 6 / 3"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Braum",
+            "kda": "0 / 6 / 6"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Evelynn",
+          "Yasuo",
+          "Yone",
+          "Urgot",
+          "Renekton"
+        ],
+        "objetivos": {
+          "torres": 10,
+          "dragoes": 4,
+          "barao": 2,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Volibear",
+            "kda": "2 / 2 / 13"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Viego",
+            "kda": "17 / 2 / 17"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Galio",
+            "kda": "3 / 1 / 16"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Draven",
+            "kda": "4 / 3 / 13"
+          },
+          {
+            "jogador": "THEUZ",
+            "rota": "SUP",
+            "campeao": "Rakan",
+            "kda": "0 / 2 / 22"
+          }
+        ]
+      }
+    },
+    {
+      "etapa": "Grande Final",
+      "placar": "3 x 2",
+      "vencedor": "VOS BRONZE",
+      "time1": {
+        "nome": "VOS BRONZE",
+        "bans": [
+          "Ahri",
+          "Leona",
+          "Kayn",
+          "Zaahen",
+          "Sett"
+        ],
+        "objetivos": {
+          "torres": 9,
+          "dragoes": 4,
+          "barao": 1,
+          "vastilavas": 0
+        },
+        "jogadores": [
+          {
+            "jogador": "JEIEL UP",
+            "rota": "TOP",
+            "campeao": "Urgot",
+            "kda": "4 / 3 / 8"
+          },
+          {
+            "jogador": "GALORURAL",
+            "rota": "JG",
+            "campeao": "Pantheon",
+            "kda": "4 / 2 / 5"
+          },
+          {
+            "jogador": "CASTRO YSE",
+            "rota": "MID",
+            "campeao": "Vex",
+            "kda": "2 / 0 / 8"
+          },
+          {
+            "jogador": "LIPPEH",
+            "rota": "ADC",
+            "campeao": "Xayah",
+            "kda": "3 / 2 / 11"
+          },
+          {
+            "jogador": "E O PUXAS",
+            "rota": "SUP",
+            "campeao": "Taric",
+            "kda": "2 / 2 / 12"
+          }
+        ]
+      },
+      "time2": {
+        "nome": "BRONZINTHIANS",
+        "bans": [
+          "Evelynn",
+          "Yasuo",
+          "Yone",
+          "Akali",
+          "Nilah"
+        ],
+        "objetivos": {
+          "torres": 1,
+          "dragoes": 0,
+          "barao": 0,
+          "vastilavas": 3
+        },
+        "jogadores": [
+          {
+            "jogador": "BPM ZECAPAGOD",
+            "rota": "TOP",
+            "campeao": "Ornn",
+            "kda": "1 / 3 / 3"
+          },
+          {
+            "jogador": "PDJ SHACO FACAO",
+            "rota": "JG",
+            "campeao": "Ekko",
+            "kda": "4 / 3 / 2"
+          },
+          {
+            "jogador": "FRENEZERI",
+            "rota": "MID",
+            "campeao": "Veigar",
+            "kda": "1 / 2 / 0"
+          },
+          {
+            "jogador": "NKZ",
+            "rota": "ADC",
+            "campeao": "Kai'Sa",
+            "kda": "3 / 3 / 3"
+          },
+          {
+            "jogador": "THEUZ",
+            "rota": "SUP",
+            "campeao": "Nautilus",
+            "kda": "0 / 4 / 7"
+          }
+        ]
+      }
+    }
+  ]
+}

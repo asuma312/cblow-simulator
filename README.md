@@ -45,23 +45,13 @@ npm run preview  # preview do build
 
 ### Imagens de campeões
 
-As imagens não são commitadas no repositório (assets pesados). Para tê-las localmente, baixe via DDragon e coloque em `public/champions/{ChampionId}.png`:
+As imagens não são commitadas no repositório. Para baixá-las localmente:
 
 ```bash
-# Exemplo para baixar todas as imagens (requer curl)
-VERSION="15.1.1"  # ajuste para a patch atual
-mkdir -p public/champions
-
-# Baixe o arquivo de campeões e extraia os IDs
-curl -s "https://ddragon.leagueoflegends.com/cdn/${VERSION}/data/pt_BR/champion.json" \
-  | grep -o '"id":"[^"]*"' | sed 's/"id":"//;s/"//' \
-  | while read id; do
-      curl -s "https://ddragon.leagueoflegends.com/cdn/${VERSION}/img/champion/${id}.png" \
-           -o "public/champions/${id}.png"
-    done
+npm run download-champions
 ```
 
-O jogo usa fallback automático para o CDN do DDragon se as imagens locais não existirem.
+Isso popula `public/champions/{ChampionId}.png` via DDragon. O jogo usa fallback automático para o CDN do DDragon se as imagens locais não existirem.
 
 ---
 
@@ -136,7 +126,7 @@ Pesos por role: `top/mid` — Mecânica (0.4); `adc` — Farm + Mecânica (0.4 +
 
 O CBlow Simulator é uma homenagem ao **CBlow** — campeonato real de League of Legends de baixo elo organizado pelo streamer **[Yoda](https://kick.com/yoda)** na Kick. Os times e jogadores são baseados nos participantes reais do torneio.
 
-Os arquivos em `/data` contêm as estatísticas reais do campeonato que inspirou o jogo.
+Os arquivos em `/data` contêm as estatísticas reais do campeonato que inspirou o jogo, originalmente publicadas em **[cblowstats.netlify.app](https://cblowstats.netlify.app)**.
 
 ---
 

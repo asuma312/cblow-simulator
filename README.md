@@ -134,7 +134,7 @@ Pesos por role: `top/mid` — Mecânica (0.4); `adc` — Farm + Mecânica (0.4 +
 
 ## Sobre o projeto
 
-O CBlow Simulator foi criado como uma homenagem ao **CBlow** — um campeonato real de baixo elo disputado entre amigos no Brasil. Os nomes, times e jogadores são fictícios baseados nos participantes do torneio original.
+O CBlow Simulator é uma homenagem ao **CBlow** — campeonato real de League of Legends de baixo elo organizado pelo streamer **[Yoda](https://kick.com/yoda)** na Kick. Os times e jogadores são baseados nos participantes reais do torneio.
 
 Os arquivos em `/data` contêm as estatísticas reais do campeonato que inspirou o jogo.
 

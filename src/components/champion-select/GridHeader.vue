@@ -35,7 +35,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { ROLE_ICONS } from '@/data/championPositions'
+import { ROLE_ICONS } from '@/data/champions'
 
 const emit = defineEmits(['queryUpdated', 'roleUpdated'])
 const queryFilter = ref('')

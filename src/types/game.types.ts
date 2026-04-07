@@ -1,3 +1,11 @@
+export type ChampionPosition = 'Top' | 'Jungle' | 'Mid' | 'Bottom' | 'Support'
+
+export interface Champion {
+    id: string                    // DDragon name — usado para imagem e champPool
+    name: string                  // nome de exibição
+    positions: ChampionPosition[]
+}
+
 export const ROLES = ['top', 'jungle', 'mid', 'adc', 'support'] as const
 export type Role = typeof ROLES[number]
 

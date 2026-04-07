@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Champions, DraftStep, SessionData, SingleChampion } from '@/types/championSelect.types'
-import { CHAMPION_POSITIONS } from '@/data/championPositions'
+import { CHAMPION_POSITIONS } from '@/data/champions'
 
 const DRAFT_ORDER: DraftStep[] = [
     { phase: 'ban', side: 'blue' },

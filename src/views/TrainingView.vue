@@ -39,7 +39,7 @@
                 <div class="week-summary">
                     <div v-for="player in teamStore.roster" :key="player.id" class="summary-row">
                         <span class="summary-nick">{{ player.nickname }}</span>
-                        <span class="summary-action">{{ getActionLabel(trainingStore.weeklyPlan[player.id]) }}</span>
+                        <span class="summary-action">{{ actionLabel(player.id) }}</span>
                     </div>
                 </div>
 
@@ -77,7 +77,7 @@ import { useRouter } from 'vue-router'
 import { useTeamStore } from '@/stores/team'
 import { useGameStore } from '@/stores/game'
 import { useTrainingStore } from '@/stores/training'
-import type { TrainingAction } from '@/types/game.types'
+import { getActionLabel } from '@/data/trainingActions'
 import PlayerCard from '@/components/shared/PlayerCard.vue'
 import TrainingActionComp from '@/components/training/TrainingAction.vue'
 
@@ -90,16 +90,9 @@ const allPlayersHaveAction = computed(() =>
     teamStore.roster.every(p => trainingStore.weeklyPlan[p.id] !== undefined)
 )
 
-const getActionLabel = (action: TrainingAction | undefined): string => {
-    if (!action) return '---'
-    switch (action.type) {
-        case 'trainFarm': return 'Treinar Farm'
-        case 'trainMechanics': return 'Treinar Mecânica'
-        case 'trainTeamfight': return 'Treinar Teamfight'
-        case 'studyChampion': return `Estudar ${action.championId}`
-        case 'stream': return 'Stremar'
-        case 'rest': return 'Descansar'
-    }
+const actionLabel = (playerId: string): string => {
+    const action = trainingStore.weeklyPlan[playerId]
+    return getActionLabel(action?.type, (action as any)?.championId)
 }
 
 const executeWeek = () => {

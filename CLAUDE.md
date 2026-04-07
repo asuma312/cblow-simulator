@@ -1,19 +1,20 @@
 # CBlow Simulator — CLAUDE.md
 
-Simulador web de gerenciamento esportivo baseado no CBLOL. O jogador é um Manager que recruta jogadores, treina o time e compete em um torneio de dupla eliminação. Roda 100% offline no browser.
+Simulador web de gerenciamento esportivo inspirado no **CBlow**, campeonato real de LoL de baixo elo organizado pelo streamer Yoda (kick.com/yoda). O jogador é um Manager que drafta jogadores, treina o time e compete em um torneio de dupla eliminação. Roda 100% offline no browser.
 
 ## Comandos
 
 ```bash
-npm run dev      # servidor de desenvolvimento
-npm run build    # type-check + build de produção
-npm run preview  # preview do build
+npm run dev                  # servidor de desenvolvimento
+npm run build                # type-check + build de produção
+npm run preview              # preview do build
+npm run download-champions   # baixa imagens DDragon para public/champions/
 ```
 
 ## Stack
 
 - **Vue 3** (Composition API + `<script setup>`)
-- **Pinia** — estado global (4 stores)
+- **Pinia** — estado global (5 stores)
 - **Vue Router 4** — hash history (`/#/rota`)
 - **TypeScript 5**
 - **Tailwind CSS 3** + **SCSS** (componentes usam `<style lang="scss" scoped>`)
@@ -26,9 +27,9 @@ src/
 ├── types/game.types.ts          # todos os tipos do jogo
 ├── types/championSelect.types.ts
 ├── data/
-│   ├── players.ts               # 23 jogadores CBLOL com stats
+│   ├── players.ts               # 23 jogadores com stats e champion pool
 │   ├── coaches.ts               # 4 coaches com bônus
-│   ├── teams.ts                 # 7 times de IA
+│   ├── teams.ts                 # 8 times de IA (roster: [], preferredPlayerIds)
 │   ├── championPositions.ts     # mapa campeão → roles (DDragon)
 │   └── trainingActions.ts       # metadados das ações de treino (fonte única)
 ├── stores/
@@ -52,6 +53,13 @@ src/
 └── utils/
     ├── storage.ts               # loadFromStorage<T> / saveToStorage<T>
     └── championImages.ts        # fallback DDragon para imagens
+
+data/                            # estatísticas reais do CBlow (fonte: cblowstats.netlify.app)
+├── data.json
+└── data_historico.json
+
+scripts/
+└── download-champions.mjs       # baixa ícones DDragon para public/champions/
 ```
 
 ## Game loop
@@ -61,13 +69,31 @@ src/
                                                                               └── /gameover ou vitória
 ```
 
-- **Setup:** nome do time → escolha de coach → escolha de 5 jogadores (budget $10.000)
+- **Setup:** nome do time → escolha de coach → **snake draft** (8 times × 5 roles = 40 picks)
 - **Tournament:** bracket visual, simula partidas de IA, define próxima partida do player
 - **Training:** cada jogador recebe uma ação semanal, salários são pagos
 - **ChampSelect:** player controla um lado (blue/red alternando), IA controla o outro
 - **Gameplay:** simulação automática com log de eventos e barra de vantagem
 - A série (Bo3/Bo5) repete ChampSelect → Gameplay até ter vencedor
 - Derrota na Losers → `/gameover`; vitória na Grand Final → tela de vitória
+
+## Snake Draft (`views/SetupView.vue`)
+
+8 times (player + 7 IA sorteados de `AI_TEAMS`) draftam do mesmo pool `ALL_PLAYERS`.
+
+```typescript
+const TOTAL_PICKS = AI_TEAMS.length * ROLES.length  // 8 × 5 = 40
+const shuffle = <T>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5)
+
+// Snake: round par → ordem normal; round ímpar → ordem invertida
+function currentPickTeam(): string {
+  const round = Math.floor(idx / n)
+  const pos = idx % n
+  return draftOrder[round % 2 === 0 ? pos : n - 1 - pos]
+}
+```
+
+IA prioriza `preferredPlayerIds` em ordem aleatória de roles; fallback: melhor stat total disponível.
 
 ## Persistência
 
@@ -90,7 +116,13 @@ interface Player {
   id, name, nickname, role: Role
   stats: { farm, mechanics, teamfight }  // 1–10
   champPool: { championId, knowledge }[] // knowledge 0–100
-  salary, popularity, moral, fatigue     // 0–100
+  popularity, moral, fatigue             // 0–100
+}
+
+interface AITeam {
+  id, name, archetype
+  roster: Player[]              // populado pelo snake draft
+  preferredPlayerIds: string[]  // IDs preferidos em ordem top/jg/mid/adc/sup
 }
 
 interface Match {
@@ -106,12 +138,12 @@ type GameState.phase = 'setup' | 'training' | 'champselect' | 'gameplay' | 'tour
 ## Fórmulas de simulação (`engine/simulation.ts`)
 
 ```
-conhecimento_efetivo = 0.5 + 0.5 * (knowledge / 100)   // conhecimento 0 → 50%, 100 → 100%
+conhecimento_efetivo = 0.5 + 0.5 * (knowledge / 100)   // 0 → 50%, 100 → 100%
 poder_jogador = baseStats * conhecimento_efetivo * (1 - fatigue/200) * (0.8 + moral/500)
 poder_time    = média(5 jogadores) * random(0.85–1.15)
 ```
 
-Pesos por role: `top/mid` — Mecânica domina (0.4); `adc` — Farm+Mecânica (0.4+0.4); `support` — TeamFight domina (0.6).
+Pesos por role: `top/mid` — Mecânica (0.4); `adc` — Farm+Mecânica (0.4+0.4); `support` — TeamFight (0.6).
 
 ## Bracket de dupla eliminação
 
@@ -121,6 +153,7 @@ Pesos por role: `top/mid` — Mecânica domina (0.4); `adc` — Farm+Mecânica (
 - Grand Final: `grand_final`
 
 Propagação centralizada em `tournament._propagate()` — tabela de rotas `routes[bracket_round]`.
+`initTournament(playerTeamId, selectedAITeamIds)` recebe os 7 times sorteados no draft.
 
 ## Champion Select
 
@@ -162,3 +195,4 @@ Componentes usam `clip-path` octagonal nos cards e bordas dourado-bronze.
 - `_save()` é chamado manualmente no final de cada action que muta estado persistido
 - Não adicionar `console.log` de debug em produção
 - Imagens de campeões não são commitadas — ficam em `public/champions/` (no `.gitignore`)
+- `.claude/` está no `.gitignore` (memória local do Claude Code, não commitar)

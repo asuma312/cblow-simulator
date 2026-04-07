@@ -9,6 +9,8 @@
     "download-champions": "node scripts/download-champions.mjs"
   },
   "dependencies": {
+    "cheerio": "^1.2.0",
+    "node-fetch": "^3.3.2",
     "pinia": "^2.1.7",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"

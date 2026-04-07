@@ -30,7 +30,7 @@
                 <div class="game-status" v-if="gameResult && eventIndex >= gameResult.events.length">
                     <div class="result-banner" :class="gameResult.winner === 'player' ? 'result-banner--win' : 'result-banner--loss'">
                         <p class="result-text">
-                            {{ gameResult.winner === 'player' ? '🏆 VITÓRIA!' : '💀 DERROTA' }}
+                            {{ gameResult.winner === 'player' ? 'VITÓRIA!' : 'DERROTA' }}
                         </p>
                     </div>
                 </div>
@@ -101,10 +101,10 @@
 
                     <template v-if="seriesFinished">
                         <p class="series-result" :class="playerWonSeries ? 'text-green-400' : 'text-red-400'">
-                            {{ playerWonSeries ? '🏆 SÉRIE VENCIDA!' : '💀 SÉRIE PERDIDA' }}
+                            {{ playerWonSeries ? 'SÉRIE VENCIDA!' : 'SÉRIE PERDIDA' }}
                         </p>
                         <button class="postgame-btn" @click="goToTournament">
-                            VER BRACKET →
+                            VER BRACKET
                         </button>
                     </template>
                     <template v-else>
@@ -112,7 +112,7 @@
                             Próximo jogo: {{ gameStore.seriesScores.player }} - {{ gameStore.seriesScores.opponent }}
                         </p>
                         <button class="postgame-btn" @click="nextGame">
-                            PRÓXIMO JOGO →
+                            PRÓXIMO JOGO
                         </button>
                     </template>
                 </div>

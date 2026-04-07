@@ -68,9 +68,9 @@
                 </div>
 
                 <div v-else class="draft-complete-center">
-                    <p class="draft-complete-text">✓ Draft finalizado!</p>
+                    <p class="draft-complete-text">Draft finalizado!</p>
                     <button class="start-game-btn" @click="startGame">
-                        INICIAR PARTIDA →
+                        INICIAR PARTIDA
                     </button>
                 </div>
             </div>

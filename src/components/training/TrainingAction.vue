@@ -9,7 +9,6 @@
                 :class="{ 'ta-btn--active': isSelected(action.type) }"
                 @click="selectAction(action.type)"
             >
-                <span class="ta-btn__icon">{{ action.icon }}</span>
                 <span class="ta-btn__label">{{ action.label }}</span>
             </button>
         </div>

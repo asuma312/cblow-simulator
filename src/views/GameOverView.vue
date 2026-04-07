@@ -3,7 +3,7 @@
         <div class="gameover-bg"></div>
 
         <div class="gameover-content">
-            <div class="gameover-mascot">{{ isVictory ? '🏆' : '💀' }}</div>
+            <div class="gameover-mascot">{{ isVictory ? 'CAMPEAO' : 'ELIMINADO' }}</div>
 
             <h1 class="gameover-title" :class="isVictory ? 'title--victory' : 'title--defeat'">
                 {{ isVictory ? 'CAMPEÃO!' : 'GAME OVER' }}

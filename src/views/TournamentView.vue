@@ -2,7 +2,7 @@
     <div class="tournament-view">
         <div class="tournament-header">
             <div>
-                <h1 class="tournament-title">🏆 CBlow Championship 2026</h1>
+                <h1 class="tournament-title">CBlow Championship 2026</h1>
                 <p class="tournament-week">Semana {{ tournamentStore.week }}</p>
             </div>
             <div class="player-status">
@@ -16,7 +16,7 @@
         </div>
 
         <div v-if="tournamentStore.hasPlayerWon" class="champion-banner">
-            <p>🦝 VOCÊ É O CAMPEÃO DO CBLOW! 🦝</p>
+            <p>VOCÊ É O CAMPEÃO DO CBLOW!</p>
         </div>
 
         <div class="tournament-content">
@@ -46,7 +46,7 @@
                     class="action-btn action-btn--primary"
                     @click="goToTraining"
                 >
-                    TREINAR ANTES DA PARTIDA →
+                    TREINAR ANTES DA PARTIDA
                 </button>
 
                 <button
@@ -62,7 +62,7 @@
                     class="action-btn action-btn--end"
                     @click="goToGameOver"
                 >
-                    VER RESULTADO FINAL →
+                    VER RESULTADO FINAL
                 </button>
             </div>
         </div>

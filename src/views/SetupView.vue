@@ -1,7 +1,7 @@
 <template>
     <div class="setup-view">
         <div class="setup-header">
-            <button class="back-btn" @click="$router.push('/')">← Voltar</button>
+            <button class="back-btn" @click="$router.push('/')">Voltar</button>
             <h1 class="setup-title">CRIAR SEU TIME</h1>
             <div class="step-indicators">
                 <div v-for="i in 3" :key="i" class="step-dot" :class="{ 'step-dot--active': step === i, 'step-dot--done': step > i }">
@@ -26,7 +26,7 @@
                 <p class="name-counter">{{ teamName.length }}/30</p>
             </div>
             <button class="setup-btn" :disabled="teamName.trim().length < 2" @click="step = 2">
-                PRÓXIMO →
+                PRÓXIMO
             </button>
         </div>
 
@@ -42,7 +42,7 @@
                     :class="{ 'coach-card--selected': selectedCoach?.id === coach.id }"
                     @click="selectedCoach = coach"
                 >
-                    <div class="coach-icon">🎯</div>
+                    <div class="coach-icon">[ ]</div>
                     <h3 class="coach-name">{{ coach.name }}</h3>
                     <p class="coach-focus">Focus: {{ coach.focus }}</p>
                     <p class="coach-desc">{{ coach.description }}</p>
@@ -55,9 +55,9 @@
                 </div>
             </div>
             <div class="setup-nav">
-                <button class="setup-btn setup-btn--secondary" @click="step = 1">← Voltar</button>
+                <button class="setup-btn setup-btn--secondary" @click="step = 1">Voltar</button>
                 <button class="setup-btn" :disabled="!selectedCoach" @click="step = 3">
-                    PRÓXIMO →
+                    PRÓXIMO
                 </button>
             </div>
         </div>
@@ -85,7 +85,7 @@
                     @click="selectedRole = role.id"
                 >
                     {{ role.label }}
-                    <span v-if="getRosterPlayer(role.id)" class="role-filled-badge">✓</span>
+                    <span v-if="getRosterPlayer(role.id)" class="role-filled-badge">OK</span>
                 </button>
             </div>
 
@@ -118,13 +118,13 @@
             </div>
 
             <div class="setup-nav">
-                <button class="setup-btn setup-btn--secondary" @click="step = 2">← Voltar</button>
+                <button class="setup-btn setup-btn--secondary" @click="step = 2">Voltar</button>
                 <button
                     class="setup-btn"
                     :disabled="!isRosterComplete || remainingBudget < 0"
                     @click="confirmSetup"
                 >
-                    CONFIRMAR TIME →
+                    CONFIRMAR TIME
                 </button>
             </div>
         </div>

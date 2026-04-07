@@ -2,7 +2,7 @@
     <div class="home-view">
         <div class="home-bg"></div>
         <div class="home-content">
-            <div class="home-mascot">🦝</div>
+            <div class="home-mascot">CBLOW</div>
             <div class="home-title-wrapper">
                 <p class="home-subtitle-top">CAMPEONATO BRASILEIRO</p>
                 <h1 class="home-title">CBLOW</h1>

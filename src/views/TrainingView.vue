@@ -61,7 +61,7 @@
                     :disabled="!allPlayersHaveAction"
                     @click="executeWeek"
                 >
-                    INICIAR SEMANA →
+                    INICIAR SEMANA
                 </button>
                 <p v-if="!allPlayersHaveAction" class="action-warning">
                     Defina uma ação para cada jogador

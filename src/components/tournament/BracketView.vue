@@ -51,7 +51,7 @@
         </div>
 
         <div v-if="grandFinal" class="bracket-section bracket-gf">
-            <h3 class="bracket-title bracket-title--gf">🏆 Grand Final</h3>
+            <h3 class="bracket-title bracket-title--gf">Grand Final</h3>
             <div class="bracket-match bracket-match--gf"
                 :class="{
                     'bracket-match--player': isPlayerMatch(grandFinal),

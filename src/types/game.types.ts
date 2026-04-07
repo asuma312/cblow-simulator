@@ -52,6 +52,7 @@ export interface AITeam {
     name: string
     archetype: string
     roster: Player[]
+    preferredPlayerIds: string[]  // IDs em ordem top/jg/mid/adc/sup
 }
 
 export type TrainingActionType =

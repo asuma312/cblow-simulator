@@ -94,12 +94,12 @@ export const useTournamentStore = defineStore('tournament', {
     },
 
     actions: {
-        initTournament(playerTeamId: string) {
+        initTournament(playerTeamId: string, selectedAITeamIds: string[]) {
             this.playerTeamId = playerTeamId
             this.eliminated = []
             this.week = 1
 
-            const shuffled = [playerTeamId, ...AI_TEAMS.map(t => t.id)].sort(() => Math.random() - 0.5)
+            const shuffled = [playerTeamId, ...selectedAITeamIds].sort(() => Math.random() - 0.5)
             const pairs = (arr: string[]): Array<[string, string]> =>
                 Array.from({ length: arr.length / 2 }, (_, i) => [arr[i * 2], arr[i * 2 + 1]])
 

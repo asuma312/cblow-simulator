@@ -50,6 +50,22 @@ export const ROLE_LANE: Record<Role, 'top' | 'mid' | 'bot' | null> = {
     top: 'top', jungle: null, mid: 'mid', adc: 'bot', support: 'bot',
 }
 
+export const LANE_TOWER_POSITIONS: Record<
+    'player' | 'opponent',
+    Record<'top' | 'mid' | 'bot', { outer: { x: number; y: number }; inner: { x: number; y: number } }>
+> = {
+    player: {
+        top: { outer: { x: 30,  y: 127 }, inner: { x: 47,  y: 296 } },
+        mid: { outer: { x: 191, y: 284 }, inner: { x: 157, y: 341 } },
+        bot: { outer: { x: 365, y: 461 }, inner: { x: 225, y: 458 } },
+    },
+    opponent: {
+        top: { outer: { x: 123, y: 33  }, inner: { x: 278, y: 46  } },
+        mid: { outer: { x: 285, y: 223 }, inner: { x: 333, y: 163 } },
+        bot: { outer: { x: 464, y: 354 }, inner: { x: 455, y: 235 } },
+    },
+}
+
 export function attackCooldown(mechanics: number): number {
     return Math.max(1, Math.round(10 / mechanics))
 }

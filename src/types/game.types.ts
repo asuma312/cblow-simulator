@@ -144,6 +144,23 @@ export interface TeamTowers {
     bot: TowerLaneState
 }
 
+export interface ActionDefinition {
+    id: string
+    getTargetPosition(ctx: ActionContext): { x: number; y: number }
+    shouldFight(ctx: ActionContext): boolean
+    shouldHitTower(ctx: ActionContext): boolean
+}
+
+export interface ActionContext {
+    ps: PlayerState
+    role: Role
+    side: 'player' | 'opponent'
+    turn: number
+    allyState: TeamState
+    enemyState: TeamState
+    allUnits: { player: PlayerState[]; opponent: PlayerState[] }
+}
+
 export interface PlayerState {
     player: Player
     pickedChampionId: string
@@ -158,6 +175,7 @@ export interface PlayerState {
     moralMult: number       // 0.8 + moral/500
     position: { x: number; y: number }
     atkCooldown: number     // turnos até próximo ataque (0 = pronto)
+    currentAction: ActionDefinition
 }
 
 export interface TeamState {

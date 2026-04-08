@@ -42,6 +42,7 @@ src/
 ├── engine/
 │   ├── simulation/              # engine de simulação (ver seção abaixo)
 │   │   ├── index.ts             # simulateGame() — loop principal
+│   │   ├── actions.ts           # ActionDefinition, ActionContext, pushLane, DEFAULT_ACTION
 │   │   ├── state.ts             # initTeamState, farmTick, teamfightPower
 │   │   ├── matchups.ts          # getMatchupMult() — bônus de counter via matchups embutidos
 │   │   ├── constants.ts         # constantes numéricas da simulação
@@ -151,8 +152,9 @@ interface PlayerState {
   baronActive: boolean          // barão por jogador (não por time)
   baronTurnsRemaining: number
   knowledgeMult, fatigueMult, moralMult
-  position: { x: number; y: number }   // posição atual no mapa (500×500)
+  position: { x: number; y: number }   // posição atual no mapa (500×500); inicia em BASE_POSITIONS
   atkCooldown: number                  // turnos até próximo ataque (0 = pronto)
+  currentAction: ActionDefinition      // comportamento da unit (default: pushLane)
 }
 
 interface TeamState {
@@ -185,63 +187,9 @@ interface SimulationResult extends GameResult {
 }
 ```
 
-## Simulação — Loop único (`engine/simulation/`)
+## Simulação (`engine/simulation/`)
 
-`simulateGame(...)` executa um **loop único de até 60 turnos** e retorna `SimulationResult`.
-
-| Mecânica | Quando |
-|----------|--------|
-| Farm | todo turno |
-| Step de posição (unit anda `80px/turno` em direção à lane) | todo turno |
-| Combate por proximidade (`COMBAT_RANGE = 40px`, cooldown individual por mechanics) | todo turno |
-| Torre: unit pronta sem inimigos no range bate na torre da lane | todo turno |
-| Dragão | turnos 20, 30, 40 |
-| Barão | turno 45 |
-| Vitória imediata | 6 torres destruídas |
-| Empate pós-60 | mais torres → mais ouro |
-
-Multiplicadores por `PlayerState`:
-```
-knowledgeMult = 0.5 + 0.5 * (knowledge / 100)
-fatigueMult   = 1 - fatigue / 200
-moralMult     = 0.8 + moral / 500
-goldMult      = min(1.3, 1 + totalGold/15000 * 0.3)
-matchupMult   = 1 + (winRate - 50) * 0.20  — só aplica se winRate > 50% (sem debuff)
-```
-
-**Cooldown de ataque** (baseado em mechanics):
-```
-attackCooldown = max(1, round(10 / mechanics))
-```
-
-**Dano por ataque** (`damageRoll` — mechanics NÃO entra no dano, só no cooldown):
-```
-damageRoll = rand(0.5, 1.5) * (farm * w.farm + teamfight * w.teamfight)
-           * knowledgeMult * fatigueMult * moralMult * matchupMult
-damage = damageRoll * DAMAGE_SCALE (4)
-```
-
-Ataques são unilaterais e independentes — não existe `counterDamage`. Cada unit reage no seu próprio cooldown.
-
-Ao morrer: `position` vai para `BASE_POSITIONS` (base do time), `atkCooldown` reseta. Ao reviver, a unit anda de volta à lane via `stepToward`.
-
-**Assist**: um `damageLog` rastreia quem causou dano a cada vítima nos últimos `ASSIST_WINDOW = 5` turnos. No kill, todos os atacantes recentes (exceto o killer) recebem `KILL_GOLD * 0.5 = 250` de ouro. O log é zerado na morte.
-
-Detalhe de bot lane: farm split 70% ADC / 30% Support.
-
-Barão é **por jogador** (não por time): cada `PlayerState` tem `baronActive` e `baronTurnsRemaining`.
-
-Cada evento carrega `GameEventMeta` com `type` (`kill | dragon | baron | tower_destroyed | turn_summary`), `phase: 'game'`, `combats[]`, `towerSnapshot`, `goldSnapshot` e `positionSnapshot`.
-
-### Matchups (`engine/simulation/matchups.ts`)
-
-Dados embutidos nos JSONs de campeão (`src/data/champions/*.json`) sob a chave `matchups`:
-```json
-{ "matchups": { "top": { "Heimerdinger": 55.63 }, "middle": { ... } } }
-```
-- Role `mid` do jogo → chave `middle` no JSON (mapeamento interno do `getMatchupMult`)
-- Só dá bônus quando `winRate > 50`; ignora matchups desfavoráveis (sem debuff)
-- Fórmula: `1 + (winRate - 50) * 0.20` → 51% = +20%, 55% = +100%
+Documentação completa da engine em `info/HOW_GAMEPLAY_WORKS.md`.
 
 ## RiftMap (`components/gameplay/RiftMap.vue`)
 

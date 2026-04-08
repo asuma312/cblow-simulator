@@ -103,7 +103,7 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import type { GameEventMeta, TeamTowers } from '@/types/game.types'
 import { ROLES, ROLE_SHORT_LABELS, type Role } from '@/types/game.types'
 import { onIconError } from '@/utils/championImages'
-import { TOTAL_TURNS, ROLE_POSITIONS, COMBAT_RANGE } from '@/engine/simulation/constants'
+import { TOTAL_TURNS, ROLE_POSITIONS, BASE_POSITIONS, COMBAT_RANGE, LANE_TOWER_POSITIONS } from '@/engine/simulation/constants'
 
 const ICON_HALF = 18  // metade dos 36px do ícone — usado para centralizar o range circle
 
@@ -121,20 +121,20 @@ const props = defineProps<{
 
 const TOWER_POSITIONS = {
     player: [
-        { key: 'pt_top_out', x: 30,  y: 127 },
-        { key: 'pt_top_inh', x: 47,  y: 296 },
-        { key: 'pt_mid_out', x: 191, y: 284 },
-        { key: 'pt_mid_inh', x: 157, y: 341 },
-        { key: 'pt_bot_out', x: 365, y: 461 },
-        { key: 'pt_bot_inh', x: 225, y: 458 },
+        { key: 'pt_top_out', ...LANE_TOWER_POSITIONS.player.top.outer },
+        { key: 'pt_top_inh', ...LANE_TOWER_POSITIONS.player.top.inner },
+        { key: 'pt_mid_out', ...LANE_TOWER_POSITIONS.player.mid.outer },
+        { key: 'pt_mid_inh', ...LANE_TOWER_POSITIONS.player.mid.inner },
+        { key: 'pt_bot_out', ...LANE_TOWER_POSITIONS.player.bot.outer },
+        { key: 'pt_bot_inh', ...LANE_TOWER_POSITIONS.player.bot.inner },
     ],
     opponent: [
-        { key: 'ot_top_out', x: 123, y: 33  },
-        { key: 'ot_top_inh', x: 278, y: 46  },
-        { key: 'ot_mid_out', x: 285, y: 223 },
-        { key: 'ot_mid_inh', x: 333, y: 163 },
-        { key: 'ot_bot_out', x: 464, y: 354 },
-        { key: 'ot_bot_inh', x: 455, y: 235 },
+        { key: 'ot_top_out', ...LANE_TOWER_POSITIONS.opponent.top.outer },
+        { key: 'ot_top_inh', ...LANE_TOWER_POSITIONS.opponent.top.inner },
+        { key: 'ot_mid_out', ...LANE_TOWER_POSITIONS.opponent.mid.outer },
+        { key: 'ot_mid_inh', ...LANE_TOWER_POSITIONS.opponent.mid.inner },
+        { key: 'ot_bot_out', ...LANE_TOWER_POSITIONS.opponent.bot.outer },
+        { key: 'ot_bot_inh', ...LANE_TOWER_POSITIONS.opponent.bot.inner },
     ],
 }
 
@@ -160,11 +160,10 @@ interface ChampIcon {
 
 const championIcons = computed((): ChampIcon[] =>
     ROLES.flatMap((role, i) => {
-        const pos  = ROLE_POSITIONS[role]
         const base = { roleLabel: ROLE_SHORT_LABELS[role], role }
         return [
-            { key: `player_${role}`,   championId: props.playerPicks[i]   ?? '', isPlayer: true,  x: pos.player.x,   y: pos.player.y,   offset: attackOffset(`player_${role}`),   ...base },
-            { key: `opponent_${role}`, championId: props.opponentPicks[i] ?? '', isPlayer: false, x: pos.opponent.x, y: pos.opponent.y, offset: attackOffset(`opponent_${role}`), ...base },
+            { key: `player_${role}`,   championId: props.playerPicks[i]   ?? '', isPlayer: true,  x: BASE_POSITIONS.player.x,   y: BASE_POSITIONS.player.y,   offset: attackOffset(`player_${role}`),   ...base },
+            { key: `opponent_${role}`, championId: props.opponentPicks[i] ?? '', isPlayer: false, x: BASE_POSITIONS.opponent.x, y: BASE_POSITIONS.opponent.y, offset: attackOffset(`opponent_${role}`), ...base },
         ]
     })
 )

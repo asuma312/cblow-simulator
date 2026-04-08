@@ -43,6 +43,24 @@
                 <div v-if="dragMode" class="drag-coords">{{ dragPos(tower.key, tower.x, tower.y) }}</div>
             </div>
 
+            <!-- Walk grid debug overlay -->
+            <template v-if="walkGridMode">
+                <div
+                    v-for="(cell, idx) in editableGrid"
+                    :key="`wg_${idx}`"
+                    class="walk-cell"
+                    :class="cell ? 'walk-cell--on' : 'walk-cell--off'"
+                    :style="{
+                        left:   (idx % GRID_COLS) * CELL_SIZE + 'px',
+                        top:    Math.floor(idx / GRID_COLS) * CELL_SIZE + 'px',
+                        width:  CELL_SIZE + 'px',
+                        height: CELL_SIZE + 'px',
+                    }"
+                    @mousedown.prevent="startWalkPaint(idx)"
+                    @mousemove="walkPainting && applyWalkPaint(idx)"
+                />
+            </template>
+
             <template v-if="dragMode">
                 <div
                     v-for="icon in championIcons"
@@ -104,6 +122,7 @@ import type { GameEventMeta, TeamTowers } from '@/types/game.types'
 import { ROLES, ROLE_SHORT_LABELS, type Role } from '@/types/game.types'
 import { onIconError } from '@/utils/championImages'
 import { TOTAL_TURNS, ROLE_POSITIONS, BASE_POSITIONS, COMBAT_RANGE, LANE_TOWER_POSITIONS } from '@/engine/simulation/constants'
+import { GRID_COLS, GRID_ROWS, CELL_SIZE, walkableGrid } from '@/engine/simulation/pathfinding'
 
 const ICON_HALF = 18  // metade dos 36px do ícone — usado para centralizar o range circle
 
@@ -228,6 +247,43 @@ const dragonBgColor = computed(() => {
     return player > opponent ? '#1d4ed8' : '#b91c1c'
 })
 
+// ─── Walk grid debug mode ─────────────────────────────────────────────────────
+
+const walkGridMode  = ref(false)
+const editableGrid  = ref<Uint8Array>(new Uint8Array(0))
+let walkPainting    = false
+let walkPaintValue  = 0
+
+function startWalkPaint(idx: number) {
+    walkPaintValue = editableGrid.value[idx] ? 0 : 1
+    walkPainting   = true
+    applyWalkPaint(idx)
+}
+
+function applyWalkPaint(idx: number) {
+    if (editableGrid.value[idx] !== walkPaintValue) {
+        editableGrid.value[idx] = walkPaintValue
+        editableGrid.value = editableGrid.value.slice()
+    }
+}
+
+function stopWalkPaint() {
+    walkPainting = false
+}
+
+function exportWalkGrid() {
+    const lines: string[] = []
+    for (let r = 0; r < GRID_ROWS; r++) {
+        let row = ''
+        for (let c = 0; c < GRID_COLS; c++) {
+            row += editableGrid.value[r * GRID_COLS + c] ? 'X' : '.'
+        }
+        lines.push(row)
+    }
+    console.log('%c[WalkGrid] Grid exportado — cole abaixo para atualizar o pathfinding:', 'color:#C8860A;font-weight:bold')
+    console.log(lines.join('\n'))
+}
+
 // ─── Drag mode (dev) ──────────────────────────────────────────────────────────
 
 const mapEl         = ref<HTMLElement>()
@@ -260,6 +316,7 @@ function onMouseMove(e: MouseEvent) {
 }
 
 function onMouseUp() {
+    stopWalkPaint()
     if (!dragging) return
     const pos = dragPositions.value[dragging.key]
     if (pos) {
@@ -293,6 +350,17 @@ onMounted(() => {
         dragMode.value = !dragMode.value
         if (dragMode.value) console.log('%c[RiftMap] Drag mode ON', 'color:#22d3ee')
         else logAllPositions()
+    }
+    ;(window as unknown as Record<string, unknown>).__debugWalkGrid = () => {
+        walkGridMode.value = !walkGridMode.value
+        if (walkGridMode.value) {
+            editableGrid.value = walkableGrid.slice()
+            console.log('%c[WalkGrid] Grid mode ON — clique nas células para toggle', 'color:#22d3ee')
+            console.log('  Verde = walkable, Vermelho = bloqueado')
+            console.log('  __debugWalkGrid() novamente para exportar e sair')
+        } else {
+            exportWalkGrid()
+        }
     }
 })
 
@@ -534,4 +602,15 @@ function formatGold(gold: number): string {
 .gold-icon  { font-size: 10px; color: #fbbf24; }
 .gold-value { font-weight: 700; font-size: 15px; color: #fbbf24; letter-spacing: 0.05em; }
 .gold-label { font-size: 10px; color: rgba(245, 240, 232, 0.4); letter-spacing: 0.06em; text-transform: uppercase; }
+
+.walk-cell {
+    position: absolute;
+    cursor: crosshair;
+    z-index: 20;
+    box-sizing: border-box;
+    border: 0.5px solid rgba(255,255,255,0.05);
+
+    &--on  { background: rgba(34, 197, 94, 0.35); }
+    &--off { background: rgba(239, 68, 68, 0.25); }
+}
 </style>

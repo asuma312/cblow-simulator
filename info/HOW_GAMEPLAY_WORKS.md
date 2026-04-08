@@ -106,11 +106,11 @@ Cada unit viva executa, por turno:
 1. Se `shouldFight` e há inimigo vivo mais próximo:
    - distância `≤ COMBAT_RANGE` → para (já em combate)
    - distância `≤ WALK_SPEED + COMBAT_RANGE` → avança em direção ao inimigo e para **exatamente** na borda do range (`dist - COMBAT_RANGE`), evitando cruzamento
-2. Caso contrário → `stepToward(position, getTargetPosition(ctx), WALK_SPEED)`
+2. Caso contrário → move para `getTargetPosition(ctx)` via `getNextStep` (A*)
 
-`stepToward` move `WALK_SPEED = 80px/turno` e para exatamente no destino se a distância for menor.
+`getNextStep` executa A* sobre o grid de walkability 50×50 (`pathfinding.ts`) e retorna a próxima posição a até `WALK_SPEED = 80px` de distância, seguindo as lanes. Se nenhum caminho for encontrado, cai back para `stepToward` em linha reta.
 
-O target de `pushLane` é a torre inimiga da lane: outer se viva, inner caso outer tenha caído. Assim, unidades de lados opostos caminham uma em direção à outra e se encontram naturalmente na lane.
+O target de `pushLane` é determinado por `getNextStep(ps.position, finalTarget)`, onde `finalTarget` é a torre inimiga da lane: outer se viva, inner caso outer tenha caído. Assim, unidades de lados opostos caminham uma em direção à outra e se encontram naturalmente na lane, respeitando o layout do mapa.
 
 ```
 BASE_POSITIONS (posição inicial e de respawn):
@@ -347,8 +347,8 @@ COMBAT_RANGE = 40px   WALK_SPEED = 80px/turno   DAMAGE_SCALE = 4
 
 ```
 constants.ts  ←  helpers.ts  ←  state.ts
-     ↑                               ↓
-  actions.ts                    matchups.ts
+     ↑               ↑               ↓
+  actions.ts   pathfinding.ts   matchups.ts
      ↑                               ↓
      └──────────────────────── index.ts  (API pública: simulateGame)
 ```
@@ -357,6 +357,7 @@ constants.ts  ←  helpers.ts  ←  state.ts
 |---------|---------|
 | `constants.ts` | Constantes numéricas, `ROLE_WEIGHTS`, `ROLE_POSITIONS`, `BASE_POSITIONS`, `ROLE_LANE`, `LANE_TOWER_POSITIONS`, `attackCooldown()` |
 | `helpers.ts` | `rand`, `randInt`, `getKnowledge`, `stepToward`, `FALLBACK_PLAYER` |
+| `pathfinding.ts` | `walkableGrid`, `findPath`, `getNextStep`, `GRID_COLS`, `GRID_ROWS`, `CELL_SIZE` |
 | `state.ts` | `initTeamState`, `updateGoldMultiplier`, `farmTick`, `teamfightPower` |
 | `matchups.ts` | `getMatchupMult` — multiplicador de matchup por campeão/role |
 | `actions.ts` | `ActionDefinition`, `ActionContext`, `pushLane`, `DEFAULT_ACTION` |

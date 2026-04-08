@@ -43,6 +43,7 @@ src/
 │   ├── simulation/              # engine de simulação (ver seção abaixo)
 │   │   ├── index.ts             # simulateGame() — loop principal
 │   │   ├── actions.ts           # ActionDefinition, ActionContext, pushLane, DEFAULT_ACTION
+│   │   ├── pathfinding.ts       # grid de walkability 50×50 + A* + getNextStep
 │   │   ├── state.ts             # initTeamState, farmTick, teamfightPower
 │   │   ├── matchups.ts          # getMatchupMult() — bônus de counter via matchups embutidos
 │   │   ├── constants.ts         # constantes numéricas da simulação
@@ -202,13 +203,15 @@ Minimapa 500×500px com fundo `/public/minimap.png`. Camadas:
 
 Badge superior: `"TURNO X / 60"` baseado em `currentTurnMeta?.turnNumber`.
 
-**Posicionamento**: ícones lêem `currentTurnMeta.positionSnapshot` (player/opponent por índice de ROLES). A lógica de andar e teletransportar para a base é feita pelo engine (`stepToward` em `helpers.ts`); o RiftMap apenas exibe as coordenadas resultantes.
+**Posicionamento**: ícones lêem `currentTurnMeta.positionSnapshot` (player/opponent por índice de ROLES). O movimento é calculado pelo engine via A* (`pathfinding.ts`) — o RiftMap apenas exibe as coordenadas resultantes.
 
 **Animações**: `flash-hit` (dano — dispara no defensor), `flash-kill` (morte + grayscale). Não há mais `counterDamage` — cada unit reage no seu próprio cooldown.
 
 **Destruição de torre**: `isTowerDestroyed(key)` parseia a chave diretamente (`'pt_top_out'` → player/top/outer) sem mapa estático.
 
 **Drag mode** (dev): `__debugMapPositions()` no console ativa arrastar ícones e torres; chamar de novo imprime todas as coordenadas no formato `ROLE_POSITIONS` prontas para colar no código. Os range circles ficam visíveis no drag mode para validar o `COMBAT_RANGE`.
+
+**Walk grid mode** (dev): `__debugWalkGrid()` sobrepõe o grid 50×50 de walkability (verde = walkable, vermelho = bloqueado); clique-e-arraste para pintar células; chamar de novo exporta o grid no console no formato `WALK_GRID_DATA` pronto para colar em `pathfinding.ts`.
 
 ## Debug (`utils/debug.ts`)
 
@@ -218,7 +221,8 @@ Registrado apenas em `import.meta.env.DEV` via `main.ts`.
 // Console do DevTools:
 __debugGameplay()        // partida bo3 aleatória → navega para /gameplay
 __debugGameplay('bo5')   // partida bo5
-__debugMapPositions()    // toggle drag mode no RiftMap
+__debugMapPositions()    // toggle drag mode no RiftMap (arrastar ícones/torres)
+__debugWalkGrid()        // toggle walk grid mode (pintar células walkable/bloqueado)
 ```
 
 ## Bracket de dupla eliminação

@@ -40,6 +40,14 @@
                     <rect x="3" y="13" width="8" height="3" rx="1"/>
                     <rect x="4" y="15" width="6" height="2" rx="1"/>
                 </svg>
+                <div v-if="!isTowerDestroyed(tower.key) && !dragMode" class="tower-hp-dots">
+                    <span
+                        v-for="i in 3"
+                        :key="i"
+                        class="tower-hp-dot"
+                        :class="{ 'tower-hp-dot--lost': i > getTowerHits(tower.key) }"
+                    />
+                </div>
                 <div v-if="dragMode" class="drag-coords">{{ dragPos(tower.key, tower.x, tower.y) }}</div>
             </div>
 
@@ -163,11 +171,23 @@ const towerList = computed(() => [
 ])
 
 // Chave: 'pt_top_out' → side=player, lane=top, which=outer
-function isTowerDestroyed(key: string): boolean {
+function parseTowerKey(key: string): { side: 'player' | 'opponent'; lane: 'top' | 'mid' | 'bot'; slot: 'outer' | 'inner' } {
     const [prefix, lane, which] = key.split('_') as [string, 'top' | 'mid' | 'bot', 'out' | 'inh']
-    const side  = prefix === 'pt' ? 'player' : 'opponent'
-    const slot  = which  === 'out' ? 'outer'  : 'inner'
+    return {
+        side: prefix === 'pt' ? 'player' : 'opponent',
+        lane,
+        slot: which === 'out' ? 'outer' : 'inner',
+    }
+}
+
+function isTowerDestroyed(key: string): boolean {
+    const { side, lane, slot } = parseTowerKey(key)
     return props.towerStates[side][lane][slot] === 0
+}
+
+function getTowerHits(key: string): number {
+    const { side, lane, slot } = parseTowerKey(key)
+    return props.towerStates[side][lane][slot]
 }
 
 // ─── Ícones dos campeões ──────────────────────────────────────────────────────
@@ -480,6 +500,24 @@ function formatGold(gold: number): string {
 .tower--destroyed {
     opacity: 0.15;
     filter: grayscale(1);
+}
+
+.tower-hp-dots {
+    display: flex;
+    gap: 2px;
+    margin-top: 2px;
+}
+
+.tower-hp-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    .tower--player &   { background: #4ac8ff; }
+    .tower--opponent & { background: #ff6666; }
+    &--lost {
+        background: rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
 }
 
 .tower-shape {

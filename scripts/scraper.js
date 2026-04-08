@@ -318,41 +318,43 @@ async function main() {
   console.log(`Output: ${outDir}\n`);
 
   const results = [];
+  const rolesToScrape = opts.role ? [opts.role] : ROLES;
   const total = champions.length;
+  const grandTotal = total * rolesToScrape.length;
+  let done = 0;
   let errors = 0;
+
+  console.log(`Total de requests: ${grandTotal} (${total} champions × ${rolesToScrape.length} roles)\n`);
 
   for (let i = 0; i < total; i++) {
     const champ = champions[i];
-    const progress = `[${i + 1}/${total}]`;
-    process.stdout.write(
-      `${progress} ${champ.name}${opts.role ? ` (${opts.role})` : ""}...`
-    );
 
-    try {
-      const data = await scrapeChampionCounters(champ, opts.role, opts.top);
-      if (data && data.counters.length > 0) {
-        results.push(data);
-        const topCounter = data.counters[0];
-        console.log(
-          ` OK — #1 counter: ${topCounter.champion} (${topCounter.winRate}% WR)`
-        );
+    for (const role of rolesToScrape) {
+      done++;
+      const progress = `[${done}/${grandTotal}]`;
+      process.stdout.write(`${progress} ${champ.name} (${role})...`);
 
-        // Salva JSON individual por champion
-        const slug = champ.slug;
-        const roleTag = opts.role ? `_${opts.role}` : "";
-        const champFile = path.join(outDir, `${slug}${roleTag}.json`);
-        fs.writeFileSync(champFile, JSON.stringify(data, null, 2), "utf-8");
-      } else {
-        console.log(` sem dados de counter`);
+      try {
+        const data = await scrapeChampionCounters(champ, role, opts.top);
+        if (data && data.counters.length > 0) {
+          results.push(data);
+          const topCounter = data.counters[0];
+          console.log(` OK — #1 counter: ${topCounter.champion} (${topCounter.winRate}% WR)`);
+
+          const champFile = path.join(outDir, `${champ.slug}_${role}.json`);
+          fs.writeFileSync(champFile, JSON.stringify(data, null, 2), "utf-8");
+        } else {
+          console.log(` sem dados de counter`);
+        }
+      } catch (err) {
+        console.log(` ERRO: ${err.message}`);
+        errors++;
       }
-    } catch (err) {
-      console.log(` ERRO: ${err.message}`);
-      errors++;
-    }
 
-    // Rate limit
-    if (i < total - 1) {
-      await sleep(opts.delay);
+      // Rate limit entre todos os requests
+      if (done < grandTotal) {
+        await sleep(opts.delay);
+      }
     }
   }
 
@@ -364,7 +366,7 @@ async function main() {
   // CSV consolidado (opcional)
   if (opts.output === "csv" || opts.output === "both") {
     const timestamp = new Date().toISOString().slice(0, 10);
-    const roleTag = opts.role ? `_${opts.role}` : "";
+    const roleTag = opts.role ? `_${opts.role}` : "_all_roles";
     saveCSV(results, path.join(outDir, `_all_counters${roleTag}_${timestamp}.csv`), opts.top);
   }
 

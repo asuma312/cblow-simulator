@@ -9,6 +9,7 @@ npm run dev                  # servidor de desenvolvimento
 npm run build                # type-check + build de produção
 npm run preview              # preview do build
 npm run download-champions   # baixa imagens DDragon para public/champions/
+node scripts/migrate-champions.mjs  # (one-shot) converte .ts de campeões → .json com matchups embutidos
 ```
 
 ## Stack
@@ -30,7 +31,7 @@ src/
 │   ├── players/index.ts         # ALL_PLAYERS + getPlayersByRole
 │   ├── coaches/index.ts         # COACHES (4 coaches)
 │   ├── teams/index.ts           # AI_TEAMS (8 times de IA)
-│   ├── champions/               # um arquivo por campeão
+│   ├── champions/               # um .json por campeão (id, name, positions, matchups)
 │   └── trainingActions.ts       # metadados das ações de treino (fonte única)
 ├── stores/
 │   ├── game.ts                  # fase do jogo, semana, scores da série
@@ -40,6 +41,11 @@ src/
 │   └── champions.ts             # draft (ban/pick), lista de campeões
 ├── engine/
 │   ├── simulation/              # engine de simulação (ver seção abaixo)
+│   │   ├── index.ts             # simulateGame() — loop principal
+│   │   ├── state.ts             # initTeamState, farmTick, teamfightPower
+│   │   ├── matchups.ts          # getMatchupMult() — bônus de counter via matchups embutidos
+│   │   ├── constants.ts         # constantes numéricas da simulação
+│   │   └── helpers.ts           # rand, randInt, getKnowledge, FALLBACK_PLAYER
 │   ├── ai-draft.ts              # lógica de ban/pick da IA
 │   └── ai-team.ts               # acesso aos times de IA
 ├── components/
@@ -62,10 +68,13 @@ public/
 
 data/                            # estatísticas reais do CBlow (fonte: cblowstats.netlify.app)
 ├── data.json
-└── data_historico.json
+├── data_historico.json
+└── counters/                    # JSONs de matchup por campeão+role (usados apenas pelo migrate script)
+    └── {champion}_{role}.json
 
 scripts/
-└── download-champions.mjs       # baixa ícones DDragon para public/champions/
+├── download-champions.mjs       # baixa ícones DDragon para public/champions/
+└── migrate-champions.mjs        # (one-shot) converte .ts → .json e embutem matchups
 ```
 
 ## Game loop
@@ -117,6 +126,13 @@ Cada store salva no `localStorage` via `utils/storage.ts`:
 
 ```typescript
 type Role = 'top' | 'jungle' | 'mid' | 'adc' | 'support'
+
+interface Champion {
+  id: string          // DDragon name — usado para imagem e champPool
+  name: string
+  positions: ChampionPosition[]
+  matchups?: Record<string, Record<string, number>>  // role -> opponentName -> winRate
+}
 
 interface TowerLaneState { outer: number; inner: number }  // hits restantes; 0 = destruída
 interface TeamTowers { top: TowerLaneState; mid: TowerLaneState; bot: TowerLaneState }
@@ -180,19 +196,43 @@ interface SimulationResult extends GameResult {
 | Vitória imediata | 6 torres destruídas |
 | Empate pós-60 | mais torres → mais ouro |
 
-Multiplicadores do jogador:
+Multiplicadores por `PlayerState`:
 ```
 knowledgeMult = 0.5 + 0.5 * (knowledge / 100)
 fatigueMult   = 1 - fatigue / 200
 moralMult     = 0.8 + moral / 500
 goldMult      = min(1.3, 1 + totalGold/15000 * 0.3)
+matchupMult   = 1 + (winRate - 50) * 0.20  — só aplica se winRate > 50% (sen não = 1.0)
 ```
+
+`rollPs(ps, oPs, withTeamfight)` — função única de roll:
+- 1v1 (top/mid): `withTeamfight = false` → usa mechanics + farm
+- 2v2 (bot): `withTeamfight = true` → usa mechanics + farm + teamfight
+
+**Dano mútuo em combate** — resolução sequencial:
+```
+damageToLoser  = winnerRoll * 4   → aplicado ao perdedor
+se perdedor sobreviver (hp > 0):
+  counterDamage = loserRoll * 2   → aplicado ao vencedor
+se perdedor morrer → sem counter (morte antes de reagir)
+```
+Mortes simultâneas são impossíveis por design.
 
 Detalhe de bot lane: farm split 70% ADC / 30% Support. Kill gold: 100% killer + 50% assister.
 
 Barão é **por jogador** (não por time): cada `PlayerState` tem `baronActive` e `baronTurnsRemaining`.
 
 Cada evento carrega `GameEventMeta` com `type` (`kill | dragon | baron | tower_destroyed | turn_summary`), `phase: 'game'`, `combats[]`, `towerSnapshot` e `goldSnapshot`.
+
+### Matchups (`engine/simulation/matchups.ts`)
+
+Dados embutidos nos JSONs de campeão (`src/data/champions/*.json`) sob a chave `matchups`:
+```json
+{ "matchups": { "top": { "Heimerdinger": 55.63 }, "middle": { ... } } }
+```
+- Role `mid` do jogo → chave `middle` no JSON (mapeamento interno do `getMatchupMult`)
+- Só dá bônus quando `winRate > 50`; ignora matchups desfavoráveis (sem debuff)
+- Fórmula: `1 + (winRate - 50) * 0.20` → 51% = +20%, 55% = +100%
 
 ## RiftMap (`components/gameplay/RiftMap.vue`)
 
@@ -204,7 +244,9 @@ Minimapa 500×500px com fundo `/public/minimap.png`. Camadas:
 
 Badge superior: `"TURNO X / 60"` baseado em `currentTurnMeta?.turnNumber`.
 
-**Animações**: `flash-hit` (dano), `flash-kill` (morte + grayscale).
+**Animações**: `flash-hit` (dano — dispara no defensor *e* no atacante quando há `counterDamage`), `flash-kill` (morte + grayscale).
+
+**Respawn walk**: ao morrer, o ícone teleporta instantaneamente para a base do time (player → canto inferior-esquerdo `(0, 468)`, opponent → canto superior-direito `(468, 0)`). Ao reviver, caminha `80px/turno` de volta à posição de lane via CSS `transition: left/top 600ms ease-in-out`. O step só ocorre quando o ícone *não* está em `deadKeys`.
 
 **Drag mode** (dev): `__debugMapPositions()` no console ativa arrastar ícones e torres; chamar de novo imprime todas as coordenadas formatadas prontas para colar no código.
 

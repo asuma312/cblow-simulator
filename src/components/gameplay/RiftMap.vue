@@ -47,10 +47,10 @@
                 v-for="icon in championIcons"
                 :key="icon.key"
                 class="champ-icon-wrapper"
-                :class="[icon.isPlayer ? 'is-player' : 'is-opponent', { 'is-dead': deadKeys.has(icon.key), 'drag-enabled': dragMode }]"
+                :class="[icon.isPlayer ? 'is-player' : 'is-opponent', { 'is-dead': deadKeys.has(icon.key), 'drag-enabled': dragMode, 'no-transition': noTransitionKeys.has(icon.key) }]"
                 :style="{
-                    left: dp(icon.key, icon.x)[0] + 'px',
-                    top:  dp(icon.key, icon.y)[1] + 'px',
+                    left: (dragMode ? dp(icon.key, icon.x)[0] : (iconVisualPositions[icon.key]?.x ?? icon.x)) + 'px',
+                    top:  (dragMode ? dp(icon.key, icon.y)[1] : (iconVisualPositions[icon.key]?.y ?? icon.y)) + 'px',
                     transform: dragMode ? 'none' : icon.offset,
                 }"
                 @mousedown="dragMode ? startDrag($event, icon.key, icon.x, icon.y) : undefined"
@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import type { GameEventMeta, TeamTowers } from '@/types/game.types'
 import { ROLES, ROLE_SHORT_LABELS } from '@/types/game.types'
 import { onIconError } from '@/utils/championImages'
@@ -186,26 +186,63 @@ function attackOffset(key: string): string {
 
 // ─── Combat animations ────────────────────────────────────────────────────────
 
-const flashKeys = ref(new Set<string>())
-const killKeys  = ref(new Set<string>())
-const deadKeys  = ref(new Set<string>())
-const hpMap     = ref<Record<string, number>>({})
+const flashKeys         = ref(new Set<string>())
+const killKeys          = ref(new Set<string>())
+const deadKeys          = ref(new Set<string>())
+const hpMap             = ref<Record<string, number>>({})
+const iconVisualPositions = ref<Record<string, { x: number; y: number }>>({})
+const noTransitionKeys  = ref(new Set<string>())
+
+const WALK_SPEED = 80
+
+function stepToward(current: { x: number; y: number }, target: { x: number; y: number }, speed: number): { x: number; y: number } {
+    const dx = target.x - current.x
+    const dy = target.y - current.y
+    const dist = Math.sqrt(dx * dx + dy * dy)
+    if (dist <= speed) return { ...target }
+    return { x: current.x + dx / dist * speed, y: current.y + dy / dist * speed }
+}
+
+function applyHit(key: string, damage: number) {
+    flashKeys.value = new Set([...flashKeys.value, key])
+    hpMap.value[key] = Math.max(0, (hpMap.value[key] ?? 100) - damage)
+    setTimeout(() => flashKeys.value.delete(key), 280)
+}
+
+function teleportToBase(key: string) {
+    const isPlayer = key.startsWith('player_')
+    noTransitionKeys.value = new Set([...noTransitionKeys.value, key])
+    iconVisualPositions.value[key] = isPlayer ? { x: 0, y: 468 } : { x: 468, y: 0 }
+    nextTick(() => noTransitionKeys.value.delete(key))
+}
 
 watch(() => props.currentTurnMeta, (meta) => {
-    if (!meta?.combats?.length) return
+    if (!meta) return
 
-    for (const c of meta.combats) {
+    for (const icon of championIcons.value) {
+        if (deadKeys.value.has(icon.key)) continue
+        const current = iconVisualPositions.value[icon.key]
+        if (current)
+            iconVisualPositions.value[icon.key] = stepToward(current, { x: icon.x, y: icon.y }, WALK_SPEED)
+    }
+
+    for (const c of meta.combats ?? []) {
         const defKey = c.attackerIsPlayer ? `opponent_${c.defenderRole}` : `player_${c.defenderRole}`
+        const atkKey = c.attackerIsPlayer ? `player_${c.attackerRole}` : `opponent_${c.attackerRole}`
 
         if (c.killedDefender) {
             killKeys.value = new Set([...killKeys.value, defKey])
-            setTimeout(() => { deadKeys.value = new Set([...deadKeys.value, defKey]); killKeys.value.delete(defKey) }, 450)
+            setTimeout(() => {
+                deadKeys.value = new Set([...deadKeys.value, defKey])
+                killKeys.value.delete(defKey)
+                teleportToBase(defKey)
+            }, 450)
             setTimeout(() => { deadKeys.value.delete(defKey); hpMap.value[defKey] = 100 }, 2200)
         } else if (c.damage > 0) {
-            flashKeys.value = new Set([...flashKeys.value, defKey])
-            hpMap.value[defKey] = Math.max(0, (hpMap.value[defKey] ?? 100) - c.damage)
-            setTimeout(() => flashKeys.value.delete(defKey), 280)
+            applyHit(defKey, c.damage)
         }
+
+        if (c.counterDamage) applyHit(atkKey, c.counterDamage)
     }
 })
 
@@ -417,9 +454,10 @@ function formatGold(gold: number): string {
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    transition: transform 150ms ease;
+    transition: transform 150ms ease, left 600ms ease-in-out, top 600ms ease-in-out;
     z-index: 10;
     &.is-dead { opacity: 0.35; filter: grayscale(1) brightness(0.3); }
+    &.no-transition { transition: transform 150ms ease; }
 }
 
 .champ-icon {

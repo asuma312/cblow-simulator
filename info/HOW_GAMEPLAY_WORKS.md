@@ -81,7 +81,18 @@ Para cada role em `['top', 'mid']`:
   roll = rand(0.5, 1.5) * (mechanics * w.mechanics + farm * w.farm)
        * knowledgeMult * fatigueMult * moralMult * matchupMult
   ```
-  Dano: `max(0, |rollP - rollO|) * 5` ao perdedor. Kill se `hp <= 0`.
+  Resolução sequencial (dano mútuo):
+  ```
+  winnerRoll = max(rollP, rollO)
+  loserRoll  = min(rollP, rollO)
+
+  damageToLoser = winnerRoll * 4   → aplicado ao perdedor
+  se perdedor.hp > 0 (sobreviveu):
+    counterDamage = loserRoll * 2  → aplicado ao vencedor
+  se perdedor.hp <= 0 (morreu):
+    sem counter (morreu antes de reagir)
+  ```
+  Kill se `hp <= 0` após `damageToLoser`. Mortes simultâneas são impossíveis.
 - Um vivo, outro morto → o vivo bate na torre inimiga da lane (`hitTower`).
 
 ### Jungle — sem combate
@@ -97,9 +108,19 @@ Poder combinado (apenas vivos):
 ```
 pBotRoll = rollAdc + rollSup
 ```
-Dano: `max(0, |pBotRoll - oBotRoll|) * 5`.
+Resolução sequencial (dano mútuo):
+```
+winnerRoll = max(pBotRoll, oBotRoll)
+loserRoll  = min(pBotRoll, oBotRoll)
 
-Alvo: aleatório entre os vivos do lado perdedor.
+damageToLoser = winnerRoll * 4   → aplicado a alvo aleatório do lado perdedor
+se alvo.hp > 0 (sobreviveu):
+  counterDamage = loserRoll * 2  → aplicado a alvo aleatório do lado vencedor
+se alvo.hp <= 0 (morreu):
+  sem counter
+```
+
+Alvo: aleatório entre os vivos do lado perdedor (50% ADC / 50% Support se ambos vivos).
 
 Kill: killer = quem tiver maior roll individual; assister = o outro vivo se `roll > 0`.
 
@@ -207,9 +228,10 @@ Todos os metas têm `phase: 'game'`, `towerSnapshot` e `goldSnapshot`.
     attackerRole: Role
     defenderRole: Role
     attackerIsPlayer: boolean
-    damage: number
+    damage: number            // dano aplicado ao perdedor (winnerRoll * 4)
     killedDefender: boolean
     goldGained: number
+    counterDamage?: number    // dano sofrido pelo vencedor; ausente se perdedor morreu
     assistantRole?: Role
     assistantIsPlayer?: boolean
     assistGoldGained?: number

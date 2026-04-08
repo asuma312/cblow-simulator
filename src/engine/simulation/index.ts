@@ -46,21 +46,18 @@ function countDestroyedTowers(team: TeamState): number {
         n + (team.towers[lane].outer === 0 ? 1 : 0) + (team.towers[lane].inner === 0 ? 1 : 0), 0)
 }
 
-function laneRoll(ps: PlayerState, oPs: PlayerState): number {
+function rollPs(ps: PlayerState, oPs: PlayerState, withTeamfight = false): number {
     const w = ROLE_WEIGHTS[ps.player.role]
-    return rand(0.5, 1.5) *
-        (ps.player.stats.mechanics * w.mechanics + ps.player.stats.farm * w.farm) *
-        ps.knowledgeMult * ps.fatigueMult * ps.moralMult *
-        getMatchupMult(ps.pickedChampionId, ps.player.role, oPs.pickedChampionId)
+    const base = ps.player.stats.mechanics * w.mechanics
+               + ps.player.stats.farm * w.farm
+               + (withTeamfight ? ps.player.stats.teamfight * w.teamfight : 0)
+    return rand(0.5, 1.5) * base
+        * ps.knowledgeMult * ps.fatigueMult * ps.moralMult
+        * getMatchupMult(ps.pickedChampionId, ps.player.role, oPs.pickedChampionId)
 }
 
-function botRoll(ps: PlayerState, oPs: PlayerState): number {
-    const w = ROLE_WEIGHTS[ps.player.role]
-    return rand(0.5, 1.5) *
-        (ps.player.stats.mechanics * w.mechanics + ps.player.stats.farm * w.farm + ps.player.stats.teamfight * w.teamfight) *
-        ps.knowledgeMult * ps.fatigueMult * ps.moralMult *
-        getMatchupMult(ps.pickedChampionId, ps.player.role, oPs.pickedChampionId)
-}
+const ADC_IDX = ROLES.indexOf('adc')
+const SUP_IDX = ROLES.indexOf('support')
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
@@ -139,31 +136,34 @@ export function simulateGame(
             const oAlive = alive(oPs)
 
             if (pAlive && oAlive) {
-                const rollP = laneRoll(pPs, oPs)
-                const rollO = laneRoll(oPs, pPs)
+                const rollP = rollPs(pPs, oPs)
+                const rollO = rollPs(oPs, pPs)
                 const playerAttacks = rollP > rollO
-                const damage = Math.max(0, (Math.max(rollP, rollO) - Math.min(rollP, rollO)) * 5)
+                const winnerRoll = Math.max(rollP, rollO)
+                const loserRoll  = Math.min(rollP, rollO)
+                const atkPs = playerAttacks ? pPs : oPs
+                const defPs = playerAttacks ? oPs : pPs
+                const damage = winnerRoll * 4
+                defPs.hp -= damage
 
-                if (damage > 0) {
-                    const atkPs = playerAttacks ? pPs : oPs
-                    const defPs = playerAttacks ? oPs : pPs
-                    defPs.hp -= damage
+                let killed = false
+                let goldGained = 0
+                let counterDamage: number | undefined
 
-                    let killed = false
-                    let goldGained = 0
-
-                    if (defPs.hp <= 0) {
-                        goldGained = resolveKill(atkPs, null, defPs, turn, playerAttacks).goldGained
-                        killed = true
-                        hasKill = true
-                        turnAdvDelta += (playerAttacks ? 1 : -1) * randInt(4, 8)
-                        killDesc = playerAttacks
-                            ? `${atkPs.player.nickname} abate ${defPs.player.nickname} na ${lane.toUpperCase()} lane!`
-                            : `${atkPs.player.nickname} abate ${defPs.player.nickname} — pressão do adversário!`
-                    }
-
-                    combats.push({ attackerRole: lane, defenderRole: lane, attackerIsPlayer: playerAttacks, damage, killedDefender: killed, goldGained })
+                if (defPs.hp <= 0) {
+                    goldGained = resolveKill(atkPs, null, defPs, turn, playerAttacks).goldGained
+                    killed = true
+                    hasKill = true
+                    turnAdvDelta += (playerAttacks ? 1 : -1) * randInt(4, 8)
+                    killDesc = playerAttacks
+                        ? `${atkPs.player.nickname} abate ${defPs.player.nickname} na ${lane.toUpperCase()} lane!`
+                        : `${atkPs.player.nickname} abate ${defPs.player.nickname} — pressão do adversário!`
+                } else {
+                    counterDamage = loserRoll * 2
+                    atkPs.hp -= counterDamage
                 }
+
+                combats.push({ attackerRole: lane, defenderRole: lane, attackerIsPlayer: playerAttacks, damage, killedDefender: killed, goldGained, counterDamage })
             } else if (pAlive !== oAlive) {
                 const atkPs   = pAlive ? pPs : oPs
                 const defTeam = pAlive ? opponentTeam : playerTeam
@@ -182,66 +182,68 @@ export function simulateGame(
         // ── Bot (2v2) ─────────────────────────────────────────────────────
 
         {
-            const pAdc = playerTeam.playerStates[ROLES.indexOf('adc')]
-            const pSup = playerTeam.playerStates[ROLES.indexOf('support')]
-            const oAdc = opponentTeam.playerStates[ROLES.indexOf('adc')]
-            const oSup = opponentTeam.playerStates[ROLES.indexOf('support')]
+            const pAdc = playerTeam.playerStates[ADC_IDX]
+            const pSup = playerTeam.playerStates[SUP_IDX]
+            const oAdc = opponentTeam.playerStates[ADC_IDX]
+            const oSup = opponentTeam.playerStates[SUP_IDX]
 
-            const pAdcRoll = alive(pAdc) ? botRoll(pAdc, oAdc) : 0
-            const pSupRoll = alive(pSup) ? botRoll(pSup, oSup) : 0
-            const oAdcRoll = alive(oAdc) ? botRoll(oAdc, pAdc) : 0
-            const oSupRoll = alive(oSup) ? botRoll(oSup, pSup) : 0
+            const pAdcRoll = alive(pAdc) ? rollPs(pAdc, oAdc, true) : 0
+            const pSupRoll = alive(pSup) ? rollPs(pSup, oSup, true) : 0
+            const oAdcRoll = alive(oAdc) ? rollPs(oAdc, pAdc, true) : 0
+            const oSupRoll = alive(oSup) ? rollPs(oSup, pSup, true) : 0
 
             const pBotRoll = pAdcRoll + pSupRoll
             const oBotRoll = oAdcRoll + oSupRoll
 
             if ((alive(pAdc) || alive(pSup)) && (alive(oAdc) || alive(oSup))) {
-                const damage = Math.max(0, Math.abs(pBotRoll - oBotRoll) * 5)
+                const attackerIsPlayer = pBotRoll > oBotRoll
+                const winnerRoll = Math.max(pBotRoll, oBotRoll)
+                const loserRoll  = Math.min(pBotRoll, oBotRoll)
+                const [aAdc, aSup, aAdcRoll, aSupRoll, dAdc, dSup] = attackerIsPlayer
+                    ? [pAdc, pSup, pAdcRoll, pSupRoll, oAdc, oSup]
+                    : [oAdc, oSup, oAdcRoll, oSupRoll, pAdc, pSup]
 
-                if (damage > 0) {
-                    const attackerIsPlayer = pBotRoll > oBotRoll
-                    const [aAdc, aSup, aAdcRoll, aSupRoll, dAdc, dSup] = attackerIsPlayer
-                        ? [pAdc, pSup, pAdcRoll, pSupRoll, oAdc, oSup]
-                        : [oAdc, oSup, oAdcRoll, oSupRoll, pAdc, pSup]
+                const pickAdc      = alive(dAdc) && (!alive(dSup) || Math.random() < 0.5)
+                const targetPs     = pickAdc ? dAdc : dSup
+                const defenderRole: Role = pickAdc ? 'adc' : 'support'
+                const damage       = winnerRoll * 4
+                targetPs.hp -= damage
 
-                    const pickAdc  = alive(dAdc) && (!alive(dSup) || Math.random() < 0.5)
-                    const targetPs = pickAdc ? dAdc : dSup
-                    const defenderRole: Role = pickAdc ? 'adc' : 'support'
+                let killed = false
+                let goldGained = 0
+                let assistGoldGained = 0
+                let assistantRole: Role | undefined
+                let assisterPs: PlayerState | null = null
+                let counterDamage: number | undefined
 
-                    targetPs.hp -= damage
-
-                    let killed = false
-                    let goldGained = 0
-                    let assistGoldGained = 0
-                    let assistantRole: Role | undefined
-                    let assisterPs: PlayerState | null = null
-
-                    if (targetPs.hp <= 0) {
-                        const killerIsAdc = aAdcRoll >= aSupRoll
-                        const killerPs  = killerIsAdc ? aAdc : aSup
-                        const otherPs   = killerIsAdc ? aSup : aAdc
-                        const otherRoll = killerIsAdc ? aSupRoll : aAdcRoll
-                        if (alive(otherPs) && otherRoll > 0) {
-                            assisterPs    = otherPs
-                            assistantRole = killerIsAdc ? 'support' : 'adc'
-                        }
-
-                        const r = resolveKill(killerPs, assisterPs, targetPs, turn, attackerIsPlayer)
-                        killed = true
-                        goldGained = r.goldGained
-                        assistGoldGained = r.assistGoldGained
-                        hasKill = true
-                        turnAdvDelta += (attackerIsPlayer ? 1 : -1) * randInt(4, 8)
-                        killDesc = attackerIsPlayer
-                            ? `${aAdc.player.nickname} e ${aSup.player.nickname} abateram ${targetPs.player.nickname} na bot lane!`
-                            : `${aAdc.player.nickname} e ${aSup.player.nickname} sofrem pressão — ${targetPs.player.nickname} cai!`
+                if (targetPs.hp <= 0) {
+                    const killerIsAdc = aAdcRoll >= aSupRoll
+                    const killerPs  = killerIsAdc ? aAdc : aSup
+                    const otherPs   = killerIsAdc ? aSup : aAdc
+                    const otherRoll = killerIsAdc ? aSupRoll : aAdcRoll
+                    if (alive(otherPs) && otherRoll > 0) {
+                        assisterPs    = otherPs
+                        assistantRole = killerIsAdc ? 'support' : 'adc'
                     }
-
-                    combats.push({
-                        attackerRole: 'adc', defenderRole, attackerIsPlayer, damage, killedDefender: killed, goldGained,
-                        ...(assisterPs ? { assistantRole, assistantIsPlayer: attackerIsPlayer, assistGoldGained } : {}),
-                    })
+                    const r = resolveKill(killerPs, assisterPs, targetPs, turn, attackerIsPlayer)
+                    killed = true
+                    goldGained = r.goldGained
+                    assistGoldGained = r.assistGoldGained
+                    hasKill = true
+                    turnAdvDelta += (attackerIsPlayer ? 1 : -1) * randInt(4, 8)
+                    killDesc = attackerIsPlayer
+                        ? `${aAdc.player.nickname} e ${aSup.player.nickname} abateram ${targetPs.player.nickname} na bot lane!`
+                        : `${aAdc.player.nickname} e ${aSup.player.nickname} sofrem pressão — ${targetPs.player.nickname} cai!`
+                } else {
+                    counterDamage = loserRoll * 2
+                    const counterTarget = alive(aAdc) && (!alive(aSup) || Math.random() < 0.5) ? aAdc : aSup
+                    counterTarget.hp -= counterDamage
                 }
+
+                combats.push({
+                    attackerRole: 'adc', defenderRole, attackerIsPlayer, damage, killedDefender: killed, goldGained, counterDamage,
+                    ...(assisterPs ? { assistantRole, assistantIsPlayer: attackerIsPlayer, assistGoldGained } : {}),
+                })
             }
 
             // Tower hits: each player hits when their direct counterpart is dead

@@ -174,6 +174,7 @@ export interface CombatResult {
     damage: number
     killedDefender: boolean
     goldGained: number
+    counterDamage?: number       // dano sofrido pelo attacker (vencedor), só presente se loser sobreviveu
     assistantRole?: Role
     assistantIsPlayer?: boolean
     assistGoldGained?: number

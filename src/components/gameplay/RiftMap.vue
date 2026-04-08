@@ -30,7 +30,7 @@
                     tower.isPlayer ? 'tower--player' : 'tower--opponent',
                     { 'drag-enabled': dragMode, 'tower--destroyed': isTowerDestroyed(tower.key) }
                 ]"
-                :style="{ left: dp(tower.key, tower.x)[0] + 'px', top: dp(tower.key, tower.y)[1] + 'px' }"
+                :style="dragStyle(tower.key, tower.x, tower.y)"
                 @mousedown="dragMode ? startDrag($event, tower.key, tower.x, tower.y) : undefined"
             >
                 <svg class="tower-shape" viewBox="0 0 14 18" xmlns="http://www.w3.org/2000/svg" style="transform: scaleY(-1)">
@@ -40,19 +40,32 @@
                     <rect x="3" y="13" width="8" height="3" rx="1"/>
                     <rect x="4" y="15" width="6" height="2" rx="1"/>
                 </svg>
-                <div v-if="dragMode" class="drag-coords">{{ dp(tower.key, tower.x)[0] }}, {{ dp(tower.key, tower.y)[1] }}</div>
+                <div v-if="dragMode" class="drag-coords">{{ dragPos(tower.key, tower.x, tower.y) }}</div>
             </div>
+
+            <template v-if="dragMode">
+                <div
+                    v-for="icon in championIcons"
+                    :key="`range_${icon.key}`"
+                    class="range-circle"
+                    :class="icon.isPlayer ? 'range--player' : 'range--opponent'"
+                    :style="{
+                        left:   dragPos(icon.key, icon.x, icon.y).x + ICON_HALF + 'px',
+                        top:    dragPos(icon.key, icon.x, icon.y).y + ICON_HALF + 'px',
+                        width:  COMBAT_RANGE * 2 + 'px',
+                        height: COMBAT_RANGE * 2 + 'px',
+                    }"
+                />
+            </template>
 
             <div
                 v-for="icon in championIcons"
                 :key="icon.key"
                 class="champ-icon-wrapper"
-                :class="[icon.isPlayer ? 'is-player' : 'is-opponent', { 'is-dead': deadKeys.has(icon.key), 'drag-enabled': dragMode, 'no-transition': noTransitionKeys.has(icon.key) }]"
-                :style="{
-                    left: (dragMode ? dp(icon.key, icon.x)[0] : (iconVisualPositions[icon.key]?.x ?? icon.x)) + 'px',
-                    top:  (dragMode ? dp(icon.key, icon.y)[1] : (iconVisualPositions[icon.key]?.y ?? icon.y)) + 'px',
-                    transform: dragMode ? 'none' : icon.offset,
-                }"
+                :class="[icon.isPlayer ? 'is-player' : 'is-opponent', { 'is-dead': deadKeys.has(icon.key), 'drag-enabled': dragMode }]"
+                :style="dragMode
+                    ? { ...dragStyle(icon.key, icon.x, icon.y), transform: 'none' }
+                    : { left: iconPos(icon).x + 'px', top: iconPos(icon).y + 'px', transform: icon.offset }"
                 @mousedown="dragMode ? startDrag($event, icon.key, icon.x, icon.y) : undefined"
             >
                 <img
@@ -62,7 +75,7 @@
                     :class="{ 'flash-hit': flashKeys.has(icon.key), 'flash-kill': killKeys.has(icon.key) }"
                     @error="(e) => onIconError(e as Event)"
                 />
-                <div v-if="dragMode" class="drag-coords">{{ dp(icon.key, icon.x)[0] }}, {{ dp(icon.key, icon.y)[1] }}</div>
+                <div v-if="dragMode" class="drag-coords">{{ dragPos(icon.key, icon.x, icon.y) }}</div>
                 <div v-if="!deadKeys.has(icon.key) && !dragMode" class="hp-bar">
                     <div class="hp-fill" :style="{ width: (hpMap[icon.key] ?? 100) + '%' }"/>
                 </div>
@@ -86,15 +99,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import type { GameEventMeta, TeamTowers } from '@/types/game.types'
-import { ROLES, ROLE_SHORT_LABELS } from '@/types/game.types'
+import { ROLES, ROLE_SHORT_LABELS, type Role } from '@/types/game.types'
 import { onIconError } from '@/utils/championImages'
-import { TOTAL_TURNS, TOWER_HITS } from '@/engine/simulation/constants'
+import { TOTAL_TURNS, ROLE_POSITIONS, COMBAT_RANGE } from '@/engine/simulation/constants'
+
+const ICON_HALF = 18  // metade dos 36px do ícone — usado para centralizar o range circle
 
 const props = defineProps<{
     currentTurnMeta: GameEventMeta | null
-    playerPicks: string[]       // [top, jgl, mid, adc, sup]
+    playerPicks: string[]
     opponentPicks: string[]
     dragonWins: { player: number; opponent: number }
     baronWinner: 'player' | 'opponent' | null
@@ -102,15 +117,7 @@ const props = defineProps<{
     towerStates: { player: TeamTowers; opponent: TeamTowers }
 }>()
 
-// ─── Static position data ─────────────────────────────────────────────────────
-
-const CHAMPION_POSITIONS: Record<string, { player: [number, number]; opponent: [number, number] }> = {
-    top:     { player: [35,  75],  opponent: [80,  35]  },
-    jungle:  { player: [89,  210], opponent: [366, 258] },
-    mid:     { player: [206, 246], opponent: [246, 219] },
-    adc:     { player: [363, 424], opponent: [435, 369] },
-    support: { player: [392, 417], opponent: [425, 395] },
-}
+// ─── Torres ───────────────────────────────────────────────────────────────────
 
 const TOWER_POSITIONS = {
     player: [
@@ -136,144 +143,113 @@ const towerList = computed(() => [
     ...TOWER_POSITIONS.opponent.map(t => ({ ...t, isPlayer: false })),
 ])
 
-// ─── Tower destroyed state ─────────────────────────────────────────────────────
-
-const TOWER_KEY_MAP: Record<string, { side: 'player' | 'opponent'; lane: 'top' | 'mid' | 'bot'; which: 'outer' | 'inner' }> = {
-    pt_top_out: { side: 'player',   lane: 'top', which: 'outer' },
-    pt_top_inh: { side: 'player',   lane: 'top', which: 'inner' },
-    pt_mid_out: { side: 'player',   lane: 'mid', which: 'outer' },
-    pt_mid_inh: { side: 'player',   lane: 'mid', which: 'inner' },
-    pt_bot_out: { side: 'player',   lane: 'bot', which: 'outer' },
-    pt_bot_inh: { side: 'player',   lane: 'bot', which: 'inner' },
-    ot_top_out: { side: 'opponent', lane: 'top', which: 'outer' },
-    ot_top_inh: { side: 'opponent', lane: 'top', which: 'inner' },
-    ot_mid_out: { side: 'opponent', lane: 'mid', which: 'outer' },
-    ot_mid_inh: { side: 'opponent', lane: 'mid', which: 'inner' },
-    ot_bot_out: { side: 'opponent', lane: 'bot', which: 'outer' },
-    ot_bot_inh: { side: 'opponent', lane: 'bot', which: 'inner' },
-}
-
+// Chave: 'pt_top_out' → side=player, lane=top, which=outer
 function isTowerDestroyed(key: string): boolean {
-    const info = TOWER_KEY_MAP[key]
-    if (!info) return false
-    const state = props.towerStates[info.side][info.lane][info.which]
-    return state === 0
+    const [prefix, lane, which] = key.split('_') as [string, 'top' | 'mid' | 'bot', 'out' | 'inh']
+    const side  = prefix === 'pt' ? 'player' : 'opponent'
+    const slot  = which  === 'out' ? 'outer'  : 'inner'
+    return props.towerStates[side][lane][slot] === 0
 }
 
-// ─── Champion icons ───────────────────────────────────────────────────────────
+// ─── Ícones dos campeões ──────────────────────────────────────────────────────
 
-interface ChampIcon { key: string; championId: string; isPlayer: boolean; x: number; y: number; offset: string; roleLabel: string; role: string }
+interface ChampIcon {
+    key: string; championId: string; isPlayer: boolean
+    x: number; y: number; offset: string; roleLabel: string; role: string
+}
 
 const championIcons = computed((): ChampIcon[] =>
     ROLES.flatMap((role, i) => {
-        const pos = CHAMPION_POSITIONS[role]
+        const pos  = ROLE_POSITIONS[role]
         const base = { roleLabel: ROLE_SHORT_LABELS[role], role }
         return [
-            { key: `player_${role}`,   championId: props.playerPicks[i]   ?? '', isPlayer: true,  x: pos.player[0],   y: pos.player[1],   offset: attackOffset(`player_${role}`),   ...base },
-            { key: `opponent_${role}`, championId: props.opponentPicks[i] ?? '', isPlayer: false, x: pos.opponent[0], y: pos.opponent[1], offset: attackOffset(`opponent_${role}`), ...base },
+            { key: `player_${role}`,   championId: props.playerPicks[i]   ?? '', isPlayer: true,  x: pos.player.x,   y: pos.player.y,   offset: attackOffset(`player_${role}`),   ...base },
+            { key: `opponent_${role}`, championId: props.opponentPicks[i] ?? '', isPlayer: false, x: pos.opponent.x, y: pos.opponent.y, offset: attackOffset(`opponent_${role}`), ...base },
         ]
     })
 )
 
+// Posição real do ícone via positionSnapshot (fallback: posição estática de lane)
+function iconPos(icon: ChampIcon): { x: number; y: number } {
+    const snap = props.currentTurnMeta?.positionSnapshot
+    if (!snap) return { x: icon.x, y: icon.y }
+    const arr = icon.isPlayer ? snap.player : snap.opponent
+    return arr[ROLES.indexOf(icon.role as Role)] ?? { x: icon.x, y: icon.y }
+}
+
 function attackOffset(key: string): string {
-    const combats = props.currentTurnMeta?.combats
+    const combats  = props.currentTurnMeta?.combats
     if (!combats) return 'none'
     const isPlayer = key.startsWith('player_')
-    const role = key.split('_')[1]
-    const isAttacker = combats.some(c => c.attackerRole === role && c.attackerIsPlayer === isPlayer)
-    return isAttacker ? `translate(${isPlayer ? 10 : -10}px, ${isPlayer ? -5 : 5}px)` : 'none'
+    const role     = key.split('_')[1]
+    const hit      = combats.some(c => c.attackerRole === role && c.attackerIsPlayer === isPlayer)
+    return hit ? `translate(${isPlayer ? 10 : -10}px, ${isPlayer ? -5 : 5}px)` : 'none'
 }
 
-// ─── Combat animations ────────────────────────────────────────────────────────
+// ─── Animações de combate ─────────────────────────────────────────────────────
 
-const flashKeys         = ref(new Set<string>())
-const killKeys          = ref(new Set<string>())
-const deadKeys          = ref(new Set<string>())
-const hpMap             = ref<Record<string, number>>({})
-const iconVisualPositions = ref<Record<string, { x: number; y: number }>>({})
-const noTransitionKeys  = ref(new Set<string>())
-
-const WALK_SPEED = 80
-
-function stepToward(current: { x: number; y: number }, target: { x: number; y: number }, speed: number): { x: number; y: number } {
-    const dx = target.x - current.x
-    const dy = target.y - current.y
-    const dist = Math.sqrt(dx * dx + dy * dy)
-    if (dist <= speed) return { ...target }
-    return { x: current.x + dx / dist * speed, y: current.y + dy / dist * speed }
-}
+const flashKeys = ref(new Set<string>())
+const killKeys  = ref(new Set<string>())
+const deadKeys  = ref(new Set<string>())
+const hpMap     = ref<Record<string, number>>({})
 
 function applyHit(key: string, damage: number) {
-    flashKeys.value = new Set([...flashKeys.value, key])
+    flashKeys.value.add(key)
     hpMap.value[key] = Math.max(0, (hpMap.value[key] ?? 100) - damage)
     setTimeout(() => flashKeys.value.delete(key), 280)
 }
 
-function teleportToBase(key: string) {
-    const isPlayer = key.startsWith('player_')
-    noTransitionKeys.value = new Set([...noTransitionKeys.value, key])
-    iconVisualPositions.value[key] = isPlayer ? { x: 0, y: 468 } : { x: 468, y: 0 }
-    nextTick(() => noTransitionKeys.value.delete(key))
-}
-
 watch(() => props.currentTurnMeta, (meta) => {
     if (!meta) return
-
-    for (const icon of championIcons.value) {
-        if (deadKeys.value.has(icon.key)) continue
-        const current = iconVisualPositions.value[icon.key]
-        if (current)
-            iconVisualPositions.value[icon.key] = stepToward(current, { x: icon.x, y: icon.y }, WALK_SPEED)
-    }
-
     for (const c of meta.combats ?? []) {
         const defKey = c.attackerIsPlayer ? `opponent_${c.defenderRole}` : `player_${c.defenderRole}`
-        const atkKey = c.attackerIsPlayer ? `player_${c.attackerRole}` : `opponent_${c.attackerRole}`
-
         if (c.killedDefender) {
-            killKeys.value = new Set([...killKeys.value, defKey])
-            setTimeout(() => {
-                deadKeys.value = new Set([...deadKeys.value, defKey])
-                killKeys.value.delete(defKey)
-                teleportToBase(defKey)
-            }, 450)
+            killKeys.value.add(defKey)
+            setTimeout(() => { deadKeys.value.add(defKey); killKeys.value.delete(defKey) }, 450)
             setTimeout(() => { deadKeys.value.delete(defKey); hpMap.value[defKey] = 100 }, 2200)
         } else if (c.damage > 0) {
             applyHit(defKey, c.damage)
         }
-
-        if (c.counterDamage) applyHit(atkKey, c.counterDamage)
     }
 })
 
-// ─── Turn badge ───────────────────────────────────────────────────────────────
+// ─── Turno / objetivos ────────────────────────────────────────────────────────
 
-const currentTurn = computed(() => props.currentTurnMeta?.turnNumber ?? 0)
-const turnLabel   = computed(() => currentTurn.value > 0 ? `TURNO ${currentTurn.value} / ${TOTAL_TURNS}` : 'INICIANDO...')
+const turnLabel = computed(() => {
+    const t = props.currentTurnMeta?.turnNumber ?? 0
+    return t > 0 ? `TURNO ${t} / ${TOTAL_TURNS}` : 'INICIANDO...'
+})
 
-const baronBgColor  = computed(() => props.baronWinner ? (props.baronWinner === 'player' ? '#818cf8' : '#f87171') : '#374151')
+const baronBgColor  = computed(() =>
+    props.baronWinner ? (props.baronWinner === 'player' ? '#818cf8' : '#f87171') : '#374151'
+)
 const dragonBgColor = computed(() => {
     const { player, opponent } = props.dragonWins
     if (!player && !opponent) return '#374151'
     return player > opponent ? '#1d4ed8' : '#b91c1c'
 })
 
-// ─── Drag mode ────────────────────────────────────────────────────────────────
+// ─── Drag mode (dev) ──────────────────────────────────────────────────────────
 
-const mapEl        = ref<HTMLElement>()
-const dragMode     = ref(false)
+const mapEl         = ref<HTMLElement>()
+const dragMode      = ref(false)
 const dragPositions = ref<Record<string, [number, number]>>({})
 let dragging: { key: string; startMouseX: number; startMouseY: number; startX: number; startY: number } | null = null
 
-function dp(key: string, base: number): [number, number] {
+function dragPos(key: string, x: number, y: number): { x: number; y: number } {
     const cached = dragPositions.value[key]
-    return cached ? cached : [base, base]
+    return cached ? { x: cached[0], y: cached[1] } : { x, y }
+}
+
+function dragStyle(key: string, x: number, y: number): { left: string; top: string } {
+    const pos = dragPos(key, x, y)
+    return { left: pos.x + 'px', top: pos.y + 'px' }
 }
 
 function startDrag(e: MouseEvent, key: string, baseX: number, baseY: number) {
     e.preventDefault()
-    const [x, y] = dragPositions.value[key] ?? [baseX, baseY]
-    dragging = { key, startMouseX: e.clientX, startMouseY: e.clientY, startX: x, startY: y }
+    const pos = dragPos(key, baseX, baseY)
+    dragging  = { key, startMouseX: e.clientX, startMouseY: e.clientY, startX: pos.x, startY: pos.y }
 }
 
 function onMouseMove(e: MouseEvent) {
@@ -297,15 +273,15 @@ function onMouseUp() {
 function logAllPositions() {
     console.group('%c[RiftMap] campeões', 'color:#C8860A;font-weight:bold')
     for (const role of ROLES) {
-        const ref = CHAMPION_POSITIONS[role]
-        const [px, py] = dragPositions.value[`player_${role}`]   ?? ref.player
-        const [ox, oy] = dragPositions.value[`opponent_${role}`] ?? ref.opponent
-        console.log(`  ${role.padEnd(7)}: { player: [${px}, ${py}], opponent: [${ox}, ${oy}] },`)
+        const ref = ROLE_POSITIONS[role]
+        const p   = dragPos(`player_${role}`,   ref.player.x,   ref.player.y)
+        const o   = dragPos(`opponent_${role}`, ref.opponent.x, ref.opponent.y)
+        console.log(`  ${role.padEnd(7)}: { player: { x: ${p.x}, y: ${p.y} }, opponent: { x: ${o.x}, y: ${o.y} } },`)
     }
     console.groupEnd()
     console.group('%c[RiftMap] torres', 'color:#C8860A;font-weight:bold')
     for (const t of [...TOWER_POSITIONS.player, ...TOWER_POSITIONS.opponent]) {
-        const [x, y] = dragPositions.value[t.key] ?? [t.x, t.y]
+        const { x, y } = dragPos(t.key, t.x, t.y)
         console.log(`  { key: '${t.key}', x: ${x}, y: ${y} },`)
     }
     console.groupEnd()
@@ -444,7 +420,7 @@ function formatGold(gold: number): string {
     height: 18px;
     filter: drop-shadow(0 0 3px currentColor);
     rect { stroke: rgba(0,0,0,0.6); stroke-width: 0.5; }
-    .tower--player &  { color: #4a9eff; rect { fill: #4ac8ff; } }
+    .tower--player &   { color: #4a9eff; rect { fill: #4ac8ff; } }
     .tower--opponent & { color: #ff4a4a; rect { fill: #ff6666; } }
 }
 
@@ -457,7 +433,6 @@ function formatGold(gold: number): string {
     transition: transform 150ms ease, left 600ms ease-in-out, top 600ms ease-in-out;
     z-index: 10;
     &.is-dead { opacity: 0.35; filter: grayscale(1) brightness(0.3); }
-    &.no-transition { transition: transform 150ms ease; }
 }
 
 .champ-icon {
@@ -495,6 +470,16 @@ function formatGold(gold: number): string {
     font-weight: 700;
     letter-spacing: 0.05em;
     color: rgba(245, 240, 232, 0.6);
+}
+
+.range-circle {
+    position: absolute;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 6;
+    &.range--player   { border: 1px dashed rgba(74, 158, 255, 0.5); background: rgba(74, 158, 255, 0.04); }
+    &.range--opponent { border: 1px dashed rgba(255, 74, 74, 0.5);  background: rgba(255, 74, 74, 0.04);  }
 }
 
 .drag-enabled {

@@ -19,6 +19,8 @@ Cada `PlayerState` carrega:
 - `gold`, `hp` (inicia em 100), `deadUntilTurn: number | null`
 - `dragonStacks`
 - `baronActive: boolean`, `baronTurnsRemaining: number` — barão é **por jogador**, não por time
+- `position: { x: number; y: number }` — posição atual no mapa (coordenadas do RiftMap 500×500)
+- `atkCooldown: number` — turnos restantes até o próximo ataque (0 = pronto para atacar)
 - Multiplicadores pré-calculados no início da partida:
   ```
   knowledgeMult = 0.5 + 0.5 * (knowledge / 100)   // knowledge do campeão pickado, default 60
@@ -62,79 +64,102 @@ Jogador morto pula o farm até `deadUntilTurn`. Ao retornar, `deadUntilTurn = nu
 Cada turno executa na ordem:
 
 1. **farm** para ambos os times
-2. **combates de lane** (top, mid, bot)
-3. **hits de torre** (quando adversário de lane está morto)
-4. **verificação de vitória por torres** (6 destruídas = vitória imediata)
-5. **objetivos** (dragão ou barão no turno específico → `continue`)
-6. **decremento do barão**
-7. **evento do turno**
+2. **step de posições** — cada unit viva avança `WALK_SPEED = 80px/turno` em direção à sua posição de lane (`ROLE_POSITIONS`)
+3. **decremento de cooldowns** — cada unit viva com `atkCooldown > 0` decrementa 1
+4. **combate por proximidade** — cada unit pronta (`atkCooldown == 0`) ataca um inimigo aleatório dentro de `COMBAT_RANGE`
+5. **hits de torre** — units prontas sem inimigos no range batem na torre da sua lane (sem resetar cooldown)
+6. **verificação de vitória por torres** (6 destruídas = vitória imediata)
+7. **objetivos** (dragão ou barão no turno específico → `continue`)
+8. **decremento do barão**
+9. **evento do turno**
 
 ---
 
-## Combates de lane
+## Combate por proximidade
 
-### Top e Mid — 1v1
+### Modelo de ataque
 
-Para cada role em `['top', 'mid']`:
-- Ambos vivos → combate:
-  ```
-  roll = rand(0.5, 1.5) * (mechanics * w.mechanics + farm * w.farm)
-       * knowledgeMult * fatigueMult * moralMult * matchupMult
-  ```
-  Resolução sequencial (dano mútuo):
-  ```
-  winnerRoll = max(rollP, rollO)
-  loserRoll  = min(rollP, rollO)
+Por turno, cada unit viva e com `atkCooldown == 0`:
+- Lista inimigos vivos dentro do range (`dist ≤ COMBAT_RANGE`)
+- Se houver inimigos: escolhe 1 aleatoriamente, ataca, reseta cooldown
+- Se não houver: bate na torre da sua lane (cooldown **não** reseta — unit fica "pronta")
 
-  damageToLoser = winnerRoll * 4   → aplicado ao perdedor
-  se perdedor.hp > 0 (sobreviveu):
-    counterDamage = loserRoll * 2  → aplicado ao vencedor
-  se perdedor.hp <= 0 (morreu):
-    sem counter (morreu antes de reagir)
-  ```
-  Kill se `hp <= 0` após `damageToLoser`. Mortes simultâneas são impossíveis.
-- Um vivo, outro morto → o vivo bate na torre inimiga da lane (`hitTower`).
+Não existe mais `counterDamage`. Cada unit ataca independentemente no seu próprio cooldown.
 
-### Jungle — sem combate
+### Cooldown baseado em mechanics
 
-### Bot lane — 2v2 (ADC + Support)
-
-Roll individual (inclui teamfight):
 ```
-roll(ps) = rand(0.5, 1.5) * (mechanics * w.mechanics + farm * w.farm + teamfight * w.teamfight)
-         * knowledgeMult * fatigueMult * moralMult * matchupMult
-```
-Poder combinado (apenas vivos):
-```
-pBotRoll = rollAdc + rollSup
-```
-Resolução sequencial (dano mútuo):
-```
-winnerRoll = max(pBotRoll, oBotRoll)
-loserRoll  = min(pBotRoll, oBotRoll)
-
-damageToLoser = winnerRoll * 4   → aplicado a alvo aleatório do lado perdedor
-se alvo.hp > 0 (sobreviveu):
-  counterDamage = loserRoll * 2  → aplicado a alvo aleatório do lado vencedor
-se alvo.hp <= 0 (morreu):
-  sem counter
+attackCooldown = max(1, round(10 / mechanics))
+  mechanics 10 → cooldown 1  (ataca todo turno)
+  mechanics 5  → cooldown 2  (a cada 2 turnos)
+  mechanics 2  → cooldown 5
+  mechanics 1  → cooldown 10
 ```
 
-Alvo: aleatório entre os vivos do lado perdedor (50% ADC / 50% Support se ambos vivos).
+### Dano por ataque (`damageRoll`)
 
-Kill: killer = quem tiver maior roll individual; assister = o outro vivo se `roll > 0`.
+Mechanics foi **removido** do dano — só determina cooldown.
 
-Tower hits na bot lane (independentes por par): cada jogador bate na torre quando seu **counterpart direto** está morto.
+```
+damageRoll = rand(0.5, 1.5)
+           * (farm * w.farm + teamfight * w.teamfight)
+           * knowledgeMult * fatigueMult * moralMult
+           * matchupMult
+
+damage aplicado = damageRoll * DAMAGE_SCALE (4)
+```
+
+### Posições de referência e range
+
+```
+COMBAT_RANGE = 40px    // raio de combate
+WALK_SPEED   = 80px/turno
+DAMAGE_SCALE = 4       // escala o damageRoll para HP base 100
+
+ROLE_POSITIONS (posições estáticas de lane no mapa 500×500):
+  top:     player { x:35,  y:75  }  opponent { x:80,  y:35  }
+  jungle:  player { x:89,  y:210 }  opponent { x:366, y:258 }
+  mid:     player { x:206, y:246 }  opponent { x:246, y:219 }
+  adc:     player { x:363, y:424 }  opponent { x:435, y:369 }
+  support: player { x:392, y:417 }  opponent { x:425, y:395 }
+
+BASE_POSITIONS:
+  player:   { x:0,   y:468 }   // canto inferior-esquerdo
+  opponent: { x:468, y:0   }   // canto superior-direito
+```
+
+Jungle fica a 158px+ de qualquer outra unit, portanto **nunca entra em combate de lane** com o COMBAT_RANGE atual.
 
 ---
 
-## Kill e respawn
+## Kill, assist e respawn
 
 ```
-KILL_GOLD     = 500    // vai para o killer
-ASSIST_GOLD   = 250    // 50% do kill gold vai para o assister (se houver)
-RESPAWN       = 2      // turnos morto; ao retornar hp = 100
+KILL_GOLD         = 500   // vai para o killer
+ASSIST_GOLD_SHARE = 0.5   // fração do kill gold para cada assister → 250 por assister
+ASSIST_WINDOW     = 5     // turnos anteriores que qualificam para assist
+RESPAWN           = 2     // turnos morto; ao retornar hp = 100
 ```
+
+### Assist tracking
+
+Durante o combate, um `damageLog` (`Map<PlayerState, {attackerPs, turn}[]>`) registra cada hit que não mata. Ao ocorrer um kill:
+
+1. `resolveKill` consulta o log da vítima filtrando entradas com `turn >= currentTurn - ASSIST_WINDOW`
+2. Deduplica os atacantes com `Set` (a mesma unit pode ter acertado múltiplas vezes)
+3. Exclui o próprio killer
+4. Cada assister recebe `floor(KILL_GOLD * ASSIST_GOLD_SHARE)` de ouro
+5. O log da vítima é apagado — ao reviver, começa sem histórico
+
+### Respawn
+
+Ao matar:
+- `victimPs.deadUntilTurn = turn + RESPAWN`
+- `victimPs.position = BASE_POSITIONS[lado da vítima]` — teleporte imediato para a base
+- `victimPs.atkCooldown = attackCooldown(mechanics)` — reset para quando reviver
+
+Ao reviver (em `farmTick`): `deadUntilTurn = null`, `hp = 100`. Na sequência do turno, o step de posições começa a mover a unit de volta à lane.
+
 Cada kill gera `advantageDelta = ±randInt(4, 8)`.
 
 ---
@@ -150,6 +175,11 @@ hitTower(atacante, time_defensor, lane):
 ```
 
 Inner só pode ser atacada após outer ser destruída (outer = 0). Torre destruída: `opacity: 0.15 + grayscale` no RiftMap.
+
+Uma unit só bate em torre quando:
+1. Está viva e com `atkCooldown == 0`
+2. Não tem nenhum inimigo no `COMBAT_RANGE`
+3. Sua role tem lane definida em `ROLE_LANE` (jungle = null → nunca bate em torre)
 
 Vitória imediata ao destruir todas as 6 torres do adversário.
 
@@ -219,24 +249,35 @@ empate → quem tem mais totalGold vence
 | `baron` | captura de barão |
 | `tower_destroyed` | torre destruída (ou nexus ao final) |
 
-Todos os metas têm `phase: 'game'`, `towerSnapshot` e `goldSnapshot`.
+Todos os metas têm `phase: 'game'`, `towerSnapshot`, `goldSnapshot` e `positionSnapshot`.
 
 ### `CombatResult` (dentro de `eventMeta[].combats`)
 
 ```typescript
 {
-    attackerRole: Role
-    defenderRole: Role
+    attackerRole:     Role
+    defenderRole:     Role
     attackerIsPlayer: boolean
-    damage: number            // dano aplicado ao perdedor (winnerRoll * 4)
-    killedDefender: boolean
-    goldGained: number
-    counterDamage?: number    // dano sofrido pelo vencedor; ausente se perdedor morreu
-    assistantRole?: Role
+    damage:           number     // damageRoll * DAMAGE_SCALE aplicado ao defensor
+    killedDefender:   boolean
+    goldGained:       number
+    assistantRole?:   Role
     assistantIsPlayer?: boolean
-    assistGoldGained?: number
+    assistGoldGained?:  number
+    // counterDamage foi removido — ataques são independentes por cooldown
 }
 ```
+
+### `positionSnapshot` (dentro de `GameEventMeta`)
+
+```typescript
+positionSnapshot: {
+    player:   { x: number; y: number }[]   // índice = ROLES index
+    opponent: { x: number; y: number }[]
+}
+```
+
+Captura as posições de todas as units ao final de cada turno. Usado pelo `RiftMap` para animar movimento.
 
 ---
 
@@ -246,11 +287,13 @@ Todos os metas têm `phase: 'game'`, `towerSnapshot` e `goldSnapshot`.
 TOTAL_TURNS = 60
 DRAGON_TURNS = [20, 30, 40]   BARON_TURN = 45
 PLAYER_HP = 100     KILL_GOLD = 500    RESPAWN = 2
-ASSIST_GOLD_SHARE = 0.5
+ASSIST_GOLD_SHARE = 0.5       ASSIST_WINDOW = 5 turnos
 GOLD_PER_FARM = 15  REFERENCE_GOLD = 15000   GOLD_MULT_CAP = 1.3
 TOWER_HITS = 3      TOWER_GOLD = 1000
 BOT_ADC_FARM_SHARE = 0.7   BOT_SUP_FARM_SHARE = 0.3
 BARON_MULT = 1.2    BARON_DURATION = 5 turnos  DRAGON_BUFF = 0.05/stack
+
+COMBAT_RANGE = 40px   WALK_SPEED = 80px/turno   DAMAGE_SCALE = 4
 ```
 
 ---
@@ -267,8 +310,8 @@ constants.ts  ←  helpers.ts  ←  state.ts
 
 | Arquivo | Exporta |
 |---------|---------|
-| `constants.ts` | Todas as constantes numéricas + `ROLE_WEIGHTS` |
-| `helpers.ts` | `rand`, `randInt`, `getKnowledge`, `FALLBACK_PLAYER` |
+| `constants.ts` | Constantes numéricas, `ROLE_WEIGHTS`, `ROLE_POSITIONS`, `BASE_POSITIONS`, `ROLE_LANE`, `attackCooldown()` |
+| `helpers.ts` | `rand`, `randInt`, `getKnowledge`, `stepToward`, `FALLBACK_PLAYER` |
 | `state.ts` | `initTeamState`, `updateGoldMultiplier`, `farmTick`, `teamfightPower` |
 | `matchups.ts` | `getMatchupMult` — multiplicador de matchup por campeão/role |
 | `index.ts` | `simulateGame` (único export público) |

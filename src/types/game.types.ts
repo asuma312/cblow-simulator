@@ -156,6 +156,8 @@ export interface PlayerState {
     knowledgeMult: number   // 0.5 + 0.5 * (knowledge/100)
     fatigueMult: number     // 1 - fatigue/200
     moralMult: number       // 0.8 + moral/500
+    position: { x: number; y: number }
+    atkCooldown: number     // turnos até próximo ataque (0 = pronto)
 }
 
 export interface TeamState {
@@ -174,25 +176,24 @@ export interface CombatResult {
     damage: number
     killedDefender: boolean
     goldGained: number
-    counterDamage?: number       // dano sofrido pelo attacker (vencedor), só presente se loser sobreviveu
-    assistantRole?: Role
-    assistantIsPlayer?: boolean
-    assistGoldGained?: number
 }
 
 export type GameEventType =
-    | 'turn_summary' | 'kill' | 'survive'
-    | 'dragon' | 'baron' | 'teamfight' | 'gold_update'
-    | 'tower_hit' | 'tower_destroyed'
+    | 'turn_summary' | 'kill'
+    | 'dragon' | 'baron'
+    | 'tower_destroyed'
 
 export interface GameEventMeta {
     type: GameEventType
     phase: 'game'
     turnNumber?: number
     combats?: CombatResult[]
-    objectiveWinner?: 'player' | 'opponent'
     towerSnapshot?: { player: TeamTowers; opponent: TeamTowers }
     goldSnapshot?: { player: number; opponent: number }
+    positionSnapshot?: {
+        player:   { x: number; y: number }[]
+        opponent: { x: number; y: number }[]
+    }
 }
 
 export interface SimulationResult extends GameResult {

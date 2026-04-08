@@ -45,7 +45,7 @@ src/
 │   │   ├── state.ts             # initTeamState, farmTick, teamfightPower
 │   │   ├── matchups.ts          # getMatchupMult() — bônus de counter via matchups embutidos
 │   │   ├── constants.ts         # constantes numéricas da simulação
-│   │   └── helpers.ts           # rand, randInt, getKnowledge, FALLBACK_PLAYER
+│   │   └── helpers.ts           # rand, randInt, getKnowledge, stepToward, FALLBACK_PLAYER
 │   ├── ai-draft.ts              # lógica de ban/pick da IA
 │   └── ai-team.ts               # acesso aos times de IA
 ├── components/
@@ -151,6 +151,8 @@ interface PlayerState {
   baronActive: boolean          // barão por jogador (não por time)
   baronTurnsRemaining: number
   knowledgeMult, fatigueMult, moralMult
+  position: { x: number; y: number }   // posição atual no mapa (500×500)
+  atkCooldown: number                  // turnos até próximo ataque (0 = pronto)
 }
 
 interface TeamState {
@@ -189,8 +191,10 @@ interface SimulationResult extends GameResult {
 
 | Mecânica | Quando |
 |----------|--------|
-| Farm + combates de lane (1v1 top/mid, 2v2 bot) | todo turno |
-| Torre: adversário de lane morto → vivo bate na torre (3 acertos = destruída, +1000 ouro) | todo turno |
+| Farm | todo turno |
+| Step de posição (unit anda `80px/turno` em direção à lane) | todo turno |
+| Combate por proximidade (`COMBAT_RANGE = 40px`, cooldown individual por mechanics) | todo turno |
+| Torre: unit pronta sem inimigos no range bate na torre da lane | todo turno |
 | Dragão | turnos 20, 30, 40 |
 | Barão | turno 45 |
 | Vitória imediata | 6 torres destruídas |
@@ -202,27 +206,32 @@ knowledgeMult = 0.5 + 0.5 * (knowledge / 100)
 fatigueMult   = 1 - fatigue / 200
 moralMult     = 0.8 + moral / 500
 goldMult      = min(1.3, 1 + totalGold/15000 * 0.3)
-matchupMult   = 1 + (winRate - 50) * 0.20  — só aplica se winRate > 50% (sen não = 1.0)
+matchupMult   = 1 + (winRate - 50) * 0.20  — só aplica se winRate > 50% (sem debuff)
 ```
 
-`rollPs(ps, oPs, withTeamfight)` — função única de roll:
-- 1v1 (top/mid): `withTeamfight = false` → usa mechanics + farm
-- 2v2 (bot): `withTeamfight = true` → usa mechanics + farm + teamfight
-
-**Dano mútuo em combate** — resolução sequencial:
+**Cooldown de ataque** (baseado em mechanics):
 ```
-damageToLoser  = winnerRoll * 4   → aplicado ao perdedor
-se perdedor sobreviver (hp > 0):
-  counterDamage = loserRoll * 2   → aplicado ao vencedor
-se perdedor morrer → sem counter (morte antes de reagir)
+attackCooldown = max(1, round(10 / mechanics))
 ```
-Mortes simultâneas são impossíveis por design.
 
-Detalhe de bot lane: farm split 70% ADC / 30% Support. Kill gold: 100% killer + 50% assister.
+**Dano por ataque** (`damageRoll` — mechanics NÃO entra no dano, só no cooldown):
+```
+damageRoll = rand(0.5, 1.5) * (farm * w.farm + teamfight * w.teamfight)
+           * knowledgeMult * fatigueMult * moralMult * matchupMult
+damage = damageRoll * DAMAGE_SCALE (4)
+```
+
+Ataques são unilaterais e independentes — não existe `counterDamage`. Cada unit reage no seu próprio cooldown.
+
+Ao morrer: `position` vai para `BASE_POSITIONS` (base do time), `atkCooldown` reseta. Ao reviver, a unit anda de volta à lane via `stepToward`.
+
+**Assist**: um `damageLog` rastreia quem causou dano a cada vítima nos últimos `ASSIST_WINDOW = 5` turnos. No kill, todos os atacantes recentes (exceto o killer) recebem `KILL_GOLD * 0.5 = 250` de ouro. O log é zerado na morte.
+
+Detalhe de bot lane: farm split 70% ADC / 30% Support.
 
 Barão é **por jogador** (não por time): cada `PlayerState` tem `baronActive` e `baronTurnsRemaining`.
 
-Cada evento carrega `GameEventMeta` com `type` (`kill | dragon | baron | tower_destroyed | turn_summary`), `phase: 'game'`, `combats[]`, `towerSnapshot` e `goldSnapshot`.
+Cada evento carrega `GameEventMeta` com `type` (`kill | dragon | baron | tower_destroyed | turn_summary`), `phase: 'game'`, `combats[]`, `towerSnapshot`, `goldSnapshot` e `positionSnapshot`.
 
 ### Matchups (`engine/simulation/matchups.ts`)
 
@@ -240,15 +249,18 @@ Minimapa 500×500px com fundo `/public/minimap.png`. Camadas:
 1. Imagem de fundo
 2. Indicadores de barão/dragão (círculos com stacks coloridas)
 3. Torres (SVG, azul/vermelho, 6 player + 6 opponent) — `tower--destroyed` quando HP = 0
-4. Ícones dos campeões (posicionados por role, animações de combate, HP bar sempre visível)
+4. Range circles (apenas no drag mode) — círculo tracejado de `COMBAT_RANGE * 2` de diâmetro, centralizado no meio do ícone (`+18px`)
+5. Ícones dos campeões — posicionados via `positionSnapshot` do engine; CSS `transition: left/top 600ms` suaviza o movimento
 
 Badge superior: `"TURNO X / 60"` baseado em `currentTurnMeta?.turnNumber`.
 
-**Animações**: `flash-hit` (dano — dispara no defensor *e* no atacante quando há `counterDamage`), `flash-kill` (morte + grayscale).
+**Posicionamento**: ícones lêem `currentTurnMeta.positionSnapshot` (player/opponent por índice de ROLES). A lógica de andar e teletransportar para a base é feita pelo engine (`stepToward` em `helpers.ts`); o RiftMap apenas exibe as coordenadas resultantes.
 
-**Respawn walk**: ao morrer, o ícone teleporta instantaneamente para a base do time (player → canto inferior-esquerdo `(0, 468)`, opponent → canto superior-direito `(468, 0)`). Ao reviver, caminha `80px/turno` de volta à posição de lane via CSS `transition: left/top 600ms ease-in-out`. O step só ocorre quando o ícone *não* está em `deadKeys`.
+**Animações**: `flash-hit` (dano — dispara no defensor), `flash-kill` (morte + grayscale). Não há mais `counterDamage` — cada unit reage no seu próprio cooldown.
 
-**Drag mode** (dev): `__debugMapPositions()` no console ativa arrastar ícones e torres; chamar de novo imprime todas as coordenadas formatadas prontas para colar no código.
+**Destruição de torre**: `isTowerDestroyed(key)` parseia a chave diretamente (`'pt_top_out'` → player/top/outer) sem mapa estático.
+
+**Drag mode** (dev): `__debugMapPositions()` no console ativa arrastar ícones e torres; chamar de novo imprime todas as coordenadas no formato `ROLE_POSITIONS` prontas para colar no código. Os range circles ficam visíveis no drag mode para validar o `COMBAT_RANGE`.
 
 ## Debug (`utils/debug.ts`)
 

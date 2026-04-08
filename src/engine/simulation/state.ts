@@ -3,6 +3,7 @@ import { ROLES } from '@/types/game.types'
 import {
     PLAYER_HP, GOLD_PER_FARM, GOLD_MULT_CAP, REFERENCE_GOLD, ROLE_WEIGHTS,
     TOWER_HITS, BOT_ADC_FARM_SHARE, BOT_SUP_FARM_SHARE, DRAGON_BUFF, BARON_MULT,
+    ROLE_POSITIONS, attackCooldown,
 } from './constants'
 import { getKnowledge, FALLBACK_PLAYER, rand } from './helpers'
 
@@ -27,6 +28,8 @@ export function initTeamState(
             knowledgeMult: 0.5 + 0.5 * (knowledge / 100),
             fatigueMult: 1 - player.fatigue / 200,
             moralMult: 0.8 + player.moral / 500,
+            position: { ...ROLE_POSITIONS[role][label] },
+            atkCooldown: attackCooldown(player.stats.mechanics),
         }
     })
     return {

@@ -43,6 +43,7 @@
                     :dragonWins="gameResult.dragonWins"
                     :baronWinner="gameResult.baronWinner"
                     :currentGold="currentGold"
+                    :towerStates="currentTowerStates"
                 />
             </div>
 
@@ -145,7 +146,7 @@ import { useChampionsStore } from '@/stores/champions'
 import { simulateGame } from '@/engine/simulation'
 import { getAITeamById } from '@/engine/ai-team'
 import { ROLES } from '@/types/game.types'
-import type { SimulationResult, GameEventMeta } from '@/types/game.types'
+import type { SimulationResult, GameEventMeta, TeamTowers } from '@/types/game.types'
 import { onIconError } from '@/utils/championImages'
 import GameLog from '@/components/gameplay/GameLog.vue'
 import RiftMap from '@/components/gameplay/RiftMap.vue'
@@ -196,12 +197,19 @@ const currentGold = computed(() => {
     return { player: 0, opponent: 0 }
 })
 
+const DEFAULT_TOWERS: TeamTowers = { top: { outer: 3, inner: 3 }, mid: { outer: 3, inner: 3 }, bot: { outer: 3, inner: 3 } }
+
+const currentTowerStates = computed(() => {
+    const meta = currentTurnMeta.value
+    if (meta?.towerSnapshot) return meta.towerSnapshot
+    return { player: DEFAULT_TOWERS, opponent: DEFAULT_TOWERS }
+})
+
 // Event delay based on type
 function getDelay(meta: GameEventMeta | undefined): number {
     if (!meta) return 700
-    if (meta.type === 'phase_header') return 2000
-    if (meta.type === 'late_turn_won') return 1800
     if (meta.type === 'dragon' || meta.type === 'baron') return 1800
+    if (meta.type === 'tower_destroyed') return 1200
     return 700
 }
 

@@ -1,6 +1,6 @@
 <template>
     <div class="rift-map-wrapper">
-        <div class="phase-badge" :class="`phase-badge--${currentPhase}`">{{ phaseLabel }}</div>
+        <div class="phase-badge">{{ turnLabel }}</div>
 
         <div v-if="dragMode" class="drag-mode-badge">
             🎯 DRAG MODE — arraste os ícones • <code>__debugMapPositions()</code> para sair
@@ -26,7 +26,10 @@
                 v-for="tower in towerList"
                 :key="tower.key"
                 class="tower-icon"
-                :class="[tower.isPlayer ? 'tower--player' : 'tower--opponent', { 'drag-enabled': dragMode }]"
+                :class="[
+                    tower.isPlayer ? 'tower--player' : 'tower--opponent',
+                    { 'drag-enabled': dragMode, 'tower--destroyed': isTowerDestroyed(tower.key) }
+                ]"
                 :style="{ left: dp(tower.key, tower.x)[0] + 'px', top: dp(tower.key, tower.y)[1] + 'px' }"
                 @mousedown="dragMode ? startDrag($event, tower.key, tower.x, tower.y) : undefined"
             >
@@ -60,7 +63,7 @@
                     @error="(e) => onIconError(e as Event)"
                 />
                 <div v-if="dragMode" class="drag-coords">{{ dp(icon.key, icon.x)[0] }}, {{ dp(icon.key, icon.y)[1] }}</div>
-                <div v-if="currentPhase === 'early' && !deadKeys.has(icon.key) && !dragMode" class="hp-bar">
+                <div v-if="!deadKeys.has(icon.key) && !dragMode" class="hp-bar">
                     <div class="hp-fill" :style="{ width: (hpMap[icon.key] ?? 100) + '%' }"/>
                 </div>
                 <div class="role-label">{{ icon.roleLabel }}</div>
@@ -84,9 +87,10 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import type { GameEventMeta } from '@/types/game.types'
+import type { GameEventMeta, TeamTowers } from '@/types/game.types'
 import { ROLES, ROLE_SHORT_LABELS } from '@/types/game.types'
 import { onIconError } from '@/utils/championImages'
+import { TOTAL_TURNS, TOWER_HITS } from '@/engine/simulation/constants'
 
 const props = defineProps<{
     currentTurnMeta: GameEventMeta | null
@@ -95,6 +99,7 @@ const props = defineProps<{
     dragonWins: { player: number; opponent: number }
     baronWinner: 'player' | 'opponent' | null
     currentGold: { player: number; opponent: number }
+    towerStates: { player: TeamTowers; opponent: TeamTowers }
 }>()
 
 // ─── Static position data ─────────────────────────────────────────────────────
@@ -113,16 +118,16 @@ const TOWER_POSITIONS = {
         { key: 'pt_top_inh', x: 47,  y: 296 },
         { key: 'pt_mid_out', x: 191, y: 284 },
         { key: 'pt_mid_inh', x: 157, y: 341 },
-        { key: 'pt_bot_out', x: 225, y: 458 },
-        { key: 'pt_bot_inh', x: 365, y: 461 },
+        { key: 'pt_bot_out', x: 365, y: 461 },
+        { key: 'pt_bot_inh', x: 225, y: 458 },
     ],
     opponent: [
         { key: 'ot_top_out', x: 123, y: 33  },
-        { key: 'ot_top_inh', x: 333, y: 163 },
+        { key: 'ot_top_inh', x: 278, y: 46  },
         { key: 'ot_mid_out', x: 285, y: 223 },
-        { key: 'ot_mid_inh', x: 278, y: 46  },
-        { key: 'ot_bot_out', x: 455, y: 235 },
-        { key: 'ot_bot_inh', x: 464, y: 354 },
+        { key: 'ot_mid_inh', x: 333, y: 163 },
+        { key: 'ot_bot_out', x: 464, y: 354 },
+        { key: 'ot_bot_inh', x: 455, y: 235 },
     ],
 }
 
@@ -130,6 +135,30 @@ const towerList = computed(() => [
     ...TOWER_POSITIONS.player.map(t   => ({ ...t, isPlayer: true  })),
     ...TOWER_POSITIONS.opponent.map(t => ({ ...t, isPlayer: false })),
 ])
+
+// ─── Tower destroyed state ─────────────────────────────────────────────────────
+
+const TOWER_KEY_MAP: Record<string, { side: 'player' | 'opponent'; lane: 'top' | 'mid' | 'bot'; which: 'outer' | 'inner' }> = {
+    pt_top_out: { side: 'player',   lane: 'top', which: 'outer' },
+    pt_top_inh: { side: 'player',   lane: 'top', which: 'inner' },
+    pt_mid_out: { side: 'player',   lane: 'mid', which: 'outer' },
+    pt_mid_inh: { side: 'player',   lane: 'mid', which: 'inner' },
+    pt_bot_out: { side: 'player',   lane: 'bot', which: 'outer' },
+    pt_bot_inh: { side: 'player',   lane: 'bot', which: 'inner' },
+    ot_top_out: { side: 'opponent', lane: 'top', which: 'outer' },
+    ot_top_inh: { side: 'opponent', lane: 'top', which: 'inner' },
+    ot_mid_out: { side: 'opponent', lane: 'mid', which: 'outer' },
+    ot_mid_inh: { side: 'opponent', lane: 'mid', which: 'inner' },
+    ot_bot_out: { side: 'opponent', lane: 'bot', which: 'outer' },
+    ot_bot_inh: { side: 'opponent', lane: 'bot', which: 'inner' },
+}
+
+function isTowerDestroyed(key: string): boolean {
+    const info = TOWER_KEY_MAP[key]
+    if (!info) return false
+    const state = props.towerStates[info.side][info.lane][info.which]
+    return state === 0
+}
 
 // ─── Champion icons ───────────────────────────────────────────────────────────
 
@@ -163,9 +192,7 @@ const deadKeys  = ref(new Set<string>())
 const hpMap     = ref<Record<string, number>>({})
 
 watch(() => props.currentTurnMeta, (meta) => {
-    if (!meta) return
-    if (meta.type === 'phase_header') { deadKeys.value = new Set(); hpMap.value = {}; return }
-    if (!meta.combats?.length) return
+    if (!meta?.combats?.length) return
 
     for (const c of meta.combats) {
         const defKey = c.attackerIsPlayer ? `opponent_${c.defenderRole}` : `player_${c.defenderRole}`
@@ -182,11 +209,10 @@ watch(() => props.currentTurnMeta, (meta) => {
     }
 })
 
-// ─── Phase & objectives ───────────────────────────────────────────────────────
+// ─── Turn badge ───────────────────────────────────────────────────────────────
 
-const PHASE_LABELS = { early: 'EARLY GAME', mid: 'MID GAME', late: 'LATE GAME' } as const
-const currentPhase = computed(() => props.currentTurnMeta?.phase ?? 'early')
-const phaseLabel   = computed(() => PHASE_LABELS[currentPhase.value])
+const currentTurn = computed(() => props.currentTurnMeta?.turnNumber ?? 0)
+const turnLabel   = computed(() => currentTurn.value > 0 ? `TURNO ${currentTurn.value} / ${TOTAL_TURNS}` : 'INICIANDO...')
 
 const baronBgColor  = computed(() => props.baronWinner ? (props.baronWinner === 'player' ? '#818cf8' : '#f87171') : '#374151')
 const dragonBgColor = computed(() => {
@@ -286,18 +312,9 @@ function formatGold(gold: number): string {
     width: fit-content;
     margin: 0 auto;
     text-transform: uppercase;
-
-    &--early { background: rgba(139, 94, 60, 0.25); color: #C8860A;  border: 1px solid rgba(139, 94, 60, 0.5); }
-    &--mid   { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); }
-    &--late  {
-        background: rgba(200, 134, 10, 0.2); color: #fbbf24; border: 1px solid rgba(200, 134, 10, 0.5);
-        animation: pulse-gold 1.2s ease-in-out infinite alternate;
-    }
-}
-
-@keyframes pulse-gold {
-    from { box-shadow: 0 0 4px rgba(200, 134, 10, 0.2); }
-    to   { box-shadow: 0 0 12px rgba(200, 134, 10, 0.6); }
+    background: rgba(139, 94, 60, 0.25);
+    color: #C8860A;
+    border: 1px solid rgba(139, 94, 60, 0.5);
 }
 
 .rift-map {
@@ -377,6 +394,12 @@ function formatGold(gold: number): string {
     flex-direction: column;
     align-items: center;
     transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.tower--destroyed {
+    opacity: 0.15;
+    filter: grayscale(1);
 }
 
 .tower-shape {

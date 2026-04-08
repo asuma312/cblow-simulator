@@ -1,73 +1,353 @@
-import type { Player, Coach, GameEvent, GameEventMeta, PhaseResult, SimulationResult, TeamGameStats } from '@/types/game.types'
-import { EARLY_TURNS, MID_TURNS, ROLE_WEIGHTS } from './constants'
-import { initTeamState } from './state'
-import { runEarlyGame } from './early'
-import { runMidGame } from './mid'
-import { runLateGame } from './late'
+import type {
+    Player, Coach, GameEvent, GameEventMeta, SimulationResult,
+    TeamState, PlayerState, CombatResult, Role, TeamTowers,
+} from '@/types/game.types'
+import { ROLES } from '@/types/game.types'
+import {
+    TOTAL_TURNS, DRAGON_TURNS, BARON_TURN, BARON_DURATION,
+    TOWER_GOLD, KILL_GOLD, PLAYER_HP, RESPAWN,
+    ROLE_WEIGHTS, ASSIST_GOLD_SHARE,
+} from './constants'
+import { rand, randInt } from './helpers'
+import { initTeamState, farmTick, teamfightPower, updateGoldMultiplier } from './state'
+import { getMatchupMult } from './matchups'
 
-function generateStats(power: number, isWinner: boolean): TeamGameStats {
-    const base = power * 2
-    return {
-        kills:  Math.round(base * (0.8 + Math.random() * 0.4)) + (isWinner ? 3 : 0),
-        deaths: Math.round(base * (0.5 + Math.random() * 0.5)) - (isWinner ? 2 : 0),
-        gold:   Math.round(40000 + power * 3000 + Math.random() * 5000) + (isWinner ? 8000 : 0),
-        towers: Math.floor(Math.random() * 5) + (isWinner ? 4 : 0),
-    }
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const alive = (ps: PlayerState): boolean => ps.deadUntilTurn === null
+
+function snapshotTowers(p: TeamState, o: TeamState): { player: TeamTowers; opponent: TeamTowers } {
+    const snap = (t: TeamState): TeamTowers => ({
+        top: { ...t.towers.top }, mid: { ...t.towers.mid }, bot: { ...t.towers.bot },
+    })
+    return { player: snap(p), opponent: snap(o) }
 }
+
+function hitTower(
+    attackerPs: PlayerState,
+    defendingTeam: TeamState,
+    lane: 'top' | 'mid' | 'bot',
+): { destroyed: boolean; whichTower: 'outer' | 'inner' } {
+    const ls = defendingTeam.towers[lane]
+    if (ls.outer > 0) {
+        ls.outer--
+        if (ls.outer === 0) attackerPs.gold += TOWER_GOLD
+        return { destroyed: ls.outer === 0, whichTower: 'outer' }
+    } else if (ls.inner > 0) {
+        ls.inner--
+        if (ls.inner === 0) attackerPs.gold += TOWER_GOLD
+        return { destroyed: ls.inner === 0, whichTower: 'inner' }
+    }
+    return { destroyed: false, whichTower: 'outer' }
+}
+
+function countDestroyedTowers(team: TeamState): number {
+    return (['top', 'mid', 'bot'] as const).reduce((n, lane) =>
+        n + (team.towers[lane].outer === 0 ? 1 : 0) + (team.towers[lane].inner === 0 ? 1 : 0), 0)
+}
+
+function laneRoll(ps: PlayerState, oPs: PlayerState): number {
+    const w = ROLE_WEIGHTS[ps.player.role]
+    return rand(0.5, 1.5) *
+        (ps.player.stats.mechanics * w.mechanics + ps.player.stats.farm * w.farm) *
+        ps.knowledgeMult * ps.fatigueMult * ps.moralMult *
+        getMatchupMult(ps.pickedChampionId, ps.player.role, oPs.pickedChampionId)
+}
+
+function botRoll(ps: PlayerState, oPs: PlayerState): number {
+    const w = ROLE_WEIGHTS[ps.player.role]
+    return rand(0.5, 1.5) *
+        (ps.player.stats.mechanics * w.mechanics + ps.player.stats.farm * w.farm + ps.player.stats.teamfight * w.teamfight) *
+        ps.knowledgeMult * ps.fatigueMult * ps.moralMult *
+        getMatchupMult(ps.pickedChampionId, ps.player.role, oPs.pickedChampionId)
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export function simulateGame(
     playerRoster: Player[],
     opponentRoster: Player[],
     playerPicks: Record<string, string>,
     opponentPicks: Record<string, string>,
-    coach?: Coach | null,
+    _coach?: Coach | null,
 ): SimulationResult {
-    const playerTeam = initTeamState('player', playerRoster, playerPicks)
+    const playerTeam   = initTeamState('player',   playerRoster,   playerPicks)
     const opponentTeam = initTeamState('opponent', opponentRoster, opponentPicks)
 
-    const events: GameEvent[] = []
+    const events: GameEvent[]    = []
     const metas: GameEventMeta[] = []
-    const phases: PhaseResult[] = []
 
-    function addPhaseHeader(phase: 'early' | 'mid' | 'late', label: string, minute: number) {
-        events.push({ minute, description: `— ${label} —`, advantageDelta: 0 })
-        metas.push({ type: 'phase_header', phase })
+    let finalWinner: 'player' | 'opponent' = 'player'
+    let nexusDestroyed = false
+    const killCount  = { player: 0, opponent: 0 }
+    const dragonWins = { player: 0, opponent: 0 }
+    let baronWinner: 'player' | 'opponent' | null = null
+
+    function addEvent(
+        type: GameEventMeta['type'],
+        description: string,
+        advantageDelta: number,
+        turn: number,
+        combats: CombatResult[] = [],
+    ): void {
+        events.push({ minute: turn, description, advantageDelta })
+        metas.push({
+            type, phase: 'game', turnNumber: turn, combats,
+            towerSnapshot: snapshotTowers(playerTeam, opponentTeam),
+            goldSnapshot:  { player: playerTeam.totalGold, opponent: opponentTeam.totalGold },
+        })
     }
 
-    addPhaseHeader('early', 'EARLY GAME', 0)
-    const { kills } = runEarlyGame(playerTeam, opponentTeam, coach, events, metas)
-    phases.push({ phase: 'early' })
+    function resolveKill(
+        killerPs: PlayerState,
+        assisterPs: PlayerState | null,
+        victimPs: PlayerState,
+        turn: number,
+        killerIsPlayer: boolean,
+    ): { goldGained: number; assistGoldGained: number } {
+        killerPs.gold += KILL_GOLD
+        let assistGoldGained = 0
+        if (assisterPs) {
+            assistGoldGained = Math.floor(KILL_GOLD * ASSIST_GOLD_SHARE)
+            assisterPs.gold += assistGoldGained
+        }
+        victimPs.deadUntilTurn = turn + RESPAWN
+        victimPs.hp = PLAYER_HP
+        if (killerIsPlayer) killCount.player++
+        else killCount.opponent++
+        return { goldGained: KILL_GOLD, assistGoldGained }
+    }
 
-    addPhaseHeader('mid', 'MID GAME', EARLY_TURNS * 2 + 1)
-    const { dragonWins, baronWinner } = runMidGame(playerTeam, opponentTeam, events, metas)
-    phases.push({ phase: 'mid' })
+    for (let turn = 1; turn <= TOTAL_TURNS; turn++) {
+        farmTick(playerTeam,   turn)
+        farmTick(opponentTeam, turn)
 
-    addPhaseHeader('late', 'LATE GAME', Math.round(EARLY_TURNS * 2 + MID_TURNS * 1.5) + 1)
-    const winner = runLateGame(playerTeam, opponentTeam, events, metas)
-    phases.push({ phase: 'late', winner })
+        const combats: CombatResult[] = []
+        let turnAdvDelta = 0
+        let hasKill = false
+        let hasTowerDestroyed = false
+        let towerDesc = ''
+        let killDesc = ''
 
-    const playerPow = playerTeam.playerStates.reduce((s, ps) => {
-        const w = ROLE_WEIGHTS[ps.player.role]
-        return s + ps.player.stats.farm * w.farm + ps.player.stats.mechanics * w.mechanics + ps.player.stats.teamfight * w.teamfight
-    }, 0) / playerTeam.playerStates.length
+        // ── Top & Mid (1v1) ───────────────────────────────────────────────
 
-    const opponentPow = opponentTeam.playerStates.reduce((s, ps) => {
-        const w = ROLE_WEIGHTS[ps.player.role]
-        return s + ps.player.stats.farm * w.farm + ps.player.stats.mechanics * w.mechanics + ps.player.stats.teamfight * w.teamfight
-    }, 0) / opponentTeam.playerStates.length
+        for (const lane of ['top', 'mid'] as const) {
+            const ri  = ROLES.indexOf(lane)
+            const pPs = playerTeam.playerStates[ri]
+            const oPs = opponentTeam.playerStates[ri]
+            const pAlive = alive(pPs)
+            const oAlive = alive(oPs)
+
+            if (pAlive && oAlive) {
+                const rollP = laneRoll(pPs, oPs)
+                const rollO = laneRoll(oPs, pPs)
+                const playerAttacks = rollP > rollO
+                const damage = Math.max(0, (Math.max(rollP, rollO) - Math.min(rollP, rollO)) * 5)
+
+                if (damage > 0) {
+                    const atkPs = playerAttacks ? pPs : oPs
+                    const defPs = playerAttacks ? oPs : pPs
+                    defPs.hp -= damage
+
+                    let killed = false
+                    let goldGained = 0
+
+                    if (defPs.hp <= 0) {
+                        goldGained = resolveKill(atkPs, null, defPs, turn, playerAttacks).goldGained
+                        killed = true
+                        hasKill = true
+                        turnAdvDelta += (playerAttacks ? 1 : -1) * randInt(4, 8)
+                        killDesc = playerAttacks
+                            ? `${atkPs.player.nickname} abate ${defPs.player.nickname} na ${lane.toUpperCase()} lane!`
+                            : `${atkPs.player.nickname} abate ${defPs.player.nickname} — pressão do adversário!`
+                    }
+
+                    combats.push({ attackerRole: lane, defenderRole: lane, attackerIsPlayer: playerAttacks, damage, killedDefender: killed, goldGained })
+                }
+            } else if (pAlive !== oAlive) {
+                const atkPs   = pAlive ? pPs : oPs
+                const defTeam = pAlive ? opponentTeam : playerTeam
+                const sign    = pAlive ? 1 : -1
+                const r = hitTower(atkPs, defTeam, lane)
+                if (r.destroyed) {
+                    hasTowerDestroyed = true
+                    towerDesc = sign > 0
+                        ? `TORRE DESTRUÍDA! ${atkPs.player.nickname} derruba a ${r.whichTower === 'outer' ? 'torre externa' : 'torre interna'} da ${lane.toUpperCase()}!`
+                        : `TORRE DESTRUÍDA! Adversário derruba a ${r.whichTower === 'outer' ? 'torre externa' : 'torre interna'} da ${lane.toUpperCase()}!`
+                    turnAdvDelta += sign * 12
+                }
+            }
+        }
+
+        // ── Bot (2v2) ─────────────────────────────────────────────────────
+
+        {
+            const pAdc = playerTeam.playerStates[ROLES.indexOf('adc')]
+            const pSup = playerTeam.playerStates[ROLES.indexOf('support')]
+            const oAdc = opponentTeam.playerStates[ROLES.indexOf('adc')]
+            const oSup = opponentTeam.playerStates[ROLES.indexOf('support')]
+
+            const pAdcRoll = alive(pAdc) ? botRoll(pAdc, oAdc) : 0
+            const pSupRoll = alive(pSup) ? botRoll(pSup, oSup) : 0
+            const oAdcRoll = alive(oAdc) ? botRoll(oAdc, pAdc) : 0
+            const oSupRoll = alive(oSup) ? botRoll(oSup, pSup) : 0
+
+            const pBotRoll = pAdcRoll + pSupRoll
+            const oBotRoll = oAdcRoll + oSupRoll
+
+            if ((alive(pAdc) || alive(pSup)) && (alive(oAdc) || alive(oSup))) {
+                const damage = Math.max(0, Math.abs(pBotRoll - oBotRoll) * 5)
+
+                if (damage > 0) {
+                    const attackerIsPlayer = pBotRoll > oBotRoll
+                    const [aAdc, aSup, aAdcRoll, aSupRoll, dAdc, dSup] = attackerIsPlayer
+                        ? [pAdc, pSup, pAdcRoll, pSupRoll, oAdc, oSup]
+                        : [oAdc, oSup, oAdcRoll, oSupRoll, pAdc, pSup]
+
+                    const pickAdc  = alive(dAdc) && (!alive(dSup) || Math.random() < 0.5)
+                    const targetPs = pickAdc ? dAdc : dSup
+                    const defenderRole: Role = pickAdc ? 'adc' : 'support'
+
+                    targetPs.hp -= damage
+
+                    let killed = false
+                    let goldGained = 0
+                    let assistGoldGained = 0
+                    let assistantRole: Role | undefined
+                    let assisterPs: PlayerState | null = null
+
+                    if (targetPs.hp <= 0) {
+                        const killerIsAdc = aAdcRoll >= aSupRoll
+                        const killerPs  = killerIsAdc ? aAdc : aSup
+                        const otherPs   = killerIsAdc ? aSup : aAdc
+                        const otherRoll = killerIsAdc ? aSupRoll : aAdcRoll
+                        if (alive(otherPs) && otherRoll > 0) {
+                            assisterPs    = otherPs
+                            assistantRole = killerIsAdc ? 'support' : 'adc'
+                        }
+
+                        const r = resolveKill(killerPs, assisterPs, targetPs, turn, attackerIsPlayer)
+                        killed = true
+                        goldGained = r.goldGained
+                        assistGoldGained = r.assistGoldGained
+                        hasKill = true
+                        turnAdvDelta += (attackerIsPlayer ? 1 : -1) * randInt(4, 8)
+                        killDesc = attackerIsPlayer
+                            ? `${aAdc.player.nickname} e ${aSup.player.nickname} abateram ${targetPs.player.nickname} na bot lane!`
+                            : `${aAdc.player.nickname} e ${aSup.player.nickname} sofrem pressão — ${targetPs.player.nickname} cai!`
+                    }
+
+                    combats.push({
+                        attackerRole: 'adc', defenderRole, attackerIsPlayer, damage, killedDefender: killed, goldGained,
+                        ...(assisterPs ? { assistantRole, assistantIsPlayer: attackerIsPlayer, assistGoldGained } : {}),
+                    })
+                }
+            }
+
+            // Tower hits: each player hits when their direct counterpart is dead
+            for (const [atkPs, cntPs, defTeam, sign] of [
+                [pAdc, oAdc, opponentTeam,  1],
+                [pSup, oSup, opponentTeam,  1],
+                [oAdc, pAdc, playerTeam,   -1],
+                [oSup, pSup, playerTeam,   -1],
+            ] as [PlayerState, PlayerState, TeamState, number][]) {
+                if (alive(atkPs) && !alive(cntPs)) {
+                    const r = hitTower(atkPs, defTeam, 'bot')
+                    if (r.destroyed) {
+                        hasTowerDestroyed = true
+                        if (!towerDesc) towerDesc = sign > 0
+                            ? `TORRE DESTRUÍDA! ${atkPs.player.nickname} derruba a torre da BOT!`
+                            : `TORRE DESTRUÍDA! Adversário derruba a torre da BOT!`
+                        turnAdvDelta += sign * 12
+                    }
+                }
+            }
+        }
+
+        updateGoldMultiplier(playerTeam)
+        updateGoldMultiplier(opponentTeam)
+
+        // ── Tower victory ─────────────────────────────────────────────────
+
+        if (countDestroyedTowers(opponentTeam) === 6) {
+            finalWinner = 'player'; nexusDestroyed = true
+            addEvent('tower_destroyed', `Turno ${turn}: NEXUS! Seu time destrói todas as torres!`, 20, turn, combats)
+            break
+        }
+        if (countDestroyedTowers(playerTeam) === 6) {
+            finalWinner = 'opponent'; nexusDestroyed = true
+            addEvent('tower_destroyed', `Turno ${turn}: NEXUS! Adversário destrói todas as torres!`, -20, turn, combats)
+            break
+        }
+
+        // ── Objectives ────────────────────────────────────────────────────
+
+        if (DRAGON_TURNS.includes(turn)) {
+            const winner: 'player' | 'opponent' = teamfightPower(playerTeam, 0.4, 0.6) >= teamfightPower(opponentTeam, 0.4, 0.6) ? 'player' : 'opponent'
+            const winTeam = winner === 'player' ? playerTeam : opponentTeam
+            winTeam.dragonCount++
+            for (const p of winTeam.playerStates) p.dragonStacks++
+            if (winner === 'player') dragonWins.player++
+            else dragonWins.opponent++
+            const dragonNum = dragonWins.player + dragonWins.opponent
+            const advDelta  = winner === 'player' ? (dragonNum === 2 ? 12 : 8) : (dragonNum === 2 ? -12 : -8)
+            addEvent('dragon', winner === 'player'
+                ? `Dragão ${dragonNum}! Seu time controla o objetivo.`
+                : `Adversário pega o Dragão ${dragonNum}!`,
+                advDelta, turn)
+            continue
+        }
+
+        if (turn === BARON_TURN) {
+            baronWinner = teamfightPower(playerTeam, 0.3, 0.7) >= teamfightPower(opponentTeam, 0.3, 0.7) ? 'player' : 'opponent'
+            for (const p of (baronWinner === 'player' ? playerTeam : opponentTeam).playerStates) {
+                p.baronActive = true
+                p.baronTurnsRemaining = BARON_DURATION
+            }
+            addEvent('baron', baronWinner === 'player'
+                ? `BARON! Seu time toma o Baron Nashor!`
+                : `BARON! Adversário pega o Baron Nashor!`,
+                baronWinner === 'player' ? 15 : -15, turn)
+            continue
+        }
+
+        // ── Decrement baron ───────────────────────────────────────────────
+
+        for (const p of [...playerTeam.playerStates, ...opponentTeam.playerStates]) {
+            if (p.baronActive && --p.baronTurnsRemaining <= 0) p.baronActive = false
+        }
+
+        // ── Turn event ────────────────────────────────────────────────────
+
+        if (hasTowerDestroyed)   addEvent('tower_destroyed', towerDesc, turnAdvDelta, turn, combats)
+        else if (hasKill)        addEvent('kill',            killDesc,  turnAdvDelta, turn, combats)
+        else                     addEvent('turn_summary', `Turno ${turn}: farm intenso, nenhum abate`, 0, turn, combats)
+    }
+
+    // ── Post-60 winner ────────────────────────────────────────────────────────
+
+    if (!nexusDestroyed) {
+        const pD = countDestroyedTowers(opponentTeam)
+        const oD = countDestroyedTowers(playerTeam)
+        finalWinner = pD !== oD
+            ? (pD > oD ? 'player' : 'opponent')
+            : (playerTeam.totalGold >= opponentTeam.totalGold ? 'player' : 'opponent')
+    }
+
+    // ── Result ────────────────────────────────────────────────────────────────
 
     return {
-        winner,
+        winner: finalWinner,
         events,
         eventMeta: metas,
-        phases,
-        finalGold: { player: playerTeam.totalGold, opponent: opponentTeam.totalGold },
-        finalKills: kills,
+        finalGold:   { player: playerTeam.totalGold,   opponent: opponentTeam.totalGold },
+        finalKills:  killCount,
         dragonWins,
         baronWinner,
+        finalTowers: snapshotTowers(playerTeam, opponentTeam),
         stats: {
-            player: generateStats(playerPow, winner === 'player'),
-            opponent: generateStats(opponentPow, winner === 'opponent'),
+            player:   { kills: killCount.player,   deaths: killCount.opponent, gold: Math.round(playerTeam.totalGold),   towers: countDestroyedTowers(opponentTeam) },
+            opponent: { kills: killCount.opponent, deaths: killCount.player,   gold: Math.round(opponentTeam.totalGold), towers: countDestroyedTowers(playerTeam)   },
         },
     }
 }

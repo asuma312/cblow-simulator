@@ -1,25 +1,24 @@
 import type { Role } from '@/types/game.types'
 
-export const EARLY_TURNS = 15
-export const MID_TURNS = 20
-export const LATE_TURNS = 10
-export const LATE_TURN_WIN_REQ = 3
-export const LATE_SUB_ROLLS = 5
-export const LATE_SUB_WIN_REQ = 3
+export const TOTAL_TURNS = 60
+export const DRAGON_TURNS = [20, 30, 40]
+export const BARON_TURN = 45
+export const RESPAWN = 2
+export const TOWER_HITS = 3       // acertos para derrubar uma torre
+export const TOWER_GOLD = 1000    // ouro ao atacante que derruba a torre
+export const BOT_ADC_FARM_SHARE = 0.7
+export const BOT_SUP_FARM_SHARE = 0.3
+export const ASSIST_GOLD_SHARE = 0.5
 
 export const PLAYER_HP = 100
 export const GOLD_PER_FARM = 15
 export const KILL_GOLD = 500
-export const RESPAWN = 3
 export const REFERENCE_GOLD = 15000
 export const GOLD_MULT_CAP = 1.3
 
 export const BARON_MULT = 1.2
 export const BARON_DURATION = 5
 export const DRAGON_BUFF = 0.05
-
-export const MID_DRAGON_TURNS = [6, 13]
-export const MID_BARON_TURN = 18
 
 export const ROLE_WEIGHTS: Record<Role, { farm: number; mechanics: number; teamfight: number }> = {
     top:     { farm: 0.3,  mechanics: 0.4, teamfight: 0.3 },

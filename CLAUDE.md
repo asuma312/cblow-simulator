@@ -24,7 +24,7 @@ npm run download-champions   # baixa imagens DDragon para public/champions/
 
 ```
 src/
-├── types/game.types.ts          # todos os tipos do jogo (incluindo tipos da simulação 3 fases)
+├── types/game.types.ts          # todos os tipos do jogo
 ├── types/championSelect.types.ts
 ├── data/
 │   ├── players/index.ts         # ALL_PLAYERS + getPlayersByRole
@@ -39,7 +39,7 @@ src/
 │   ├── training.ts              # plano semanal e execução
 │   └── champions.ts             # draft (ban/pick), lista de campeões
 ├── engine/
-│   ├── simulation.ts            # simulação em 3 fases (early/mid/late) — retorna SimulationResult
+│   ├── simulation/              # engine de simulação (ver seção abaixo)
 │   ├── ai-draft.ts              # lógica de ban/pick da IA
 │   └── ai-team.ts               # acesso aos times de IA
 ├── components/
@@ -79,7 +79,7 @@ scripts/
 - **Tournament:** bracket visual, simula partidas de IA, define próxima partida do player
 - **Training:** cada jogador recebe uma ação semanal, salários são pagos
 - **ChampSelect:** player controla um lado (blue/red alternando), IA controla o outro
-- **Gameplay:** simulação em 3 fases com minimapa animado + log de eventos
+- **Gameplay:** loop único de 60 turnos com minimapa animado + log de eventos
 - A série (Bo3/Bo5) repete ChampSelect → Gameplay até ter vencedor
 - Derrota na Losers → `/gameover`; vitória na Grand Final → tela de vitória
 
@@ -118,6 +118,9 @@ Cada store salva no `localStorage` via `utils/storage.ts`:
 ```typescript
 type Role = 'top' | 'jungle' | 'mid' | 'adc' | 'support'
 
+interface TowerLaneState { outer: number; inner: number }  // hits restantes; 0 = destruída
+interface TeamTowers { top: TowerLaneState; mid: TowerLaneState; bot: TowerLaneState }
+
 interface Player {
   id, name, nickname, role: Role
   stats: { farm, mechanics, teamfight }  // 1–10
@@ -125,10 +128,24 @@ interface Player {
   popularity, moral, fatigue             // 0–100
 }
 
+interface PlayerState {
+  player, pickedChampionId, gold, hp
+  deadUntilTurn: number | null
+  dragonStacks: number
+  baronActive: boolean          // barão por jogador (não por time)
+  baronTurnsRemaining: number
+  knowledgeMult, fatigueMult, moralMult
+}
+
+interface TeamState {
+  label, playerStates[], totalGold, goldMultiplier, dragonCount
+  towers: TeamTowers            // 6 torres por time (outer + inner por lane)
+}
+
 interface AITeam {
   id, name, archetype
-  roster: Player[]              // populado pelo snake draft
-  preferredPlayerIds: string[]  // IDs preferidos em ordem top/jg/mid/adc/sup
+  roster: Player[]
+  preferredPlayerIds: string[]
 }
 
 interface Match {
@@ -140,26 +157,28 @@ interface Match {
 
 type GameState.phase = 'setup' | 'training' | 'champselect' | 'gameplay' | 'tournament' | 'gameover' | 'victory'
 
-// Tipos da simulação 3 fases
 interface SimulationResult extends GameResult {
-  phases: PhaseResult[]
-  eventMeta: GameEventMeta[]      // metadados por evento (type, phase, combats, etc.)
+  eventMeta: GameEventMeta[]
   finalGold: { player, opponent }
   finalKills: { player, opponent }
   dragonWins: { player, opponent }
   baronWinner: 'player' | 'opponent' | null
+  finalTowers: { player: TeamTowers; opponent: TeamTowers }
 }
 ```
 
-## Simulação em 3 Fases (`engine/simulation.ts`)
+## Simulação — Loop único (`engine/simulation/`)
 
-`simulateGame(...)` retorna `SimulationResult`. Fases sequenciais:
+`simulateGame(...)` executa um **loop único de até 60 turnos** e retorna `SimulationResult`.
 
-| Fase | Turnos | Mecânica |
-|------|--------|----------|
-| Early | 15 | Farm + combates 1v1 por role com HP e kills |
-| Mid | 20 | Farm + dragões (turnos 6/13) + barão (turno 18) |
-| Late | até 10 | 5 sub-rolls por turno; vence quem ganhar 3 turnos |
+| Mecânica | Quando |
+|----------|--------|
+| Farm + combates de lane (1v1 top/mid, 2v2 bot) | todo turno |
+| Torre: adversário de lane morto → vivo bate na torre (3 acertos = destruída, +1000 ouro) | todo turno |
+| Dragão | turnos 20, 30, 40 |
+| Barão | turno 45 |
+| Vitória imediata | 6 torres destruídas |
+| Empate pós-60 | mais torres → mais ouro |
 
 Multiplicadores do jogador:
 ```
@@ -169,17 +188,23 @@ moralMult     = 0.8 + moral / 500
 goldMult      = min(1.3, 1 + totalGold/15000 * 0.3)
 ```
 
-Cada evento carrega `GameEventMeta` com `type` (`phase_header | kill | dragon | baron | late_turn_won | ...`), `phase` e array `combats` — usado pelo `RiftMap` para animar ícones.
+Detalhe de bot lane: farm split 70% ADC / 30% Support. Kill gold: 100% killer + 50% assister.
+
+Barão é **por jogador** (não por time): cada `PlayerState` tem `baronActive` e `baronTurnsRemaining`.
+
+Cada evento carrega `GameEventMeta` com `type` (`kill | dragon | baron | tower_destroyed | turn_summary`), `phase: 'game'`, `combats[]`, `towerSnapshot` e `goldSnapshot`.
 
 ## RiftMap (`components/gameplay/RiftMap.vue`)
 
 Minimapa 500×500px com fundo `/public/minimap.png`. Camadas:
 1. Imagem de fundo
 2. Indicadores de barão/dragão (círculos com stacks coloridas)
-3. Torres (SVG de torre, azul/vermelho, 6 player + 6 opponent)
-4. Ícones dos campeões (posicionados por role, animações de combate)
+3. Torres (SVG, azul/vermelho, 6 player + 6 opponent) — `tower--destroyed` quando HP = 0
+4. Ícones dos campeões (posicionados por role, animações de combate, HP bar sempre visível)
 
-**Animações**: `flash-hit` (dano), `flash-kill` (morte + grayscale), HP bar no early game.
+Badge superior: `"TURNO X / 60"` baseado em `currentTurnMeta?.turnNumber`.
+
+**Animações**: `flash-hit` (dano), `flash-kill` (morte + grayscale).
 
 **Drag mode** (dev): `__debugMapPositions()` no console ativa arrastar ícones e torres; chamar de novo imprime todas as coordenadas formatadas prontas para colar no código.
 
@@ -239,6 +264,7 @@ Componentes usam `clip-path` octagonal nos cards e bordas dourado-bronze.
 ## Convenções
 
 - Todo texto da UI em **português brasileiro**
+- Sem emojis em nenhum arquivo ou componente
 - Stores usam Options API do Pinia (`defineStore({ state, getters, actions })`)
 - `_save()` é chamado manualmente no final de cada action que muta estado persistido
 - Não adicionar `console.log` de debug em produção

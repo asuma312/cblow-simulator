@@ -4,6 +4,7 @@ export interface Champion {
     id: string                    // DDragon name — usado para imagem e champPool
     name: string                  // nome de exibição
     positions: ChampionPosition[]
+    matchups?: Record<string, Record<string, number>>  // role -> opponentName -> winRate
 }
 
 export const ROLES = ['top', 'jungle', 'mid', 'adc', 'support'] as const
@@ -130,15 +131,28 @@ export interface TeamGameStats {
     towers: number
 }
 
-// ─── New 3-phase simulation types ───────────────────────────────────────────
+// ─── Simulation types ────────────────────────────────────────────────────────
+
+export interface TowerLaneState {
+    outer: number  // hits restantes (0 = destruída)
+    inner: number
+}
+
+export interface TeamTowers {
+    top: TowerLaneState
+    mid: TowerLaneState
+    bot: TowerLaneState
+}
 
 export interface PlayerState {
     player: Player
     pickedChampionId: string
     gold: number
-    hp: number              // early game; starts at 100
+    hp: number              // starts at 100
     deadUntilTurn: number | null
-    dragonStacks: number    // feeds late-game formula
+    dragonStacks: number
+    baronActive: boolean
+    baronTurnsRemaining: number
     knowledgeMult: number   // 0.5 + 0.5 * (knowledge/100)
     fatigueMult: number     // 1 - fatigue/200
     moralMult: number       // 0.8 + moral/500
@@ -150,8 +164,7 @@ export interface TeamState {
     totalGold: number
     goldMultiplier: number       // 1 + (totalGold/15000) * 0.3, max 1.3
     dragonCount: number
-    baronActive: boolean
-    baronTurnsRemaining: number
+    towers: TeamTowers
 }
 
 export interface CombatResult {
@@ -161,33 +174,31 @@ export interface CombatResult {
     damage: number
     killedDefender: boolean
     goldGained: number
+    assistantRole?: Role
+    assistantIsPlayer?: boolean
+    assistGoldGained?: number
 }
 
 export type GameEventType =
-    | 'phase_header' | 'turn_summary' | 'kill' | 'survive'
-    | 'dragon' | 'baron' | 'teamfight' | 'late_turn_won' | 'gold_update'
+    | 'turn_summary' | 'kill' | 'survive'
+    | 'dragon' | 'baron' | 'teamfight' | 'gold_update'
+    | 'tower_hit' | 'tower_destroyed'
 
 export interface GameEventMeta {
     type: GameEventType
-    phase: 'early' | 'mid' | 'late'
+    phase: 'game'
     turnNumber?: number
-    combats?: CombatResult[]      // all combats in this turn (for map flashing)
+    combats?: CombatResult[]
     objectiveWinner?: 'player' | 'opponent'
-    subRollWinner?: 'player' | 'opponent'
-    lateTurnsWon?: { player: number; opponent: number }
+    towerSnapshot?: { player: TeamTowers; opponent: TeamTowers }
     goldSnapshot?: { player: number; opponent: number }
 }
 
-export interface PhaseResult {
-    phase: 'early' | 'mid' | 'late'
-    winner?: 'player' | 'opponent'
-}
-
 export interface SimulationResult extends GameResult {
-    phases: PhaseResult[]
     eventMeta: GameEventMeta[]
     finalGold: { player: number; opponent: number }
     finalKills: { player: number; opponent: number }
     dragonWins: { player: number; opponent: number }
     baronWinner: 'player' | 'opponent' | null
+    finalTowers: { player: TeamTowers; opponent: TeamTowers }
 }

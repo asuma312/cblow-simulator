@@ -1,6 +1,9 @@
 import type { Player, TeamState, PlayerState } from '@/types/game.types'
 import { ROLES } from '@/types/game.types'
-import { PLAYER_HP, GOLD_PER_FARM, GOLD_MULT_CAP, REFERENCE_GOLD, ROLE_WEIGHTS } from './constants'
+import {
+    PLAYER_HP, GOLD_PER_FARM, GOLD_MULT_CAP, REFERENCE_GOLD, ROLE_WEIGHTS,
+    TOWER_HITS, BOT_ADC_FARM_SHARE, BOT_SUP_FARM_SHARE, DRAGON_BUFF, BARON_MULT,
+} from './constants'
 import { getKnowledge, FALLBACK_PLAYER, rand } from './helpers'
 
 export function initTeamState(
@@ -19,6 +22,8 @@ export function initTeamState(
             hp: PLAYER_HP,
             deadUntilTurn: null,
             dragonStacks: 0,
+            baronActive: false,
+            baronTurnsRemaining: 0,
             knowledgeMult: 0.5 + 0.5 * (knowledge / 100),
             fatigueMult: 1 - player.fatigue / 200,
             moralMult: 0.8 + player.moral / 500,
@@ -30,8 +35,11 @@ export function initTeamState(
         totalGold: 0,
         goldMultiplier: 1,
         dragonCount: 0,
-        baronActive: false,
-        baronTurnsRemaining: 0,
+        towers: {
+            top: { outer: TOWER_HITS, inner: TOWER_HITS },
+            mid: { outer: TOWER_HITS, inner: TOWER_HITS },
+            bot: { outer: TOWER_HITS, inner: TOWER_HITS },
+        },
     }
 }
 
@@ -49,7 +57,10 @@ export function farmTick(team: TeamState, turn: number): void {
         }
         const w = ROLE_WEIGHTS[ps.player.role]
         const farmStat = ps.player.stats.farm * w.farm + ps.player.stats.mechanics * w.mechanics * 0.2
-        ps.gold += farmStat * GOLD_PER_FARM * ps.knowledgeMult * ps.fatigueMult * ps.moralMult
+        let share = 1
+        if (ps.player.role === 'adc') share = BOT_ADC_FARM_SHARE
+        else if (ps.player.role === 'support') share = BOT_SUP_FARM_SHARE
+        ps.gold += farmStat * GOLD_PER_FARM * ps.knowledgeMult * ps.fatigueMult * ps.moralMult * share
     }
     updateGoldMultiplier(team)
 }
@@ -58,7 +69,9 @@ export function teamfightPower(team: TeamState, weightMechanics = 0.4, weightTea
     const sum = team.playerStates.reduce((s, ps) => {
         const w = ROLE_WEIGHTS[ps.player.role]
         const base = ps.player.stats.mechanics * weightMechanics + ps.player.stats.teamfight * weightTeamfight
-        return s + base * ps.knowledgeMult * ps.fatigueMult * ps.moralMult
+        const dragonBuff = 1 + ps.dragonStacks * DRAGON_BUFF
+        const baronBuff = ps.baronActive ? BARON_MULT : 1
+        return s + base * ps.knowledgeMult * ps.fatigueMult * ps.moralMult * dragonBuff * baronBuff
     }, 0)
     return (sum / team.playerStates.length) * team.goldMultiplier * rand(0.85, 1.15)
 }

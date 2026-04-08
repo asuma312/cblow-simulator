@@ -25,8 +25,8 @@
         </div>
 
         <div class="gameplay-grid">
-            <!-- Game Log -->
-            <div class="gameplay-log-section">
+            <!-- Rift Map -->
+            <div class="gameplay-map-section">
                 <div class="game-status" v-if="gameResult && eventIndex >= gameResult.events.length">
                     <div class="result-banner" :class="gameResult.winner === 'player' ? 'result-banner--win' : 'result-banner--loss'">
                         <p class="result-text">
@@ -35,15 +35,27 @@
                     </div>
                 </div>
 
+                <RiftMap
+                    v-if="gameResult"
+                    :currentTurnMeta="currentTurnMeta"
+                    :playerPicks="playerPicks"
+                    :opponentPicks="opponentPicks"
+                    :dragonWins="gameResult.dragonWins"
+                    :baronWinner="gameResult.baronWinner"
+                    :currentGold="currentGold"
+                />
+            </div>
+
+            <!-- Side panel: Log + Stats + Picks -->
+            <div class="gameplay-side">
+                <!-- Game Log -->
                 <GameLog
                     v-if="gameResult"
                     :events="gameResult.events"
                     :currentIndex="eventIndex"
+                    :eventMeta="gameResult.eventMeta"
                 />
-            </div>
 
-            <!-- Stats & Picks -->
-            <div class="gameplay-side">
                 <!-- Draft Picks Display -->
                 <div class="picks-display">
                     <h3 class="picks-title">Draft</h3>
@@ -78,12 +90,14 @@
                             <p class="stat-item">{{ gameResult.stats.player.kills }}K / {{ gameResult.stats.player.deaths }}D</p>
                             <p class="stat-item">Ouro: {{ (gameResult.stats.player.gold / 1000).toFixed(1) }}k</p>
                             <p class="stat-item">Torres: {{ gameResult.stats.player.towers }}</p>
+                            <p class="stat-item">Dragões: {{ gameResult.dragonWins.player }}</p>
                         </div>
                         <div class="stat-col stat-col--opponent">
                             <p class="stat-col-label">{{ opponentName }}</p>
                             <p class="stat-item">{{ gameResult.stats.opponent.kills }}K / {{ gameResult.stats.opponent.deaths }}D</p>
                             <p class="stat-item">Ouro: {{ (gameResult.stats.opponent.gold / 1000).toFixed(1) }}k</p>
                             <p class="stat-item">Torres: {{ gameResult.stats.opponent.towers }}</p>
+                            <p class="stat-item">Dragões: {{ gameResult.dragonWins.opponent }}</p>
                         </div>
                     </div>
                 </div>
@@ -129,11 +143,12 @@ import { useGameStore } from '@/stores/game'
 import { useTournamentStore } from '@/stores/tournament'
 import { useChampionsStore } from '@/stores/champions'
 import { simulateGame } from '@/engine/simulation'
-import { getAITeamById, getAITeamPicks } from '@/engine/ai-team'
+import { getAITeamById } from '@/engine/ai-team'
 import { ROLES } from '@/types/game.types'
-import type { GameResult } from '@/types/game.types'
+import type { SimulationResult, GameEventMeta } from '@/types/game.types'
 import { onIconError } from '@/utils/championImages'
 import GameLog from '@/components/gameplay/GameLog.vue'
+import RiftMap from '@/components/gameplay/RiftMap.vue'
 
 const router = useRouter()
 const teamStore = useTeamStore()
@@ -141,7 +156,7 @@ const gameStore = useGameStore()
 const tournamentStore = useTournamentStore()
 const champStore = useChampionsStore()
 
-const gameResult = ref<GameResult | null>(null)
+const gameResult = ref<SimulationResult | null>(null)
 const eventIndex = ref(0)
 
 const playerSide = computed(() => gameStore.currentGameInSeries % 2 === 1 ? 'blue' : 'red')
@@ -171,6 +186,25 @@ const opponentPicksMap = computed(() => picksToMap(opponentPicks.value))
 const seriesFinished  = computed(() => gameStore.isSeriesOver(matchFormat.value))
 const playerWonSeries = computed(() => gameStore.playerWonSeries(matchFormat.value))
 
+const currentTurnMeta = computed((): GameEventMeta | null =>
+    gameResult.value?.eventMeta[eventIndex.value - 1] ?? null
+)
+
+const currentGold = computed(() => {
+    const meta = currentTurnMeta.value
+    if (meta?.goldSnapshot) return meta.goldSnapshot
+    return { player: 0, opponent: 0 }
+})
+
+// Event delay based on type
+function getDelay(meta: GameEventMeta | undefined): number {
+    if (!meta) return 700
+    if (meta.type === 'phase_header') return 2000
+    if (meta.type === 'late_turn_won') return 1800
+    if (meta.type === 'dragon' || meta.type === 'baron') return 1800
+    return 700
+}
+
 const applyMoraleChanges = (winner: 'player' | 'opponent') => {
     for (const player of teamStore.roster) {
         const updated = { ...player }
@@ -182,6 +216,16 @@ const applyMoraleChanges = (winner: 'player' | 'opponent') => {
         }
         teamStore.updateRosterPlayer(updated)
     }
+}
+
+let timer: ReturnType<typeof setTimeout> | null = null
+
+function playNextEvent(idx: number) {
+    if (!gameResult.value) return
+    if (idx >= gameResult.value.events.length) return
+    eventIndex.value = idx + 1
+    const nextMeta = gameResult.value.eventMeta[idx + 1]
+    timer = setTimeout(() => playNextEvent(idx + 1), getDelay(nextMeta))
 }
 
 const runSimulation = () => {
@@ -197,19 +241,12 @@ const runSimulation = () => {
     gameStore.recordGameResult(result.winner)
     applyMoraleChanges(result.winner)
 
-    // Play events one by one
-    let idx = 0
-    const interval = setInterval(() => {
-        if (idx < result.events.length) {
-            idx++
-            eventIndex.value = idx
-        } else {
-            clearInterval(interval)
-        }
-    }, 1800)
+    // Start replaying events
+    timer = setTimeout(() => playNextEvent(0), getDelay(result.eventMeta[0]))
 }
 
 const nextGame = () => {
+    if (timer) clearTimeout(timer)
     gameStore.currentGameInSeries++
     gameStore.setPhase('champselect')
     champStore.resetDraft()
@@ -217,7 +254,7 @@ const nextGame = () => {
 }
 
 const goToTournament = () => {
-    // Record match result in tournament
+    if (timer) clearTimeout(timer)
     if (currentMatch.value) {
         const winner = playerWonSeries.value ? 'player' : (opponentTeamId.value ?? '')
         tournamentStore.recordMatchResult(currentMatch.value.id, winner)
@@ -235,7 +272,6 @@ const goToTournament = () => {
             return
         }
 
-        // Find next player match
         const nextMatch = tournamentStore.playerNextMatch
         if (nextMatch) {
             tournamentStore.setCurrentMatch(nextMatch.id)
@@ -256,7 +292,7 @@ onMounted(() => {
     min-height: 100vh;
     background: #1a0d06;
     padding: 20px;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -336,11 +372,12 @@ onMounted(() => {
 
 .gameplay-grid {
     display: grid;
-    grid-template-columns: 1fr 360px;
+    grid-template-columns: 520px 1fr;
     gap: 20px;
+    align-items: start;
 }
 
-.gameplay-log-section {
+.gameplay-map-section {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -376,6 +413,8 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    max-height: 600px;
+    overflow-y: auto;
 }
 
 .picks-display {

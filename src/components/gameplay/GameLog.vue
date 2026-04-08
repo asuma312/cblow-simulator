@@ -6,11 +6,16 @@
                     v-for="(event, idx) in visibleEvents"
                     :key="idx"
                     class="game-log__event"
-                    :class="eventClass(event.advantageDelta)"
+                    :class="eventClass(event.advantageDelta, idx)"
                 >
-                    <span class="event-minute">{{ event.minute }}'</span>
+                    <span class="event-icon" v-if="getEventIcon(idx)">{{ getEventIcon(idx) }}</span>
+                    <span class="event-minute" v-if="getMetaType(idx) !== 'phase_header'">{{ event.minute }}'</span>
                     <span class="event-desc">{{ event.description }}</span>
-                    <span class="event-delta" :class="event.advantageDelta >= 0 ? 'delta--pos' : 'delta--neg'">
+                    <span
+                        class="event-delta"
+                        v-if="event.advantageDelta !== 0"
+                        :class="event.advantageDelta >= 0 ? 'delta--pos' : 'delta--neg'"
+                    >
                         {{ event.advantageDelta >= 0 ? '+' : '' }}{{ event.advantageDelta }}
                     </span>
                 </div>
@@ -39,11 +44,12 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch, nextTick } from 'vue'
-import type { GameEvent } from '@/types/game.types'
+import type { GameEvent, GameEventMeta } from '@/types/game.types'
 
 const props = defineProps({
     events: { type: Array as () => GameEvent[], required: true },
     currentIndex: { type: Number, default: 0 },
+    eventMeta: { type: Array as () => GameEventMeta[], default: () => [] },
 })
 
 const logContainer = ref<HTMLElement>()
@@ -71,7 +77,33 @@ const advantageBarStyle = computed(() => {
     }
 })
 
-const eventClass = (delta: number) => {
+function getMetaType(idx: number): string {
+    return props.eventMeta[idx]?.type ?? 'turn_summary'
+}
+
+function getEventIcon(idx: number): string {
+    const t = getMetaType(idx)
+    if (t === 'kill') return '⚔'
+    if (t === 'dragon') return '◆'
+    if (t === 'baron') return '◆'
+    if (t === 'late_turn_won') return '★'
+    if (t === 'phase_header') return ''
+    return ''
+}
+
+function getEventExtraClass(idx: number): string {
+    const t = getMetaType(idx)
+    if (t === 'phase_header') return 'game-log__event--phase'
+    if (t === 'kill') return 'game-log__event--kill'
+    if (t === 'dragon') return 'game-log__event--dragon'
+    if (t === 'baron') return 'game-log__event--baron'
+    if (t === 'late_turn_won') return 'game-log__event--late'
+    return ''
+}
+
+const eventClass = (delta: number, idx: number) => {
+    const extra = getEventExtraClass(idx)
+    if (extra) return extra
     if (delta >= 10) return 'game-log__event--big-pos'
     if (delta >= 0) return 'game-log__event--pos'
     if (delta <= -10) return 'game-log__event--big-neg'
@@ -118,11 +150,29 @@ watch(() => props.currentIndex, async () => {
     &--neg { border-color: #ef4444; }
     &--big-pos { border-color: #4ade80; background: rgba(34, 197, 94, 0.1); }
     &--big-neg { border-color: #f87171; background: rgba(239, 68, 68, 0.1); }
+    &--phase {
+        border-color: #C8860A;
+        background: rgba(200, 134, 10, 0.12);
+        justify-content: center;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        color: #C8860A;
+    }
+    &--kill { border-color: #f87171; background: rgba(239, 68, 68, 0.08); }
+    &--dragon { border-color: #22d3ee; background: rgba(6, 182, 212, 0.08); }
+    &--baron { border-color: #818cf8; background: rgba(129, 140, 248, 0.1); }
+    &--late { border-color: #fbbf24; background: rgba(251, 191, 36, 0.08); font-weight: 600; }
 }
 
 @keyframes slide-in {
     from { transform: translateX(-10px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
+}
+
+.event-icon {
+    font-size: 12px;
+    min-width: 16px;
+    text-align: center;
 }
 
 .event-minute {

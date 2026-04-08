@@ -129,3 +129,65 @@ export interface TeamGameStats {
     gold: number
     towers: number
 }
+
+// ─── New 3-phase simulation types ───────────────────────────────────────────
+
+export interface PlayerState {
+    player: Player
+    pickedChampionId: string
+    gold: number
+    hp: number              // early game; starts at 100
+    deadUntilTurn: number | null
+    dragonStacks: number    // feeds late-game formula
+    knowledgeMult: number   // 0.5 + 0.5 * (knowledge/100)
+    fatigueMult: number     // 1 - fatigue/200
+    moralMult: number       // 0.8 + moral/500
+}
+
+export interface TeamState {
+    label: 'player' | 'opponent'
+    playerStates: PlayerState[]  // index = top/jgl/mid/adc/sup
+    totalGold: number
+    goldMultiplier: number       // 1 + (totalGold/15000) * 0.3, max 1.3
+    dragonCount: number
+    baronActive: boolean
+    baronTurnsRemaining: number
+}
+
+export interface CombatResult {
+    attackerRole: Role
+    defenderRole: Role
+    attackerIsPlayer: boolean
+    damage: number
+    killedDefender: boolean
+    goldGained: number
+}
+
+export type GameEventType =
+    | 'phase_header' | 'turn_summary' | 'kill' | 'survive'
+    | 'dragon' | 'baron' | 'teamfight' | 'late_turn_won' | 'gold_update'
+
+export interface GameEventMeta {
+    type: GameEventType
+    phase: 'early' | 'mid' | 'late'
+    turnNumber?: number
+    combats?: CombatResult[]      // all combats in this turn (for map flashing)
+    objectiveWinner?: 'player' | 'opponent'
+    subRollWinner?: 'player' | 'opponent'
+    lateTurnsWon?: { player: number; opponent: number }
+    goldSnapshot?: { player: number; opponent: number }
+}
+
+export interface PhaseResult {
+    phase: 'early' | 'mid' | 'late'
+    winner?: 'player' | 'opponent'
+}
+
+export interface SimulationResult extends GameResult {
+    phases: PhaseResult[]
+    eventMeta: GameEventMeta[]
+    finalGold: { player: number; opponent: number }
+    finalKills: { player: number; opponent: number }
+    dragonWins: { player: number; opponent: number }
+    baronWinner: 'player' | 'opponent' | null
+}

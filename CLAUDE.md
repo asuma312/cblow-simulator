@@ -24,13 +24,13 @@ npm run download-champions   # baixa imagens DDragon para public/champions/
 
 ```
 src/
-├── types/game.types.ts          # todos os tipos do jogo
+├── types/game.types.ts          # todos os tipos do jogo (incluindo tipos da simulação 3 fases)
 ├── types/championSelect.types.ts
 ├── data/
-│   ├── players.ts               # 23 jogadores com stats e champion pool
-│   ├── coaches.ts               # 4 coaches com bônus
-│   ├── teams.ts                 # 8 times de IA (roster: [], preferredPlayerIds)
-│   ├── championPositions.ts     # mapa campeão → roles (DDragon)
+│   ├── players/index.ts         # ALL_PLAYERS + getPlayersByRole
+│   ├── coaches/index.ts         # COACHES (4 coaches)
+│   ├── teams/index.ts           # AI_TEAMS (8 times de IA)
+│   ├── champions/               # um arquivo por campeão
 │   └── trainingActions.ts       # metadados das ações de treino (fonte única)
 ├── stores/
 │   ├── game.ts                  # fase do jogo, semana, scores da série
@@ -39,20 +39,26 @@ src/
 │   ├── training.ts              # plano semanal e execução
 │   └── champions.ts             # draft (ban/pick), lista de campeões
 ├── engine/
-│   ├── simulation.ts            # simulação de partida
+│   ├── simulation.ts            # simulação em 3 fases (early/mid/late) — retorna SimulationResult
 │   ├── ai-draft.ts              # lógica de ban/pick da IA
 │   └── ai-team.ts               # acesso aos times de IA
 ├── components/
-│   ├── champion-select/         # componentes do draft (portados do lol-champion-select)
+│   ├── champion-select/         # componentes do draft
+│   ├── gameplay/
+│   │   ├── GameLog.vue          # log de eventos com ícones por tipo
+│   │   └── RiftMap.vue          # minimapa 500×500 com ícones, torres, drag mode
 │   ├── shared/PlayerCard.vue
 │   ├── training/TrainingAction.vue
-│   ├── tournament/BracketView.vue
-│   └── gameplay/GameLog.vue
+│   └── tournament/BracketView.vue
 ├── views/                       # uma view por rota
 ├── composables/useTimer.ts
 └── utils/
     ├── storage.ts               # loadFromStorage<T> / saveToStorage<T>
-    └── championImages.ts        # fallback DDragon para imagens
+    ├── championImages.ts        # fallback DDragon para imagens
+    └── debug.ts                 # helpers de dev (registrados só em import.meta.env.DEV)
+
+public/
+└── minimap.png                  # imagem do minimapa do Summoner's Rift (fundo do RiftMap)
 
 data/                            # estatísticas reais do CBlow (fonte: cblowstats.netlify.app)
 ├── data.json
@@ -73,7 +79,7 @@ scripts/
 - **Tournament:** bracket visual, simula partidas de IA, define próxima partida do player
 - **Training:** cada jogador recebe uma ação semanal, salários são pagos
 - **ChampSelect:** player controla um lado (blue/red alternando), IA controla o outro
-- **Gameplay:** simulação automática com log de eventos e barra de vantagem
+- **Gameplay:** simulação em 3 fases com minimapa animado + log de eventos
 - A série (Bo3/Bo5) repete ChampSelect → Gameplay até ter vencedor
 - Derrota na Losers → `/gameover`; vitória na Grand Final → tela de vitória
 
@@ -133,17 +139,60 @@ interface Match {
 }
 
 type GameState.phase = 'setup' | 'training' | 'champselect' | 'gameplay' | 'tournament' | 'gameover' | 'victory'
+
+// Tipos da simulação 3 fases
+interface SimulationResult extends GameResult {
+  phases: PhaseResult[]
+  eventMeta: GameEventMeta[]      // metadados por evento (type, phase, combats, etc.)
+  finalGold: { player, opponent }
+  finalKills: { player, opponent }
+  dragonWins: { player, opponent }
+  baronWinner: 'player' | 'opponent' | null
+}
 ```
 
-## Fórmulas de simulação (`engine/simulation.ts`)
+## Simulação em 3 Fases (`engine/simulation.ts`)
 
+`simulateGame(...)` retorna `SimulationResult`. Fases sequenciais:
+
+| Fase | Turnos | Mecânica |
+|------|--------|----------|
+| Early | 15 | Farm + combates 1v1 por role com HP e kills |
+| Mid | 20 | Farm + dragões (turnos 6/13) + barão (turno 18) |
+| Late | até 10 | 5 sub-rolls por turno; vence quem ganhar 3 turnos |
+
+Multiplicadores do jogador:
 ```
-conhecimento_efetivo = 0.5 + 0.5 * (knowledge / 100)   // 0 → 50%, 100 → 100%
-poder_jogador = baseStats * conhecimento_efetivo * (1 - fatigue/200) * (0.8 + moral/500)
-poder_time    = média(5 jogadores) * random(0.85–1.15)
+knowledgeMult = 0.5 + 0.5 * (knowledge / 100)
+fatigueMult   = 1 - fatigue / 200
+moralMult     = 0.8 + moral / 500
+goldMult      = min(1.3, 1 + totalGold/15000 * 0.3)
 ```
 
-Pesos por role: `top/mid` — Mecânica (0.4); `adc` — Farm+Mecânica (0.4+0.4); `support` — TeamFight (0.6).
+Cada evento carrega `GameEventMeta` com `type` (`phase_header | kill | dragon | baron | late_turn_won | ...`), `phase` e array `combats` — usado pelo `RiftMap` para animar ícones.
+
+## RiftMap (`components/gameplay/RiftMap.vue`)
+
+Minimapa 500×500px com fundo `/public/minimap.png`. Camadas:
+1. Imagem de fundo
+2. Indicadores de barão/dragão (círculos com stacks coloridas)
+3. Torres (SVG de torre, azul/vermelho, 6 player + 6 opponent)
+4. Ícones dos campeões (posicionados por role, animações de combate)
+
+**Animações**: `flash-hit` (dano), `flash-kill` (morte + grayscale), HP bar no early game.
+
+**Drag mode** (dev): `__debugMapPositions()` no console ativa arrastar ícones e torres; chamar de novo imprime todas as coordenadas formatadas prontas para colar no código.
+
+## Debug (`utils/debug.ts`)
+
+Registrado apenas em `import.meta.env.DEV` via `main.ts`.
+
+```js
+// Console do DevTools:
+__debugGameplay()        // partida bo3 aleatória → navega para /gameplay
+__debugGameplay('bo5')   // partida bo5
+__debugMapPositions()    // toggle drag mode no RiftMap
+```
 
 ## Bracket de dupla eliminação
 
@@ -157,7 +206,6 @@ Propagação centralizada em `tournament._propagate()` — tabela de rotas `rout
 
 ## Champion Select
 
-Portado de `lol-champion-select` para `src/components/champion-select/`.
 - Draft order padrão de 20 passos (6 bans + 5 picks por lado)
 - `stores/champions.ts` controla o estado; `playerSide` define qual lado o player controla
 - O grid fica bloqueado (`pointer-events: none`) durante os turnos da IA
@@ -196,3 +244,4 @@ Componentes usam `clip-path` octagonal nos cards e bordas dourado-bronze.
 - Não adicionar `console.log` de debug em produção
 - Imagens de campeões não são commitadas — ficam em `public/champions/` (no `.gitignore`)
 - `.claude/` está no `.gitignore` (memória local do Claude Code, não commitar)
+- `public/minimap.png` não é commitado (no `.gitignore`)
